@@ -6,7 +6,6 @@ chances:
   TREE: 22
   BUSH: 16
 options:
-  auto-update: false
   auto-generate-plants: true
   item-heads: true
 ########################################

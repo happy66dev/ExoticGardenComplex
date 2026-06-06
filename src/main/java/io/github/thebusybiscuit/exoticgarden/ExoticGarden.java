@@ -75,7 +75,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 
 @SuppressWarnings("deprecation")
 public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
@@ -228,11 +227,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         // Setting up bStats
         new Metrics(this, 4575);
 
-        // Auto Updater
-        if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("Build")) {
-            GuizhanUpdater.start(this, getFile(), "ybw0014", "ExoticGarden", "master");
-        }
-
         initTransNames();
 
         registerItems();
@@ -275,14 +269,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         BECommands.onCommandsRegister();
         Bukkit.getPluginManager().registerEvents(BEListener.getInstance(), ExoticGarden.instance);
 
-        /*
-        // Auto Updater
-        if (ExoticGarden.config.getBoolean("options.auto-update")) {
-            PluginUpdater updater = new GitHubBuildsUpdater(this, getFile(), "1798643961/BEPlugin/master");
-            updater.start();
-        }
-
-         */
         cfg.save();
 
         getServer().getScheduler().runTaskTimer(this, ExoticGarden.this::checkDrunkers, 120L, 120L);
