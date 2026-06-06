@@ -1,4 +1,4 @@
-# ExoticGardenComplex 复合花园
+# ExoticGardenComplex 复合花园 [魔改版]
 
 这是一个缝合了众多异域花园附属及其本体的附属
 包括以下仓库:
@@ -108,6 +108,10 @@ You are allowed, even encouraged, to contribute to ExoticGarden by making Pull R
 These Pull Requests can be Fixes, Changes or even Additions, it is your choice.
 
 Check the license for more Info on redistributing and modifying ExoticGarden.
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=happy66dev/ExoticGardenComplex&type=Date)](https://star-history.com/#happy66dev/ExoticGardenComplex&Date)
 
 ===以上是 ExoticGarden-it-dainb README 原文===
 # This Fork
