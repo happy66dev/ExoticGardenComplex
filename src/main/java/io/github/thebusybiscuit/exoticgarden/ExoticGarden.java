@@ -77,6 +77,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater;
 
+@SuppressWarnings("deprecation")
 public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
     public static final ConcurrentHashMap<String, PlayerAlcohol> drunkPlayers = new ConcurrentHashMap<>();

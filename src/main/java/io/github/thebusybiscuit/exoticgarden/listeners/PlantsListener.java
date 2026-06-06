@@ -61,6 +61,7 @@ import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
 import io.ncbpfluffybear.fluffymachines.utils.FluffyItems;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
+@SuppressWarnings("deprecation")
 public class PlantsListener implements Listener {
 
     private static final Map<String, SlimefunTag> nameLookup = new HashMap<>();

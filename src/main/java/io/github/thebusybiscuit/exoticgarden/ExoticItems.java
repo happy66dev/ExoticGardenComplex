@@ -89,6 +89,7 @@ public class ExoticItems {
                 return 1;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 1024;
             }
@@ -111,6 +112,7 @@ public class ExoticItems {
                 return 2;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 1024;
             }
@@ -133,6 +135,7 @@ public class ExoticItems {
                 return 3;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 1024;
             }
@@ -156,6 +159,7 @@ public class ExoticItems {
                 return 1;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 256;
             }
@@ -178,6 +182,7 @@ public class ExoticItems {
                 return 1;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 256;
             }
@@ -200,6 +205,7 @@ public class ExoticItems {
                 return 2;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 512;
             }
@@ -222,6 +228,7 @@ public class ExoticItems {
                 return 3;
             }
 
+            @SuppressWarnings("deprecation")
             public int getCapacity() {
                 return 768;
             }
