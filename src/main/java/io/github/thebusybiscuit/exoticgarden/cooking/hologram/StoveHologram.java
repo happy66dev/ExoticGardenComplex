@@ -34,8 +34,8 @@ public class StoveHologram {
         for (FuelEntry fe : state.fuels) {
             FuelConfig.FuelData fd = fuels.get(fe.fuelId);
             if (fd != null) {
-                maxTemp += fd.tempGain;
-                totalRate += fd.heatRate;
+                totalHeatRate += fd.heatRate;
+                maxTemp = Math.max(maxTemp, fd.tempGain);
             }
         }
 

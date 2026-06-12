@@ -73,6 +73,10 @@ public class DishGenerator {
         return t;
     });
 
+    public static void shutdown() {
+        EXECUTOR.shutdown();
+    }
+
     public static CompletableFuture<DishResult> generate(
             List<IngredientInfo> ingredientInfos,
             List<SeasoningInfo> seasoningInfos,

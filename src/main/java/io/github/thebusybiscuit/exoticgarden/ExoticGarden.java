@@ -1272,6 +1272,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onDisable() {
+        io.github.thebusybiscuit.exoticgarden.cooking.ai.DishGenerator.shutdown();
         SlimefunItemUtil.unregisterAllItems();
         SlimefunItemUtil.unregisterItemGroups();
         saveDatas();

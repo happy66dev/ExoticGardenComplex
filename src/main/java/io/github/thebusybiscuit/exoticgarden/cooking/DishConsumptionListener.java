@@ -14,6 +14,7 @@ public class DishConsumptionListener implements Listener {
 
     private static final NamespacedKey KEY_DISH_HUNGER = new NamespacedKey("cooking", "dish_hunger");
     private static final NamespacedKey KEY_DISH_SATURATION = new NamespacedKey("cooking", "dish_saturation");
+    private static final NamespacedKey KEY_DISH_EFFECTS = new NamespacedKey("cooking", "dish_effects");
 
     @EventHandler(ignoreCancelled = true)
     public void onConsume(PlayerItemConsumeEvent e) {
@@ -38,5 +39,23 @@ public class DishConsumptionListener implements Listener {
         float newSat = (float) Math.min(player.getSaturation() + saturation, newFood);
         player.setFoodLevel(newFood);
         player.setSaturation(newSat);
+
+        String effectsRaw = pdc.get(KEY_DISH_EFFECTS, PersistentDataType.STRING);
+        if (effectsRaw != null && !effectsRaw.isEmpty()) {
+            for (String effectStr : effectsRaw.split("\\|")) {
+                String[] parts = effectStr.trim().split(":");
+                String effectName = parts[0].toUpperCase().replace(" ", "_").replace("-", "_");
+                int duration = parts.length > 1 ? parseInt(parts[1], 200) : 200;
+                int amplifier = parts.length > 2 ? parseInt(parts[2], 0) : 0;
+                PotionEffectType type = PotionEffectType.getByName(effectName);
+                if (type != null) {
+                    player.addPotionEffect(new PotionEffect(type, duration, amplifier));
+                }
+            }
+        }
+    }
+
+    private int parseInt(String s, int def) {
+        try { return Integer.parseInt(s.trim()); } catch (NumberFormatException e) { return def; }
     }
 }

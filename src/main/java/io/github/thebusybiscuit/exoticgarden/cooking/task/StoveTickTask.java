@@ -24,7 +24,6 @@ public class StoveTickTask extends BukkitRunnable {
     private final Map<String, DonenessCalculator> calculators;
     private final DonenessCalculator defaultCalculator = new StandardDonenessCalculator();
     private final StoveBlock stove;
-    private int tickCounter = 0;
     private int hologramCounter = 0;
 
     public StoveTickTask(Map<String, FuelConfig.FuelData> fuels,
@@ -109,7 +108,7 @@ public class StoveTickTask extends BukkitRunnable {
             double increment = calculator.calculate(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
 
             if (state.currentTemp >= data.maxTemp) {
-                slot.charSeconds += 0.1;
+                slot.charSeconds = Math.min(slot.charSeconds + 0.1, 60.0);
             }
 
             if (slot.state == FoodState.WHOLE) {

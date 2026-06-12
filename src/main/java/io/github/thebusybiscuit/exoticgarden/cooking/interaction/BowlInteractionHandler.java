@@ -27,6 +27,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
     private static final NamespacedKey KEY_DISH_SATURATION = new NamespacedKey("cooking", "dish_saturation");
     private static final NamespacedKey KEY_DISH_QUALITY = new NamespacedKey("cooking", "dish_quality");
     private static final NamespacedKey KEY_DISH_DESCRIPTION = new NamespacedKey("cooking", "dish_description");
+    private static final NamespacedKey KEY_DISH_EFFECTS = new NamespacedKey("cooking", "dish_effects");
     private static final NamespacedKey KEY_SF_ITEM = new NamespacedKey("slimefun", "slimefun_item");
 
     private final JavaPlugin plugin;
@@ -114,6 +115,10 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
                     state.cookingInProgress = false;
                     player.sendMessage("§c烹饪失败，请稍后再试");
+                    Map<Integer, ItemStack> leftover = player.getInventory().addItem(new ItemStack(Material.BOWL));
+                    if (!leftover.isEmpty() && location.getWorld() != null) {
+                        leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
+                    }
                 });
                 return null;
             });
@@ -129,6 +134,9 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         lore.add("§7品质: §a" + result.quality);
         lore.add("§7描述: " + result.description);
         lore.add("§7饥饿值: §e+" + result.hunger);
+        if (!result.effects.isEmpty()) {
+            lore.add("§7效果: §b" + String.join(", ", result.effects));
+        }
         meta.setLore(lore);
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         pdc.set(KEY_DISH_NAME, PersistentDataType.STRING, result.name);
@@ -136,6 +144,9 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         pdc.set(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, result.saturation);
         pdc.set(KEY_DISH_QUALITY, PersistentDataType.STRING, result.quality);
         pdc.set(KEY_DISH_DESCRIPTION, PersistentDataType.STRING, result.description);
+        if (!result.effects.isEmpty()) {
+            pdc.set(KEY_DISH_EFFECTS, PersistentDataType.STRING, String.join("|", result.effects));
+        }
         item.setItemMeta(meta);
         return item;
     }
