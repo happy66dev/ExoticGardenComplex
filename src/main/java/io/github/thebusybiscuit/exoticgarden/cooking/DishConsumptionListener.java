@@ -27,6 +27,8 @@ public class DishConsumptionListener implements Listener {
         int hunger = pdc.get(KEY_DISH_HUNGER, PersistentDataType.INTEGER);
         double saturation = pdc.getOrDefault(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
 
+        e.setItem(new ItemStack(org.bukkit.Material.AIR));
+
         Player player = e.getPlayer();
         int newFood = Math.min(player.getFoodLevel() + hunger, 20);
         float newSat = (float) Math.min(player.getSaturation() + saturation, newFood);
