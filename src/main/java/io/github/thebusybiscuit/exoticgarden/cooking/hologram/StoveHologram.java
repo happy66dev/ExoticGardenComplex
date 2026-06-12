@@ -29,13 +29,13 @@ public class StoveHologram {
                                     Map<String, SeasoningConfig.SeasoningData> seasonings) {
         StringBuilder sb = new StringBuilder();
 
-        double maxTemp = 0;
+        double maxTemp = 30;
         double totalHeatRate = 0;
         for (FuelEntry fe : state.fuels) {
             FuelConfig.FuelData fd = fuels.get(fe.fuelId);
             if (fd != null) {
                 totalHeatRate += fd.heatRate;
-                maxTemp = Math.max(maxTemp, fd.tempGain);
+                maxTemp += fd.tempGain;
             }
         }
 
@@ -48,6 +48,8 @@ public class StoveHologram {
                 sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fe.fuelId, secs));
             }
             sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
+            double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
+            sb.append(String.format("§3散热: -%.1f°C/s\n", coolRate));
         } else {
             sb.append("§7无燃料\n");
         }
