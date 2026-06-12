@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.ai.DishGenerator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
@@ -7,7 +8,6 @@ import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,13 +22,8 @@ import java.util.Map;
 
 public class BowlInteractionHandler implements StoveInteractionHandler {
 
-    private static final NamespacedKey KEY_DISH_NAME = new NamespacedKey("cooking", "dish_name");
-    private static final NamespacedKey KEY_DISH_HUNGER = new NamespacedKey("cooking", "dish_hunger");
-    private static final NamespacedKey KEY_DISH_SATURATION = new NamespacedKey("cooking", "dish_saturation");
-    private static final NamespacedKey KEY_DISH_QUALITY = new NamespacedKey("cooking", "dish_quality");
-    private static final NamespacedKey KEY_DISH_DESCRIPTION = new NamespacedKey("cooking", "dish_description");
-    private static final NamespacedKey KEY_DISH_EFFECTS = new NamespacedKey("cooking", "dish_effects");
-    private static final NamespacedKey KEY_SF_ITEM = new NamespacedKey("slimefun", "slimefun_item");
+    private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
+            new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
 
     private final JavaPlugin plugin;
     private final String apiKey;
@@ -139,13 +134,13 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         }
         meta.setLore(lore);
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        pdc.set(KEY_DISH_NAME, PersistentDataType.STRING, result.name);
-        pdc.set(KEY_DISH_HUNGER, PersistentDataType.INTEGER, result.hunger);
-        pdc.set(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, result.saturation);
-        pdc.set(KEY_DISH_QUALITY, PersistentDataType.STRING, result.quality);
-        pdc.set(KEY_DISH_DESCRIPTION, PersistentDataType.STRING, result.description);
+        pdc.set(CookingKeys.DISH_NAME,        PersistentDataType.STRING,  result.name);
+        pdc.set(CookingKeys.DISH_HUNGER,      PersistentDataType.INTEGER, result.hunger);
+        pdc.set(CookingKeys.DISH_SATURATION,  PersistentDataType.DOUBLE,  result.saturation);
+        pdc.set(CookingKeys.DISH_QUALITY,     PersistentDataType.STRING,  result.quality);
+        pdc.set(CookingKeys.DISH_DESCRIPTION, PersistentDataType.STRING,  result.description);
         if (!result.effects.isEmpty()) {
-            pdc.set(KEY_DISH_EFFECTS, PersistentDataType.STRING, String.join("|", result.effects));
+            pdc.set(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING, String.join("|", result.effects));
         }
         item.setItemMeta(meta);
         return item;

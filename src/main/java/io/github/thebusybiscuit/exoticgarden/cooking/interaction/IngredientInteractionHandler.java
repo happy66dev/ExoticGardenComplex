@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.ActiveFace;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
@@ -7,7 +8,6 @@ import io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -17,8 +17,6 @@ import java.util.Map;
 
 public class IngredientInteractionHandler implements StoveInteractionHandler {
 
-    private static final NamespacedKey KEY_INGREDIENT_ID = new NamespacedKey("cooking", "ingredient_id");
-    private static final NamespacedKey KEY_FOOD_STATE = new NamespacedKey("cooking", "food_state");
     private final Map<String, IngredientConfig.IngredientData> ingredients;
 
     public IngredientInteractionHandler(Map<String, IngredientConfig.IngredientData> ingredients) {
@@ -29,7 +27,7 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
     public boolean handle(Player player, ItemStack handItem, StoveState state, Location location) {
         if (handItem.getType() == Material.AIR || handItem.getItemMeta() == null) return false;
         PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
-        String ingId = pdc.get(KEY_INGREDIENT_ID, PersistentDataType.STRING);
+        String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
         if (ingId == null || !ingredients.containsKey(ingId)) return false;
 
         state.pendingFuelClear = false;
@@ -41,7 +39,7 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
             player.sendMessage("§c食材槽已满（最多4格）");
             return true;
         }
-        String rawState = pdc.get(KEY_FOOD_STATE, PersistentDataType.STRING);
+        String rawState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
         FoodState foodState = FoodState.WHOLE;
         if (rawState != null) {
             try { foodState = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}

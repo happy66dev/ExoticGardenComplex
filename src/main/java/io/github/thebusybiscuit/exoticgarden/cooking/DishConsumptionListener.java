@@ -9,12 +9,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class DishConsumptionListener implements Listener {
-
-    private static final NamespacedKey KEY_DISH_HUNGER = new NamespacedKey("cooking", "dish_hunger");
-    private static final NamespacedKey KEY_DISH_SATURATION = new NamespacedKey("cooking", "dish_saturation");
-    private static final NamespacedKey KEY_DISH_EFFECTS = new NamespacedKey("cooking", "dish_effects");
 
     @EventHandler(ignoreCancelled = true)
     public void onConsume(PlayerItemConsumeEvent e) {
@@ -23,13 +21,13 @@ public class DishConsumptionListener implements Listener {
         if (meta == null) return;
 
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        if (!pdc.has(KEY_DISH_HUNGER, PersistentDataType.INTEGER)) return;
+        if (!pdc.has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) return;
 
-        Integer hungerRaw = pdc.get(KEY_DISH_HUNGER, PersistentDataType.INTEGER);
+        Integer hungerRaw = pdc.get(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER);
         if (hungerRaw == null) return;
         int hunger = Math.max(0, Math.min(hungerRaw, 20));
 
-        Double saturationRaw = pdc.getOrDefault(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
+        Double saturationRaw = pdc.getOrDefault(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
         double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
         e.setItem(new ItemStack(org.bukkit.Material.AIR));
@@ -40,7 +38,7 @@ public class DishConsumptionListener implements Listener {
         player.setFoodLevel(newFood);
         player.setSaturation(newSat);
 
-        String effectsRaw = pdc.get(KEY_DISH_EFFECTS, PersistentDataType.STRING);
+        String effectsRaw = pdc.get(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING);
         if (effectsRaw != null && !effectsRaw.isEmpty()) {
             for (String effectStr : effectsRaw.split("\\|")) {
                 String[] parts = effectStr.trim().split(":");

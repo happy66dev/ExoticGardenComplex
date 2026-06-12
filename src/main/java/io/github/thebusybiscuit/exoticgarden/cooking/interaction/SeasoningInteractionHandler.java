@@ -1,11 +1,11 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.SeasoningEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
-    private static final NamespacedKey KEY_SEASONING_ID = new NamespacedKey("cooking", "seasoning_id");
     private final Map<String, SeasoningConfig.SeasoningData> seasonings;
 
     public SeasoningInteractionHandler(Map<String, SeasoningConfig.SeasoningData> seasonings) {
@@ -41,7 +40,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
     private String resolve(ItemStack item) {
         if (item.getItemMeta() != null) {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-            String id = pdc.get(KEY_SEASONING_ID, PersistentDataType.STRING);
+            String id = pdc.get(CookingKeys.SEASONING_ID, PersistentDataType.STRING);
             if (id != null && seasonings.containsKey(id)) return id;
         }
         String matName = item.getType().name();

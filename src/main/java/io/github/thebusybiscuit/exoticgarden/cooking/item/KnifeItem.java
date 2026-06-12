@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.item;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -7,7 +8,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -21,9 +21,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Map;
 
 public class KnifeItem extends SlimefunItem {
-
-    private static final NamespacedKey KEY_FOOD_STATE = new NamespacedKey("cooking", "food_state");
-    private static final NamespacedKey KEY_ITEM_TYPE = new NamespacedKey("cooking", "item_type");
 
     public KnifeItem(ItemGroup group, SlimefunItemStack item,
                      RecipeType recipeType, ItemStack[] recipe, JavaPlugin plugin) {
@@ -41,7 +38,7 @@ public class KnifeItem extends SlimefunItem {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getItemMeta() == null) return;
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
-                if (!"KNIFE".equals(handPdc.get(KEY_ITEM_TYPE, PersistentDataType.STRING))) return;
+                if (!"KNIFE".equals(handPdc.get(CookingKeys.ITEM_TYPE, PersistentDataType.STRING))) return;
 
                 event.setCancelled(true);
 
@@ -63,13 +60,13 @@ public class KnifeItem extends SlimefunItem {
                 org.bukkit.inventory.meta.ItemMeta heldMeta = held.getItemMeta();
                 if (heldMeta == null) return;
                 PersistentDataContainer heldPdc = heldMeta.getPersistentDataContainer();
-                String rawState = heldPdc.get(KEY_FOOD_STATE, PersistentDataType.STRING);
+                String rawState = heldPdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
                 FoodState current = FoodState.WHOLE;
                 if (rawState != null) {
                     try { current = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
                 }
                 FoodState next = advanceState(current);
-                heldPdc.set(KEY_FOOD_STATE, PersistentDataType.STRING, next.name());
+                heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, next.name());
                 held.setItemMeta(heldMeta);
                 stand.getEquipment().setHelmet(held);
                 player.sendMessage("§a食材状态: " + next.name());

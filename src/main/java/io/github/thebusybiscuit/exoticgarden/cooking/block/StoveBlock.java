@@ -1,6 +1,9 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.block;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.StoveInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.FuelEntry;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.SeasoningEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -11,6 +14,8 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.HologramOwner;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class StoveBlock extends SlimefunItem implements HologramOwner {
 
-    public static final Map<Location, StoveState> activeStoves = new ConcurrentHashMap<>();
+    public final Map<Location, StoveState> activeStoves = new ConcurrentHashMap<>();
 
     private final List<StoveInteractionHandler> handlers;
 
@@ -62,9 +67,35 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
                 org.bukkit.block.Block b = e.getBlock();
-                activeStoves.remove(b.getLocation());
+                Location loc = b.getLocation();
+                StoveState state = activeStoves.remove(loc);
                 removeHologram(b);
+                if (state == null) return;
+                World world = loc.getWorld();
+                if (world == null) return;
+                Location dropLoc = loc.clone().add(0.5, 0.5, 0.5);
+                for (IngredientSlot slot : state.slots) {
+                    if (slot == null) continue;
+                    ItemStack drop = reconstructItem(slot.ingredientId);
+                    if (drop != null) world.dropItemNaturally(dropLoc, drop);
+                }
+                for (FuelEntry fe : state.fuels) {
+                    ItemStack drop = reconstructItem(fe.fuelId);
+                    if (drop != null) world.dropItemNaturally(dropLoc, drop);
+                }
+                for (SeasoningEntry se : state.seasonings) {
+                    ItemStack drop = reconstructItem(se.seasoningId);
+                    if (drop != null) world.dropItemNaturally(dropLoc, drop);
+                }
             }
         };
+    }
+
+    private static ItemStack reconstructItem(String id) {
+        SlimefunItem sfItem = SlimefunItem.getById(id);
+        if (sfItem != null) return sfItem.getItem().clone();
+        Material mat = Material.getMaterial(id);
+        if (mat != null && mat != Material.AIR) return new ItemStack(mat, 1);
+        return null;
     }
 }

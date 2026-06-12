@@ -1,11 +1,11 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FuelEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class FuelInteractionHandler implements StoveInteractionHandler {
 
-    private static final NamespacedKey KEY_FUEL_ID = new NamespacedKey("cooking", "fuel_id");
     private final Map<String, FuelConfig.FuelData> fuels;
 
     public FuelInteractionHandler(Map<String, FuelConfig.FuelData> fuels) {
@@ -43,7 +42,7 @@ public class FuelInteractionHandler implements StoveInteractionHandler {
     private String resolve(ItemStack item) {
         if (item.getItemMeta() != null) {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-            String id = pdc.get(KEY_FUEL_ID, PersistentDataType.STRING);
+            String id = pdc.get(CookingKeys.FUEL_ID, PersistentDataType.STRING);
             if (id != null && fuels.containsKey(id)) return id;
         }
         String matName = item.getType().name();

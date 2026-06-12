@@ -5,8 +5,9 @@ import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 public class StandardDonenessCalculator implements DonenessCalculator {
 
     @Override
-    public double calculate(double currentTemp, IngredientConfig.IngredientData config,
-                           double deltaTime, boolean hasSpatulaBoost) {
+    public double calculate(CookingContext ctx) {
+        IngredientConfig.IngredientData config = ctx.config;
+        double currentTemp = ctx.currentTemp;
         if (currentTemp < config.minTemp) return 0;
         if (currentTemp >= config.maxTemp) return 0;
         if (config.baseCookTimeSeconds <= 0) return 0;
@@ -25,7 +26,7 @@ public class StandardDonenessCalculator implements DonenessCalculator {
             coefficient = 1.0 - 0.5 * (over / range);
         }
 
-        double boost = hasSpatulaBoost ? 2.0 : 1.0;
-        return (1.0 / config.baseCookTimeSeconds) * deltaTime * coefficient * boost;
+        double boost = ctx.hasSpatulaBoost ? 2.0 : 1.0;
+        return (1.0 / config.baseCookTimeSeconds) * ctx.deltaTime * coefficient * boost;
     }
 }

@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.item;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
@@ -7,7 +8,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -22,11 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Map;
 
 public class SpatulaItem extends SlimefunItem {
-
-    private static final NamespacedKey KEY_FOOD_STATE = new NamespacedKey("cooking", "food_state");
-    private static final NamespacedKey KEY_SPATULA_CLICKS = new NamespacedKey("cooking", "spatula_clicks");
-    private static final NamespacedKey KEY_ITEM_TYPE = new NamespacedKey("cooking", "item_type");
-    private static final NamespacedKey KEY_INGREDIENT_ID = new NamespacedKey("cooking", "ingredient_id");
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
 
@@ -49,7 +44,7 @@ public class SpatulaItem extends SlimefunItem {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getItemMeta() == null) return;
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
-                if (!"SPATULA".equals(handPdc.get(KEY_ITEM_TYPE, PersistentDataType.STRING))) return;
+                if (!"SPATULA".equals(handPdc.get(CookingKeys.ITEM_TYPE, PersistentDataType.STRING))) return;
 
                 event.setCancelled(true);
 
@@ -61,25 +56,25 @@ public class SpatulaItem extends SlimefunItem {
                 if (heldMeta == null) return;
                 PersistentDataContainer heldPdc = heldMeta.getPersistentDataContainer();
 
-                String rawState = heldPdc.get(KEY_FOOD_STATE, PersistentDataType.STRING);
+                String rawState = heldPdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
                 FoodState current = FoodState.WHOLE;
                 if (rawState != null) {
                     try { current = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
                 }
                 if (current != FoodState.WHOLE) return;
 
-                String ingId = heldPdc.get(KEY_INGREDIENT_ID, PersistentDataType.STRING);
+                String ingId = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
                 if (ingId == null) return;
                 IngredientConfig.IngredientData data = ingredients.get(ingId);
                 if (data == null || data.sauceCreation == null) return;
 
-                int clicks = heldPdc.getOrDefault(KEY_SPATULA_CLICKS, PersistentDataType.INTEGER, 0) + 1;
+                int clicks = heldPdc.getOrDefault(CookingKeys.SPATULA_CLICKS, PersistentDataType.INTEGER, 0) + 1;
                 if (clicks >= data.sauceCreation.clicksRequired) {
-                    heldPdc.set(KEY_FOOD_STATE, PersistentDataType.STRING, FoodState.SAUCE.name());
-                    heldPdc.remove(KEY_SPATULA_CLICKS);
+                    heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, FoodState.SAUCE.name());
+                    heldPdc.remove(CookingKeys.SPATULA_CLICKS);
                     player.sendMessage("§a已制成酱料！");
                 } else {
-                    heldPdc.set(KEY_SPATULA_CLICKS, PersistentDataType.INTEGER, clicks);
+                    heldPdc.set(CookingKeys.SPATULA_CLICKS, PersistentDataType.INTEGER, clicks);
                     player.sendMessage("§e搅拌中: " + clicks + "/" + data.sauceCreation.clicksRequired);
                 }
                 held.setItemMeta(heldMeta);

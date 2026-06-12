@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.task;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
+import io.github.thebusybiscuit.exoticgarden.cooking.calculator.CookingContext;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.DonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.StandardDonenessCalculator;
@@ -40,9 +41,8 @@ public class StoveTickTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        tickCounter = (tickCounter + 2) % 50;
         hologramCounter = (hologramCounter + 2) % 10;
-        for (Map.Entry<Location, StoveState> entry : StoveBlock.activeStoves.entrySet()) {
+        for (Map.Entry<Location, StoveState> entry : stove.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
             tickFuels(state, loc);
@@ -105,7 +105,8 @@ public class StoveTickTask extends BukkitRunnable {
             if (data == null) continue;
 
             DonenessCalculator calculator = calculators.getOrDefault(data.calculatorType, defaultCalculator);
-            double increment = calculator.calculate(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
+            CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
+            double increment = calculator.calculate(ctx);
 
             if (state.currentTemp >= data.maxTemp) {
                 slot.charSeconds = Math.min(slot.charSeconds + 0.1, 60.0);

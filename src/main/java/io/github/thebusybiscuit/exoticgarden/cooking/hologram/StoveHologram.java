@@ -30,7 +30,7 @@ public class StoveHologram {
         StringBuilder sb = new StringBuilder();
 
         double maxTemp = 0;
-        double totalRate = 0;
+        double totalHeatRate = 0;
         for (FuelEntry fe : state.fuels) {
             FuelConfig.FuelData fd = fuels.get(fe.fuelId);
             if (fd != null) {
@@ -46,7 +46,7 @@ public class StoveHologram {
             FuelEntry first = state.fuels.get(0);
             double secs = first.ticksRemaining / 20.0;
             sb.append(String.format("§b升温: +%.1f°C/s §7(%s %.0fs)\n",
-                totalRate, first.fuelId, secs));
+                totalHeatRate, first.fuelId, secs));
         } else {
             sb.append("§7无燃料\n");
         }

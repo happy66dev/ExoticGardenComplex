@@ -33,31 +33,65 @@ import java.util.logging.Logger;
 public class CookingModule {
 
     public static void initialize(ExoticGarden plugin) {
-        Logger logger = plugin.getLogger();
-
-        FuelConfig fuelConfig = new FuelConfig(logger);
-        IngredientConfig ingredientConfig = new IngredientConfig(logger);
-        SeasoningConfig seasoningConfig = new SeasoningConfig(logger);
-
-        saveResourceIfMissing(plugin, "fuels.yml");
-        saveResourceIfMissing(plugin, "ingredients.yml");
-        saveResourceIfMissing(plugin, "seasonings.yml");
-
-        Map<String, FuelConfig.FuelData> fuels = fuelConfig.loadAll(
-            new File(plugin.getDataFolder(), "fuels.yml"), "");
-        Map<String, IngredientConfig.IngredientData> ingredients = ingredientConfig.loadAll(
-            new File(plugin.getDataFolder(), "ingredients.yml"), "");
-        Map<String, SeasoningConfig.SeasoningData> seasonings = seasoningConfig.loadAll(
-            new File(plugin.getDataFolder(), "seasonings.yml"), "");
+        Map<String, FuelConfig.FuelData> fuels = loadConfigs(plugin);
+        Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
+        Map<String, SeasoningConfig.SeasoningData> seasonings = loadSeasonings(plugin);
 
         String apiKey = plugin.getConfig().getString("cooking.ai_api_key", "");
         String baseUrl = plugin.getConfig().getString("cooking.ai_base_url", "https://api.openai.com/v1");
-        String model = plugin.getConfig().getString("cooking.ai_model", "gpt-4o-mini");
+        String model   = plugin.getConfig().getString("cooking.ai_model", "gpt-4o-mini");
 
+        ItemGroup cookingGroup = buildItemGroup(plugin);
+        Map<String, DonenessCalculator> calculators = buildCalculators();
+        List<StoveInteractionHandler> stoveHandlers = buildHandlers(plugin, fuels, ingredients, seasonings, apiKey, baseUrl, model);
+
+        StoveBlock stove = registerStove(plugin, cookingGroup, stoveHandlers);
+        registerBoard(plugin, cookingGroup);
+        registerKnife(plugin, cookingGroup);
+        registerSpatula(plugin, cookingGroup, ingredients);
+
+        new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
+        plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
+        plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
+    }
+
+    private static Map<String, FuelConfig.FuelData> loadConfigs(ExoticGarden plugin) {
+        Logger logger = plugin.getLogger();
+        saveResourceIfMissing(plugin, "fuels.yml");
+        return new FuelConfig(logger).loadAll(new File(plugin.getDataFolder(), "fuels.yml"), "");
+    }
+
+    private static Map<String, IngredientConfig.IngredientData> loadIngredients(ExoticGarden plugin) {
+        Logger logger = plugin.getLogger();
+        saveResourceIfMissing(plugin, "ingredients.yml");
+        return new IngredientConfig(logger).loadAll(new File(plugin.getDataFolder(), "ingredients.yml"), "");
+    }
+
+    private static Map<String, SeasoningConfig.SeasoningData> loadSeasonings(ExoticGarden plugin) {
+        Logger logger = plugin.getLogger();
+        saveResourceIfMissing(plugin, "seasonings.yml");
+        return new SeasoningConfig(logger).loadAll(new File(plugin.getDataFolder(), "seasonings.yml"), "");
+    }
+
+    private static ItemGroup buildItemGroup(ExoticGarden plugin) {
+        return new ItemGroup(
+            new NamespacedKey(plugin, "cooking"),
+            new CustomItemStack(Material.CAMPFIRE, "&6烹饪系统")
+        );
+    }
+
+    private static Map<String, DonenessCalculator> buildCalculators() {
         Map<String, DonenessCalculator> calculators = new HashMap<>();
         calculators.put("standard", new StandardDonenessCalculator());
+        return calculators;
+    }
 
-        List<StoveInteractionHandler> stoveHandlers = List.of(
+    private static List<StoveInteractionHandler> buildHandlers(ExoticGarden plugin,
+            Map<String, FuelConfig.FuelData> fuels,
+            Map<String, IngredientConfig.IngredientData> ingredients,
+            Map<String, SeasoningConfig.SeasoningData> seasonings,
+            String apiKey, String baseUrl, String model) {
+        return List.of(
             new SpatulaInteractionHandler(),
             new BowlInteractionHandler(plugin, fuels, ingredients, seasonings, apiKey, baseUrl, model),
             new FuelInteractionHandler(fuels),
@@ -65,102 +99,64 @@ public class CookingModule {
             new IngredientInteractionHandler(ingredients),
             new ClearFuelInteractionHandler()
         );
+    }
 
-        ItemGroup cookingGroup = new ItemGroup(
-            new NamespacedKey(plugin, "cooking"),
-            new CustomItemStack(Material.CAMPFIRE, "&6烹饪系统")
-        );
-
-        SlimefunItemStack stoveStack = new SlimefunItemStack(
-            "EG_COOKING_STOVE",
-            Material.BLAST_FURNACE,
-            "&6烹饪灶台",
-            "&7放置燃料和食材进行烹饪",
-            "&7右键交互以操作"
-        );
-        StoveBlock stove = new StoveBlock(
-            cookingGroup, stoveStack, RecipeType.ENHANCED_CRAFTING_TABLE,
+    private static StoveBlock registerStove(ExoticGarden plugin, ItemGroup group,
+                                            List<StoveInteractionHandler> handlers) {
+        SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_STOVE", Material.BLAST_FURNACE,
+            "&6烹饪灶台", "&7放置燃料和食材进行烹饪", "&7右键交互以操作");
+        StoveBlock stove = new StoveBlock(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {
                 new ItemStack(Material.COBBLESTONE), new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COBBLESTONE),
-                new ItemStack(Material.IRON_INGOT), new ItemStack(Material.CAMPFIRE), new ItemStack(Material.IRON_INGOT),
+                new ItemStack(Material.IRON_INGOT),  new ItemStack(Material.CAMPFIRE),   new ItemStack(Material.IRON_INGOT),
                 new ItemStack(Material.COBBLESTONE), new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COBBLESTONE)
-            },
-            stoveHandlers
-        );
+            }, handlers);
         stove.register(plugin);
+        return stove;
+    }
 
-        SlimefunItemStack boardStack = new SlimefunItemStack(
-            "EG_CUTTING_BOARD",
-            Material.OAK_SLAB,
-            "&e砧板",
-            "&7放置食材，使用刀具切割",
-            "&7潜行右键取回物品"
-        );
-        CuttingBoardBlock board = new CuttingBoardBlock(
-            cookingGroup, boardStack, RecipeType.ENHANCED_CRAFTING_TABLE,
+    private static void registerBoard(ExoticGarden plugin, ItemGroup group) {
+        SlimefunItemStack stack = new SlimefunItemStack("EG_CUTTING_BOARD", Material.OAK_SLAB,
+            "&e砧板", "&7放置食材，使用刀具切割", "&7潜行右键取回物品");
+        new CuttingBoardBlock(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {
                 null, null, null,
                 new ItemStack(Material.OAK_SLAB), new ItemStack(Material.OAK_SLAB), new ItemStack(Material.OAK_SLAB),
                 null, null, null
-            }
-        );
-        board.register(plugin);
+            }).register(plugin);
+    }
 
-        SlimefunItemStack knifeStack = new SlimefunItemStack(
-            "EG_COOKING_KNIFE",
-            Material.IRON_SWORD,
-            "&f烹饪刀",
-            "&7右键砧板上的食材进行切割",
-            "&7潜行右键取回食材"
-        );
-        ItemMeta knifeMeta = knifeStack.getItemMeta();
-        if (knifeMeta != null) {
-            knifeMeta.getPersistentDataContainer()
-                .set(new NamespacedKey("cooking", "item_type"),
-                     PersistentDataType.STRING, "KNIFE");
-            knifeStack.setItemMeta(knifeMeta);
+    private static void registerKnife(ExoticGarden plugin, ItemGroup group) {
+        SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_KNIFE", Material.IRON_SWORD,
+            "&f烹饪刀", "&7右键砧板上的食材进行切割", "&7潜行右键取回食材");
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(CookingKeys.ITEM_TYPE, PersistentDataType.STRING, "KNIFE");
+            stack.setItemMeta(meta);
         }
-        KnifeItem knife = new KnifeItem(
-            cookingGroup, knifeStack, RecipeType.ENHANCED_CRAFTING_TABLE,
+        new KnifeItem(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.IRON_INGOT), null,
-                null, new ItemStack(Material.STICK), null
-            },
-            plugin
-        );
-        knife.register(plugin);
+                null, new ItemStack(Material.STICK),      null
+            }, plugin).register(plugin);
+    }
 
-        SlimefunItemStack spatulaStack = new SlimefunItemStack(
-            "EG_COOKING_SPATULA",
-            Material.IRON_SHOVEL,
-            "&b烹饪锅铲",
-            "&7右键灶台翻面，加速烹饪",
-            "&7右键砧板搅拌制酱"
-        );
-        ItemMeta spatulaMeta = spatulaStack.getItemMeta();
-        if (spatulaMeta != null) {
-            spatulaMeta.getPersistentDataContainer()
-                .set(new NamespacedKey("cooking", "item_type"),
-                     PersistentDataType.STRING, "SPATULA");
-            spatulaStack.setItemMeta(spatulaMeta);
+    private static void registerSpatula(ExoticGarden plugin, ItemGroup group,
+                                        Map<String, IngredientConfig.IngredientData> ingredients) {
+        SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_SPATULA", Material.IRON_SHOVEL,
+            "&b烹饪锅铲", "&7右键灶台翻面，加速烹饪", "&7右键砧板搅拌制酱");
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(CookingKeys.ITEM_TYPE, PersistentDataType.STRING, "SPATULA");
+            stack.setItemMeta(meta);
         }
-        SpatulaItem spatula = new SpatulaItem(
-            cookingGroup, spatulaStack, RecipeType.ENHANCED_CRAFTING_TABLE,
+        new SpatulaItem(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.IRON_INGOT), null,
-                null, new ItemStack(Material.STICK), null
-            },
-            plugin, ingredients
-        );
-        spatula.register(plugin);
-
-        StoveTickTask tickTask = new StoveTickTask(fuels, ingredients, seasonings, calculators, stove);
-        tickTask.runTaskTimer(plugin, 2L, 2L);
-        plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
-
-        plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
+                null, new ItemStack(Material.STICK),      null
+            }, plugin, ingredients).register(plugin);
     }
 
     private static void saveResourceIfMissing(ExoticGarden plugin, String name) {
