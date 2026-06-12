@@ -105,7 +105,7 @@ public class CookingModule {
 
     private static StoveBlock registerStove(ExoticGarden plugin, ItemGroup group,
                                             List<StoveInteractionHandler> handlers) {
-        SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_STOVE", Material.BLAST_FURNACE,
+        SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_STOVE", Material.CAMPFIRE,
             "&6烹饪灶台", "&7放置燃料和食材进行烹饪", "&7右键交互以操作");
         StoveBlock stove = new StoveBlock(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {
@@ -118,7 +118,7 @@ public class CookingModule {
     }
 
     private static void registerBoard(ExoticGarden plugin, ItemGroup group) {
-        SlimefunItemStack stack = new SlimefunItemStack("EG_CUTTING_BOARD", Material.OAK_SLAB,
+        SlimefunItemStack stack = new SlimefunItemStack("EG_CUTTING_BOARD", Material.CRAFTING_TABLE,
             "&e砧板", "&7放置食材，使用刀具切割", "&7潜行右键取回物品");
         new CuttingBoardBlock(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {

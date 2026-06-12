@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
+import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.ActiveFace;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
@@ -46,6 +47,7 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
         }
         state.slots[emptySlot] = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
         handItem.setAmount(handItem.getAmount() - 1);
+        StoveBlock.syncCampfireSlots(location, state);
         return true;
     }
 }
