@@ -9,8 +9,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -48,9 +48,8 @@ public class SpatulaItem extends SlimefunItem {
 
                 event.setCancelled(true);
 
-                if (!(target instanceof ArmorStand stand)) return;
-                ItemStack held = stand.getEquipment().getHelmet();
-                if (held == null || held.getType().isAir()) return;
+                ItemStack held = CuttingBoardBlock.getStoredItem(boardLoc);
+                if (held == null) return;
 
                 org.bukkit.inventory.meta.ItemMeta heldMeta = held.getItemMeta();
                 if (heldMeta == null) return;
@@ -64,7 +63,9 @@ public class SpatulaItem extends SlimefunItem {
                 if (current != FoodState.WHOLE) return;
 
                 String ingId = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-                if (ingId == null) return;
+                if (ingId == null) {
+                    ingId = held.getType().name();
+                }
                 IngredientConfig.IngredientData data = ingredients.get(ingId);
                 if (data == null || data.sauceCreation == null) return;
 
@@ -78,13 +79,13 @@ public class SpatulaItem extends SlimefunItem {
                     player.sendMessage("§e搅拌中: " + clicks + "/" + data.sauceCreation.clicksRequired);
                 }
                 held.setItemMeta(heldMeta);
-                stand.getEquipment().setHelmet(held);
+                CuttingBoardBlock.setStoredItem(boardLoc, held);
             }
         }, plugin);
     }
 
     private static Location findBoardLoc(Entity entity) {
-        for (Map.Entry<Location, Entity> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
+        for (Map.Entry<Location, ItemFrame> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
             if (entry.getValue().equals(entity)) return entry.getKey();
         }
         return null;

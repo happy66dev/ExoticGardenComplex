@@ -125,7 +125,7 @@ public class CookingModule {
                 null, null, null,
                 new ItemStack(Material.OAK_SLAB), new ItemStack(Material.OAK_SLAB), new ItemStack(Material.OAK_SLAB),
                 null, null, null
-            }).register(plugin);
+            }, plugin).register(plugin);
     }
 
     private static void registerKnife(ExoticGarden plugin, ItemGroup group) {

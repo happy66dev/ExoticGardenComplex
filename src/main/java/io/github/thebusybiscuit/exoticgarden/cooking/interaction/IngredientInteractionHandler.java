@@ -26,10 +26,9 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
 
     @Override
     public boolean handle(Player player, ItemStack handItem, StoveState state, Location location) {
-        if (handItem.getType() == Material.AIR || handItem.getItemMeta() == null) return false;
-        PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
-        String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-        if (ingId == null || !ingredients.containsKey(ingId)) return false;
+        if (handItem.getType() == Material.AIR) return false;
+        String ingId = resolveIngredientId(handItem);
+        if (ingId == null) return false;
 
         state.pendingFuelClear = false;
         int emptySlot = -1;
@@ -40,14 +39,30 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
             player.sendMessage("§c食材槽已满（最多4格）");
             return true;
         }
-        String rawState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
+
         FoodState foodState = FoodState.WHOLE;
-        if (rawState != null) {
-            try { foodState = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
+        if (handItem.getItemMeta() != null) {
+            PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
+            String rawState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
+            if (rawState != null) {
+                try { foodState = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
+            }
         }
+
         state.slots[emptySlot] = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
         handItem.setAmount(handItem.getAmount() - 1);
         StoveBlock.syncCampfireSlots(location, state);
         return true;
+    }
+
+    private String resolveIngredientId(ItemStack item) {
+        if (item.getItemMeta() != null) {
+            PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+            String id = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+            if (id != null && ingredients.containsKey(id)) return id;
+        }
+        String matName = item.getType().name();
+        if (ingredients.containsKey(matName)) return matName;
+        return null;
     }
 }

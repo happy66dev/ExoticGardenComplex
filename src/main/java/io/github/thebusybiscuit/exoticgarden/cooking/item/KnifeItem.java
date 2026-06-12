@@ -8,8 +8,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -42,18 +42,16 @@ public class KnifeItem extends SlimefunItem {
 
                 event.setCancelled(true);
 
-                if (!(target instanceof ArmorStand stand)) return;
-                ItemStack held = stand.getEquipment().getHelmet();
-                if (held == null || held.getType().isAir()) return;
+                ItemStack held = CuttingBoardBlock.getStoredItem(boardLoc);
+                if (held == null) return;
 
                 if (player.isSneaking()) {
-                    Map<Integer, ItemStack> leftover = player.getInventory().addItem(held.clone());
+                    Map<Integer, ItemStack> leftover = player.getInventory().addItem(held);
                     if (!leftover.isEmpty() && boardLoc.getWorld() != null) {
                         leftover.values().forEach(it -> boardLoc.getWorld().dropItemNaturally(boardLoc, it));
                     }
-                    stand.getEquipment().setHelmet(null);
-                    CuttingBoardBlock.boardDisplays.remove(boardLoc);
                     target.remove();
+                    CuttingBoardBlock.boardDisplays.remove(boardLoc);
                     return;
                 }
 
@@ -68,7 +66,7 @@ public class KnifeItem extends SlimefunItem {
                 FoodState next = advanceState(current);
                 heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, next.name());
                 held.setItemMeta(heldMeta);
-                stand.getEquipment().setHelmet(held);
+                CuttingBoardBlock.setStoredItem(boardLoc, held);
                 player.sendMessage("§a食材状态: " + next.name());
             }
         }, plugin);
@@ -83,7 +81,7 @@ public class KnifeItem extends SlimefunItem {
     }
 
     private Location findBoardLoc(Entity entity) {
-        for (Map.Entry<Location, Entity> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
+        for (Map.Entry<Location, ItemFrame> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
             if (entry.getValue().equals(entity)) return entry.getKey();
         }
         return null;
