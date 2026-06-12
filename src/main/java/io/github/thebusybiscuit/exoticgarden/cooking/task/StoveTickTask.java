@@ -23,6 +23,7 @@ public class StoveTickTask extends BukkitRunnable {
     private final Map<String, DonenessCalculator> calculators;
     private final DonenessCalculator defaultCalculator = new StandardDonenessCalculator();
     private int tickCounter = 0;
+    private int hologramCounter = 0;
 
     public StoveTickTask(Map<String, FuelConfig.FuelData> fuels,
                          Map<String, IngredientConfig.IngredientData> ingredients,
@@ -37,6 +38,7 @@ public class StoveTickTask extends BukkitRunnable {
     @Override
     public void run() {
         tickCounter = (tickCounter + 2) % 50;
+        hologramCounter = (hologramCounter + 2) % 10;
         for (Map.Entry<Location, StoveState> entry : StoveBlock.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
@@ -47,7 +49,7 @@ public class StoveTickTask extends BukkitRunnable {
             }
             tickIngredients(state);
             tickSeasonings(state);
-            if (tickCounter % 5 == 0) {
+            if (hologramCounter == 0) {
                 io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram
                     .update(loc, state, fuels, ingredients, seasonings);
             }
