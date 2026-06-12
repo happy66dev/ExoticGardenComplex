@@ -43,10 +43,11 @@ public class StoveHologram {
             state.currentTemp, maxTemp));
 
         if (!state.fuels.isEmpty()) {
-            FuelEntry first = state.fuels.get(0);
-            double secs = first.ticksRemaining / 20.0;
-            sb.append(String.format("§b升温: +%.1f°C/s §7(%s %.0fs)\n",
-                totalHeatRate, first.fuelId, secs));
+            for (FuelEntry fe : state.fuels) {
+                double secs = fe.ticksRemaining / 20.0;
+                sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fe.fuelId, secs));
+            }
+            sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
         } else {
             sb.append("§7无燃料\n");
         }
