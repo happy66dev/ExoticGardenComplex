@@ -14,10 +14,12 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,9 +90,9 @@ public class CuttingBoardBlock extends SlimefunItem {
     private BlockBreakHandler buildBreakHandler() {
         return new BlockBreakHandler(false, false) {
             @Override
-            public void onPlayerBreak(org.bukkit.event.block.BlockBreakEvent e,
-                                      ItemStack item,
-                                      List<ItemStack> drops) {
+            public void onPlayerBreak(@Nonnull BlockBreakEvent e,
+                                      @Nonnull ItemStack item,
+                                      @Nonnull List<ItemStack> drops) {
                 Location loc = e.getBlock().getLocation();
                 Entity display = boardDisplays.remove(loc);
                 if (display != null) {

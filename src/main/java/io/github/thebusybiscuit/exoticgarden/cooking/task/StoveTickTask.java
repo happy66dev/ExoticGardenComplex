@@ -36,7 +36,7 @@ public class StoveTickTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        tickCounter += 2;
+        tickCounter = (tickCounter + 2) % 50;
         for (Map.Entry<Location, StoveState> entry : StoveBlock.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
@@ -86,7 +86,7 @@ public class StoveTickTask extends BukkitRunnable {
                     maxTemp += data.tempGain;
                 }
             }
-            state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
+            state.currentTemp = Math.max(Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp), 30.0);
         } else {
             double coolRate = Math.max((state.currentTemp + 20) * 0.01, 0.5) - 0.5;
             state.currentTemp = Math.max(state.currentTemp - coolRate * 0.1, 30.0);

@@ -24,6 +24,8 @@ public class SpatulaItem extends SlimefunItem {
 
     private static final NamespacedKey KEY_FOOD_STATE = new NamespacedKey("cooking", "food_state");
     private static final NamespacedKey KEY_SPATULA_CLICKS = new NamespacedKey("cooking", "spatula_clicks");
+    private static final NamespacedKey KEY_ITEM_TYPE = new NamespacedKey("cooking", "item_type");
+    private static final NamespacedKey KEY_INGREDIENT_ID = new NamespacedKey("cooking", "ingredient_id");
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
 
@@ -45,8 +47,7 @@ public class SpatulaItem extends SlimefunItem {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getItemMeta() == null) return;
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
-                NamespacedKey typeKey = new NamespacedKey("cooking", "item_type");
-                if (!"SPATULA".equals(handPdc.get(typeKey, PersistentDataType.STRING))) return;
+                if (!"SPATULA".equals(handPdc.get(KEY_ITEM_TYPE, PersistentDataType.STRING))) return;
 
                 event.setCancelled(true);
 
@@ -65,8 +66,7 @@ public class SpatulaItem extends SlimefunItem {
                 }
                 if (current != FoodState.WHOLE) return;
 
-                String ingId = heldPdc.get(new NamespacedKey("cooking", "ingredient_id"),
-                    PersistentDataType.STRING);
+                String ingId = heldPdc.get(KEY_INGREDIENT_ID, PersistentDataType.STRING);
                 if (ingId == null) return;
                 IngredientConfig.IngredientData data = ingredients.get(ingId);
                 if (data == null || data.sauceCreation == null) return;

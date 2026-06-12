@@ -83,6 +83,11 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             if (fd != null && fd.effect != null && !fd.effect.isEmpty()) fxList.add(fd.effect);
         }
 
+        if (ingInfos.isEmpty()) {
+            player.sendMessage("§c灶台上没有食材");
+            return true;
+        }
+
         Arrays.fill(state.slots, null);
         state.seasonings.clear();
 

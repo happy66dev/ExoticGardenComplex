@@ -11,8 +11,10 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,9 +56,9 @@ public class StoveBlock extends SlimefunItem {
     private BlockBreakHandler buildBreakHandler() {
         return new BlockBreakHandler(false, false) {
             @Override
-            public void onPlayerBreak(org.bukkit.event.block.BlockBreakEvent e,
-                                      ItemStack item,
-                                      List<ItemStack> drops) {
+            public void onPlayerBreak(@Nonnull BlockBreakEvent e,
+                                      @Nonnull ItemStack item,
+                                      @Nonnull List<ItemStack> drops) {
                 activeStoves.remove(e.getBlock().getLocation());
             }
         };

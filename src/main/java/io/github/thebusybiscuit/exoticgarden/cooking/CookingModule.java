@@ -39,16 +39,16 @@ public class CookingModule {
         IngredientConfig ingredientConfig = new IngredientConfig(logger);
         SeasoningConfig seasoningConfig = new SeasoningConfig(logger);
 
+        saveResourceIfMissing(plugin, "fuels.yml");
+        saveResourceIfMissing(plugin, "ingredients.yml");
+        saveResourceIfMissing(plugin, "seasonings.yml");
+
         Map<String, FuelConfig.FuelData> fuels = fuelConfig.loadAll(
             new File(plugin.getDataFolder(), "fuels.yml"), "");
         Map<String, IngredientConfig.IngredientData> ingredients = ingredientConfig.loadAll(
             new File(plugin.getDataFolder(), "ingredients.yml"), "");
         Map<String, SeasoningConfig.SeasoningData> seasonings = seasoningConfig.loadAll(
             new File(plugin.getDataFolder(), "seasonings.yml"), "");
-
-        saveResourceIfMissing(plugin, "fuels.yml");
-        saveResourceIfMissing(plugin, "ingredients.yml");
-        saveResourceIfMissing(plugin, "seasonings.yml");
 
         String apiKey = plugin.getConfig().getString("cooking.ai_api_key", "");
         String baseUrl = plugin.getConfig().getString("cooking.ai_base_url", "https://api.openai.com/v1");

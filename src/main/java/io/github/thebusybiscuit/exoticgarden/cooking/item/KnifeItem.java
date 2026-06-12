@@ -23,6 +23,7 @@ import java.util.Map;
 public class KnifeItem extends SlimefunItem {
 
     private static final NamespacedKey KEY_FOOD_STATE = new NamespacedKey("cooking", "food_state");
+    private static final NamespacedKey KEY_ITEM_TYPE = new NamespacedKey("cooking", "item_type");
 
     public KnifeItem(ItemGroup group, SlimefunItemStack item,
                      RecipeType recipeType, ItemStack[] recipe, JavaPlugin plugin) {
@@ -39,8 +40,7 @@ public class KnifeItem extends SlimefunItem {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getItemMeta() == null) return;
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
-                NamespacedKey typeKey = new NamespacedKey("cooking", "item_type");
-                if (!"KNIFE".equals(handPdc.get(typeKey, PersistentDataType.STRING))) return;
+                if (!"KNIFE".equals(handPdc.get(KEY_ITEM_TYPE, PersistentDataType.STRING))) return;
 
                 event.setCancelled(true);
 
