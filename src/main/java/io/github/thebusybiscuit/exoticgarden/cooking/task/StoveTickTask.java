@@ -2,6 +2,7 @@ package io.github.thebusybiscuit.exoticgarden.cooking.task;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.DonenessCalculator;
+import io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.StandardDonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
@@ -22,17 +23,20 @@ public class StoveTickTask extends BukkitRunnable {
     private final Map<String, SeasoningConfig.SeasoningData> seasonings;
     private final Map<String, DonenessCalculator> calculators;
     private final DonenessCalculator defaultCalculator = new StandardDonenessCalculator();
+    private final StoveBlock stove;
     private int tickCounter = 0;
     private int hologramCounter = 0;
 
     public StoveTickTask(Map<String, FuelConfig.FuelData> fuels,
                          Map<String, IngredientConfig.IngredientData> ingredients,
                          Map<String, SeasoningConfig.SeasoningData> seasonings,
-                         Map<String, DonenessCalculator> calculators) {
+                         Map<String, DonenessCalculator> calculators,
+                         StoveBlock stove) {
         this.fuels = fuels;
         this.ingredients = ingredients;
         this.seasonings = seasonings;
         this.calculators = calculators;
+        this.stove = stove;
     }
 
     @Override
@@ -50,8 +54,7 @@ public class StoveTickTask extends BukkitRunnable {
             tickIngredients(state);
             tickSeasonings(state);
             if (hologramCounter == 0) {
-                io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram
-                    .update(loc, state, fuels, ingredients, seasonings);
+                StoveHologram.update(loc, state, fuels, ingredients, seasonings, stove);
             }
         }
     }

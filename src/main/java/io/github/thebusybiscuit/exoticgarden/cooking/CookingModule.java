@@ -156,7 +156,7 @@ public class CookingModule {
         );
         spatula.register(plugin);
 
-        new StoveTickTask(fuels, ingredients, seasonings, calculators)
+        new StoveTickTask(fuels, ingredients, seasonings, calculators, stove)
             .runTaskTimer(plugin, 2L, 2L);
 
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);

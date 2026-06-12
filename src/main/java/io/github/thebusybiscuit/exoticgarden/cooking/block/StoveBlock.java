@@ -7,6 +7,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.attributes.HologramOwner;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StoveBlock extends SlimefunItem {
+public class StoveBlock extends SlimefunItem implements HologramOwner {
 
     public static final Map<Location, StoveState> activeStoves = new ConcurrentHashMap<>();
 
@@ -59,7 +60,9 @@ public class StoveBlock extends SlimefunItem {
             public void onPlayerBreak(@Nonnull BlockBreakEvent e,
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
-                activeStoves.remove(e.getBlock().getLocation());
+                org.bukkit.block.Block b = e.getBlock();
+                activeStoves.remove(b.getLocation());
+                removeHologram(b);
             }
         };
     }
