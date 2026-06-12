@@ -1,0 +1,18 @@
+OAK_LOG:
+  temp_gain: 300
+  duration_seconds: 80
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+CHARCOAL:
+  temp_gain: 400
+  duration_seconds: 180
+  heat_rate: 4
+  effect: SMOKY
+  byproduct: null
+ICE:
+  temp_gain: 0
+  duration_seconds: 6
+  heat_rate: -40
+  effect: FREEZING
+  byproduct: null

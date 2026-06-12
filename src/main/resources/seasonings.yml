@@ -1,0 +1,12 @@
+SALT:
+  display_name: "盐"
+  has_doneness: false
+SUGAR:
+  display_name: "白糖"
+  has_doneness: false
+RICE_WINE:
+  display_name: "料酒"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20

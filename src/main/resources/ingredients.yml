@@ -1,0 +1,22 @@
+BEEF:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 240
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 45
+  flip_required: true
+TOMATO:
+  type: SAUCE_BASE
+  states: [WHOLE, SAUCE]
+  calculator_type: standard
+  sauce_creation:
+    clicks_required: 3
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 70
+  optimal_temp_max: 90
+  base_cook_time_seconds: 30
+  flip_required: false
