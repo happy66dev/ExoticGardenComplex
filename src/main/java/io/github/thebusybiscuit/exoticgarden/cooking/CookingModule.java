@@ -43,13 +43,9 @@ public class CookingModule {
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
         Map<String, SeasoningConfig.SeasoningData> seasonings = loadSeasonings(plugin);
 
-        String apiKey = plugin.getConfig().getString("cooking.ai_api_key", "");
-        String baseUrl = plugin.getConfig().getString("cooking.ai_base_url", "https://api.openai.com/v1");
-        String model   = plugin.getConfig().getString("cooking.ai_model", "gpt-4o-mini");
-
         ItemGroup cookingGroup = buildItemGroup(plugin);
         Map<String, DonenessCalculator> calculators = buildCalculators();
-        List<StoveInteractionHandler> stoveHandlers = buildHandlers(plugin, fuels, ingredients, seasonings, apiKey, baseUrl, model);
+        List<StoveInteractionHandler> stoveHandlers = buildHandlers(fuels, ingredients, seasonings);
 
         StoveBlock stove = registerStove(plugin, cookingGroup, stoveHandlers);
         registerBoard(plugin, cookingGroup);
@@ -93,14 +89,13 @@ public class CookingModule {
         return calculators;
     }
 
-    private static List<StoveInteractionHandler> buildHandlers(ExoticGarden plugin,
+    private static List<StoveInteractionHandler> buildHandlers(
             Map<String, FuelConfig.FuelData> fuels,
             Map<String, IngredientConfig.IngredientData> ingredients,
-            Map<String, SeasoningConfig.SeasoningData> seasonings,
-            String apiKey, String baseUrl, String model) {
+            Map<String, SeasoningConfig.SeasoningData> seasonings) {
         return List.of(
             new SpatulaInteractionHandler(),
-            new BowlInteractionHandler(plugin, fuels, ingredients, seasonings, apiKey, baseUrl, model),
+            new BowlInteractionHandler(fuels, ingredients, seasonings),
             new FuelInteractionHandler(fuels),
             new SeasoningInteractionHandler(seasonings),
             new IngredientInteractionHandler(ingredients),
