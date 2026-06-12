@@ -3,12 +3,18 @@ package io.github.thebusybiscuit.exoticgarden.cooking;
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.BowlInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.ClearFuelInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.FuelInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.IngredientInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.SeasoningInteractionHandler;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.SpatulaInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.DonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.StandardDonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
-import io.github.thebusybiscuit.exoticgarden.cooking.interaction.*;
+import io.github.thebusybiscuit.exoticgarden.cooking.interaction.StoveInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.item.KnifeItem;
 import io.github.thebusybiscuit.exoticgarden.cooking.item.SpatulaItem;
 import io.github.thebusybiscuit.exoticgarden.cooking.task.StoveTickTask;
@@ -52,7 +58,8 @@ public class CookingModule {
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
-        plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
+        // Temporarily disable dish consumption custom logic.
+        // plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
     }
 
     private static Map<String, FuelConfig.FuelData> loadConfigs(ExoticGarden plugin) {
