@@ -129,6 +129,7 @@ public class StoveTickTask extends BukkitRunnable {
         for (SeasoningEntry se : state.seasonings) {
             SeasoningConfig.SeasoningData data = seasonings.get(se.seasoningId);
             if (data == null || !data.hasDoneness) continue;
+            if (data.baseTimeSeconds <= 0) continue;
             if (state.currentTemp < data.minTemp) continue;
             double increment = (1.0 / data.baseTimeSeconds) * 0.1;
             se.progress = Math.min(se.progress + increment, 1.0);
