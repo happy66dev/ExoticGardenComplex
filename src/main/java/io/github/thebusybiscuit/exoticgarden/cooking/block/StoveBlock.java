@@ -41,11 +41,11 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
         addItemHandler(buildUseHandler(), buildBreakHandler());
         plugin.getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler(ignoreCancelled = true)
-             public void onBlockCook(BlockCookEvent e) {
-                 if (activeStoves.containsKey(e.getBlock().getLocation())) {
-                     e.setCancelled(true);
-                 }
-             }
+            public void onBlockCook(BlockCookEvent e) {
+                if (activeStoves.containsKey(e.getBlock().getLocation())) {
+                    e.setCancelled(true);
+                }
+            }
         }, plugin);
     }
 
@@ -112,17 +112,5 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             }
         }
         campfire.update(true, false);
-    }
-
-    public static void resetCampfireCookTime(Location loc) {
-        if (loc.getWorld() == null) return;
-        org.bukkit.block.Block b = loc.getBlock();
-        if (!(b.getState() instanceof Campfire campfire)) return;
-        for (int i = 0; i < 4; i++) {
-            if (campfire.getItem(i) != null) {
-                campfire.setCookTime(i, 0);
-            }
-        }
-        campfire.update(false, false);
     }
 }
