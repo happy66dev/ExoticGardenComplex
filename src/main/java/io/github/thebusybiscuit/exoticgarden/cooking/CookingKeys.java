@@ -20,6 +20,7 @@ public final class CookingKeys {
     public static final NamespacedKey FOOD_STATE      = new NamespacedKey(NS, "food_state");
     public static final NamespacedKey ITEM_TYPE       = new NamespacedKey(NS, "item_type");
     public static final NamespacedKey SPATULA_CLICKS  = new NamespacedKey(NS, "spatula_clicks");
+    public static final NamespacedKey BOARD_ITEM      = new NamespacedKey(NS, "board_item");
 
     private CookingKeys() {}
 }

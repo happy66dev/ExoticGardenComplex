@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.block;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -9,7 +10,6 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -28,7 +28,7 @@ public class CuttingBoardBlock extends SlimefunItem {
 
     public static final Map<Location, Entity> boardDisplays = new ConcurrentHashMap<>();
 
-    private static final NamespacedKey KEY_BOARD_ITEM = new NamespacedKey("cooking", "board_item");
+    private static final NamespacedKey KEY_BOARD_ITEM = CookingKeys.BOARD_ITEM;
 
     public CuttingBoardBlock(ItemGroup group, SlimefunItemStack item,
                              RecipeType recipeType, ItemStack[] recipe) {
