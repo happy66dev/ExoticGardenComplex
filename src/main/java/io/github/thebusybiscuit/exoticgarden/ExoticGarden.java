@@ -76,6 +76,8 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingModule;
+
 @SuppressWarnings("deprecation")
 public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
@@ -270,6 +272,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         Bukkit.getPluginManager().registerEvents(BEListener.getInstance(), ExoticGarden.instance);
 
         cfg.save();
+
+        CookingModule.initialize(this);
 
         getServer().getScheduler().runTaskTimer(this, ExoticGarden.this::checkDrunkers, 120L, 120L);
     }

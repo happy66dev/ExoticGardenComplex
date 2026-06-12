@@ -37,3 +37,10 @@ twerking:
   chance: 0.1
 watering-can:
   chance: 0.1
+
+cooking:
+  ai_api_key: "your-api-key-here"
+  ai_base_url: "https://api.openai.com/v1"
+  ai_model: "gpt-4o-mini"
+  hologram_update_ticks: 5
+  cook_tick_interval: 2
