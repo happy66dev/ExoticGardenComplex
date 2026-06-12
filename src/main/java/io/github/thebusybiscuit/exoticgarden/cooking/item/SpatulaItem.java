@@ -8,6 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -41,7 +42,8 @@ public class SpatulaItem extends SlimefunItem {
             public void onInteract(PlayerInteractAtEntityEvent event) {
                 if (event.getHand() != EquipmentSlot.HAND) return;
                 Entity target = event.getRightClicked();
-                if (!CuttingBoardBlock.boardDisplays.containsValue(target)) return;
+                Location boardLoc = findBoardLoc(target);
+                if (boardLoc == null) return;
 
                 Player player = event.getPlayer();
                 ItemStack hand = player.getInventory().getItemInMainHand();
@@ -84,5 +86,12 @@ public class SpatulaItem extends SlimefunItem {
                 stand.getEquipment().setHelmet(held);
             }
         }, plugin);
+    }
+
+    private static Location findBoardLoc(Entity entity) {
+        for (Map.Entry<Location, Entity> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
+            if (entry.getValue().equals(entity)) return entry.getKey();
+        }
+        return null;
     }
 }

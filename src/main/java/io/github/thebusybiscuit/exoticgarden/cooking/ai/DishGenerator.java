@@ -14,6 +14,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class DishGenerator {
@@ -65,6 +67,11 @@ public class DishGenerator {
     }
 
     private static final Logger LOGGER = Logger.getLogger("ExoticGardenComplex");
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(r -> {
+        Thread t = new Thread(r, "ExoticGarden-DishGen");
+        t.setDaemon(true);
+        return t;
+    });
 
     public static CompletableFuture<DishResult> generate(
             List<IngredientInfo> ingredientInfos,
@@ -199,6 +206,6 @@ public class DishGenerator {
                 LOGGER.severe("[DishGenerator] 菜肴生成失败: " + e.getMessage());
                 throw new RuntimeException(e);
             }
-        });
+        }, EXECUTOR);
     }
 }

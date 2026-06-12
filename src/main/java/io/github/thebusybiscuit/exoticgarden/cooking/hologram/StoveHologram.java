@@ -19,7 +19,7 @@ public class StoveHologram {
                               Map<String, SeasoningConfig.SeasoningData> seasonings,
                               StoveBlock stove) {
         Block block = loc.getBlock();
-        String[] lines = buildLines(state, fuels, ingredients, seasonings).split("\n");
+        String[] lines = buildLines(state, fuels, ingredients, seasonings).split("\\n");
         stove.updateMultiLineHologram(block, lines);
     }
 

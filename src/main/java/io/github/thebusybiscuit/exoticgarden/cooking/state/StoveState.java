@@ -11,6 +11,7 @@ public class StoveState {
     public int spatulaBoostTicksLeft;
     public boolean pendingFuelClear;
     public long fuelClearConfirmTime;
+    public boolean cookingInProgress;
 
     public StoveState() {
         this.currentTemp = 30.0;
@@ -20,5 +21,6 @@ public class StoveState {
         this.spatulaBoostTicksLeft = 0;
         this.pendingFuelClear = false;
         this.fuelClearConfirmTime = 0L;
+        this.cookingInProgress = false;
     }
 }

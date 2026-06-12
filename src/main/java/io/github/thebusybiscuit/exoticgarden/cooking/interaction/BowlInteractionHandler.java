@@ -27,6 +27,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
     private static final NamespacedKey KEY_DISH_SATURATION = new NamespacedKey("cooking", "dish_saturation");
     private static final NamespacedKey KEY_DISH_QUALITY = new NamespacedKey("cooking", "dish_quality");
     private static final NamespacedKey KEY_DISH_DESCRIPTION = new NamespacedKey("cooking", "dish_description");
+    private static final NamespacedKey KEY_SF_ITEM = new NamespacedKey("slimefun", "slimefun_item");
 
     private final JavaPlugin plugin;
     private final String apiKey;
@@ -55,8 +56,13 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         if (handItem.getType() != Material.BOWL) return false;
         if (handItem.getItemMeta() != null) {
             PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
-            if (pdc.has(new NamespacedKey("slimefun", "slimefun_item"), PersistentDataType.STRING))
+            if (pdc.has(KEY_SF_ITEM, PersistentDataType.STRING))
                 return false;
+        }
+
+        if (state.cookingInProgress) {
+            player.sendMessage("§e烹饪进行中，请等待完成...");
+            return true;
         }
 
         state.pendingFuelClear = false;
@@ -88,22 +94,27 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             return true;
         }
 
+        state.cookingInProgress = true;
+        handItem.setAmount(handItem.getAmount() - 1);
         player.sendMessage("§e烹饪中...");
 
         DishGenerator.generate(ingInfos, seaInfos, fxList, apiKey, baseUrl, model)
             .thenAccept(result -> plugin.getServer().getScheduler().runTask(plugin, () -> {
+                state.cookingInProgress = false;
                 Arrays.fill(state.slots, null);
                 state.seasonings.clear();
                 ItemStack dish = buildDishItem(result);
                 Map<Integer, ItemStack> leftover = player.getInventory().addItem(dish);
-                if (!leftover.isEmpty()) {
+                if (!leftover.isEmpty() && location.getWorld() != null) {
                     leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
                 }
                 player.sendMessage("§a烹饪完成：" + result.name);
             }))
             .exceptionally(ex -> {
-                plugin.getServer().getScheduler().runTask(plugin, () ->
-                    player.sendMessage("§c烹饪失败，请稍后再试"));
+                plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    state.cookingInProgress = false;
+                    player.sendMessage("§c烹饪失败，请稍后再试");
+                });
                 return null;
             });
         return true;

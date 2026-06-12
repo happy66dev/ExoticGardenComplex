@@ -29,7 +29,7 @@ public class DishConsumptionListener implements Listener {
         int hunger = Math.max(0, Math.min(hungerRaw, 20));
 
         Double saturationRaw = pdc.getOrDefault(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
-        double saturation = Math.max(0, Math.min(saturationRaw == null ? 0.8 : saturationRaw, 20.0));
+        double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
         e.setItem(new ItemStack(org.bukkit.Material.AIR));
 

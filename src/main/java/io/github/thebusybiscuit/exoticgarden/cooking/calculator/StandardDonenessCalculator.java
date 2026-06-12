@@ -16,6 +16,7 @@ public class StandardDonenessCalculator implements DonenessCalculator {
             coefficient = 1.0;
         } else {
             double range = config.maxTemp - config.optimalTempMax;
+            if (range <= 0) return 0;
             double over = currentTemp - config.optimalTempMax;
             coefficient = 1.0 - 0.5 * (over / range);
         }

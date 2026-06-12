@@ -77,6 +77,7 @@ public class StoveTickTask extends BukkitRunnable {
     private void dropByproduct(String byproductId, Location loc) {
         Material mat = Material.getMaterial(byproductId);
         if (mat == null) return;
+        if (loc.getWorld() == null) return;
         loc.getWorld().dropItemNaturally(loc, new ItemStack(mat));
     }
 
@@ -88,12 +89,12 @@ public class StoveTickTask extends BukkitRunnable {
                 FuelConfig.FuelData data = fuels.get(fe.fuelId);
                 if (data != null) {
                     totalHeatRate += data.heatRate;
-                    maxTemp += data.tempGain;
+                    maxTemp = Math.max(maxTemp, data.tempGain);
                 }
             }
             state.currentTemp = Math.max(Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp), 30.0);
         } else {
-            double coolRate = Math.max((state.currentTemp + 20) * 0.01, 0.5) - 0.5;
+            double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
             state.currentTemp = Math.max(state.currentTemp - coolRate * 0.1, 30.0);
         }
     }

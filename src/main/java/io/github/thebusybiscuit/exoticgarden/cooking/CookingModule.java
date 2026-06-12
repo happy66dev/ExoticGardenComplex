@@ -156,8 +156,9 @@ public class CookingModule {
         );
         spatula.register(plugin);
 
-        new StoveTickTask(fuels, ingredients, seasonings, calculators, stove)
-            .runTaskTimer(plugin, 2L, 2L);
+        StoveTickTask tickTask = new StoveTickTask(fuels, ingredients, seasonings, calculators, stove);
+        tickTask.runTaskTimer(plugin, 2L, 2L);
+        plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
 
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
     }
@@ -166,9 +167,13 @@ public class CookingModule {
         File file = new File(plugin.getDataFolder(), name);
         if (file.exists()) return;
         try (InputStream in = plugin.getResource(name)) {
-            if (in != null) Files.copy(in, file.toPath());
+            if (in == null) {
+                plugin.getLogger().severe("[Cooking] 资源文件未找到: " + name + "，请检查 jar 是否完整");
+                return;
+            }
+            Files.copy(in, file.toPath());
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to save resource: " + name);
+            plugin.getLogger().warning("Failed to save resource: " + name + " - " + e.getMessage());
         }
     }
 }

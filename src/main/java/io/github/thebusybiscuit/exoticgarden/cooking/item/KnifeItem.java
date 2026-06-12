@@ -60,6 +60,7 @@ public class KnifeItem extends SlimefunItem {
                     return;
                 }
 
+                if (held == null || held.getType().isAir()) return;
                 org.bukkit.inventory.meta.ItemMeta heldMeta = held.getItemMeta();
                 if (heldMeta == null) return;
                 PersistentDataContainer heldPdc = heldMeta.getPersistentDataContainer();

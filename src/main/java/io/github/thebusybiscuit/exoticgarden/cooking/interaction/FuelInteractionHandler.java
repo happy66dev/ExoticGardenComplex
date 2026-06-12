@@ -34,6 +34,7 @@ public class FuelInteractionHandler implements StoveInteractionHandler {
             return true;
         }
         FuelConfig.FuelData fd = fuels.get(fuelId);
+        if (fd == null) return true;
         state.fuels.add(new FuelEntry(fuelId, fd.durationSeconds * 20));
         handItem.setAmount(handItem.getAmount() - 1);
         return true;

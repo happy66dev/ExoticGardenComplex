@@ -50,8 +50,9 @@ public class CuttingBoardBlock extends SlimefunItem {
 
                 if (display == null) {
                     if (loc.getWorld() == null) return;
-                    display = spawnDisplay(loc, hand.clone());
-                    boardDisplays.put(loc, display);
+                    Entity spawned = spawnDisplay(loc, hand.clone());
+                    if (spawned == null) return;
+                    boardDisplays.put(loc, spawned);
                     hand.setAmount(hand.getAmount() - 1);
                 } else {
                     player.sendMessage("§c砧板上已有物品，请潜行右键取回");
@@ -73,6 +74,7 @@ public class CuttingBoardBlock extends SlimefunItem {
     }
 
     private Entity spawnDisplay(Location loc, ItemStack item) {
+        if (loc.getWorld() == null) return null;
         Location spawnLoc = loc.clone().add(0.5, 1.0, 0.5);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
         stand.setVisible(false);
