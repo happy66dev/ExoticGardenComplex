@@ -158,6 +158,8 @@ public class CookingModule {
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators)
             .runTaskTimer(plugin, 2L, 2L);
+
+        plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
     }
 
     private static void saveResourceIfMissing(ExoticGarden plugin, String name) {
