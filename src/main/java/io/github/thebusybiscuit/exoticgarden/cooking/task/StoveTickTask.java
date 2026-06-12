@@ -47,6 +47,7 @@ public class StoveTickTask extends BukkitRunnable {
             StoveState state = entry.getValue();
             tickFuels(state, loc);
             tickTemperature(state);
+            StoveBlock.resetCampfireCookTime(loc);
             if (state.spatulaBoostTicksLeft > 0) {
                 state.spatulaBoostTicksLeft -= 2;
             }
