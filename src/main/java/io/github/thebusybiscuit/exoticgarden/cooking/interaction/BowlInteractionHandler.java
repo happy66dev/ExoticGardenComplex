@@ -94,30 +94,37 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         handItem.setAmount(handItem.getAmount() - 1);
         player.sendMessage("§e烹饪中...");
 
-        DishGenerator.generate(ingInfos, seaInfos, fxList, apiKey, baseUrl, model)
-            .thenAccept(result -> plugin.getServer().getScheduler().runTask(plugin, () -> {
-                state.cookingInProgress = false;
-                Arrays.fill(state.slots, null);
-                state.seasonings.clear();
-                ItemStack dish = buildDishItem(result);
-                Map<Integer, ItemStack> leftover = player.getInventory().addItem(dish);
-                if (!leftover.isEmpty() && location.getWorld() != null) {
-                    leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
-                }
-                player.sendMessage("§a烹饪完成：" + result.name);
-            }))
-            .exceptionally(ex -> {
-                plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    state.cookingInProgress = false;
-                    player.sendMessage("§c烹饪失败，请稍后再试");
-                    Map<Integer, ItemStack> leftover = player.getInventory().addItem(new ItemStack(Material.BOWL));
-                    if (!leftover.isEmpty() && location.getWorld() != null) {
-                        leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
-                    }
-                });
-                return null;
-            });
+        String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos, fxList);
+        player.sendMessage("§6§l──── AI 提示词调试 ────");
+        player.sendMessage("§b[System] §f" + prompts[0]);
+        player.sendMessage("§a[User]   §f" + prompts[1]);
+        player.sendMessage("§6§l──────────────────────");
+
+        DishGenerator.DishResult result = buildLocalResult(ingInfos);
+        state.cookingInProgress = false;
+        Arrays.fill(state.slots, null);
+        state.seasonings.clear();
+        ItemStack dish = buildDishItem(result);
+        Map<Integer, ItemStack> leftover = player.getInventory().addItem(dish);
+        if (!leftover.isEmpty() && location.getWorld() != null) {
+            leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
+        }
+        player.sendMessage("§a烹饪完成（临时本地生成）：" + result.name);
         return true;
+    }
+
+    private DishGenerator.DishResult buildLocalResult(List<DishGenerator.IngredientInfo> ingInfos) {
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < ingInfos.size(); i++) {
+            if (i > 0) name.append("·");
+            name.append(ingInfos.get(i).id);
+        }
+        name.append("料理");
+        int hunger = Math.min(4 + ingInfos.size(), 10);
+        return new DishGenerator.DishResult(
+            name.toString(), hunger, 0.8, "普通",
+            List.of(), "临时生成的测试菜肴"
+        );
     }
 
     private ItemStack buildDishItem(DishGenerator.DishResult result) {

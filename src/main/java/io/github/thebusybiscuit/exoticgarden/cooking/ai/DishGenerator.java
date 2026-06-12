@@ -77,6 +77,50 @@ public class DishGenerator {
         EXECUTOR.shutdown();
     }
 
+    public static String[] buildPrompt(
+            List<IngredientInfo> ingredientInfos,
+            List<SeasoningInfo> seasoningInfos,
+            List<String> fuelEffects) {
+        Gson gson = new Gson();
+
+        JsonObject userContent = new JsonObject();
+
+        JsonArray ingArr = new JsonArray();
+        for (IngredientInfo info : ingredientInfos) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("id", info.id);
+            obj.addProperty("state", info.state);
+            obj.addProperty("frontDoneness", info.frontDoneness);
+            obj.addProperty("backDoneness", info.backDoneness);
+            obj.addProperty("charLevel", info.charLevel);
+            ingArr.add(obj);
+        }
+        userContent.add("ingredients", ingArr);
+
+        JsonArray seaArr = new JsonArray();
+        for (SeasoningInfo si : seasoningInfos) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("id", si.id);
+            if (si.progress != null) {
+                obj.addProperty("progress", si.progress);
+            } else {
+                obj.add("progress", com.google.gson.JsonNull.INSTANCE);
+            }
+            seaArr.add(obj);
+        }
+        userContent.add("seasonings", seaArr);
+
+        JsonArray fxArr = new JsonArray();
+        for (String fx : fuelEffects) fxArr.add(fx);
+        userContent.add("fuelEffects", fxArr);
+        userContent.addProperty("language", "zh-CN");
+
+        String systemPrompt = "你是一个 Minecraft 烹饪游戏的菜肴生成器。根据食材和烹饪状态，用 JSON 格式返回菜肴信息。严格遵守格式，不输出任何其他内容。";
+        String userPrompt = gson.toJson(userContent);
+
+        return new String[]{systemPrompt, userPrompt};
+    }
+
     public static CompletableFuture<DishResult> generate(
             List<IngredientInfo> ingredientInfos,
             List<SeasoningInfo> seasoningInfos,
