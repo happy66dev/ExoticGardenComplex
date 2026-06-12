@@ -15,8 +15,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Campfire;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.CampfireStartCookEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -30,10 +34,12 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
     private final List<StoveInteractionHandler> handlers;
 
     public StoveBlock(ItemGroup group, SlimefunItemStack item, RecipeType recipeType,
-                      ItemStack[] recipe, List<StoveInteractionHandler> handlers) {
+                      ItemStack[] recipe, List<StoveInteractionHandler> handlers,
+                      JavaPlugin plugin) {
         super(group, item, recipeType, recipe);
         this.handlers = handlers;
         addItemHandler(buildUseHandler(), buildBreakHandler());
+        plugin.getServer().getPluginManager().registerEvents(new CampfireBlockListener(), plugin);
     }
 
     private BlockUseHandler buildUseHandler() {
@@ -99,5 +105,15 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             }
         }
         campfire.update(true, false);
+    }
+
+    private class CampfireBlockListener implements Listener {
+
+        @EventHandler(ignoreCancelled = true)
+        public void onCampfireStartCook(CampfireStartCookEvent e) {
+            if (activeStoves.containsKey(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+            }
+        }
     }
 }
