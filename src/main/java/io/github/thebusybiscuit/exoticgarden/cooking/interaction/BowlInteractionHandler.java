@@ -88,15 +88,17 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             return true;
         }
 
-        Arrays.fill(state.slots, null);
-        state.seasonings.clear();
-
         player.sendMessage("§e烹饪中...");
 
         DishGenerator.generate(ingInfos, seaInfos, fxList, apiKey, baseUrl, model)
             .thenAccept(result -> plugin.getServer().getScheduler().runTask(plugin, () -> {
+                Arrays.fill(state.slots, null);
+                state.seasonings.clear();
                 ItemStack dish = buildDishItem(result);
-                player.getInventory().addItem(dish);
+                Map<Integer, ItemStack> leftover = player.getInventory().addItem(dish);
+                if (!leftover.isEmpty()) {
+                    leftover.values().forEach(it -> location.getWorld().dropItemNaturally(location, it));
+                }
                 player.sendMessage("§a烹饪完成：" + result.name);
             }))
             .exceptionally(ex -> {
@@ -110,6 +112,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
     private ItemStack buildDishItem(DishGenerator.DishResult result) {
         ItemStack item = new ItemStack(Material.MUSHROOM_STEW, 1);
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
         meta.setDisplayName(result.name);
         List<String> lore = new ArrayList<>();
         lore.add("§7品质: §a" + result.quality);

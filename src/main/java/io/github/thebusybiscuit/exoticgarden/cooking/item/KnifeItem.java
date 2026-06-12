@@ -34,7 +34,8 @@ public class KnifeItem extends SlimefunItem {
             public void onInteract(PlayerInteractAtEntityEvent event) {
                 if (event.getHand() != EquipmentSlot.HAND) return;
                 Entity target = event.getRightClicked();
-                if (!CuttingBoardBlock.boardDisplays.containsValue(target)) return;
+                Location boardLoc = findBoardLoc(target);
+                if (boardLoc == null) return;
 
                 Player player = event.getPlayer();
                 ItemStack hand = player.getInventory().getItemInMainHand();
@@ -49,10 +50,12 @@ public class KnifeItem extends SlimefunItem {
                 if (held == null || held.getType().isAir()) return;
 
                 if (player.isSneaking()) {
-                    player.getInventory().addItem(held.clone());
+                    Map<Integer, ItemStack> leftover = player.getInventory().addItem(held.clone());
+                    if (!leftover.isEmpty() && boardLoc.getWorld() != null) {
+                        leftover.values().forEach(it -> boardLoc.getWorld().dropItemNaturally(boardLoc, it));
+                    }
                     stand.getEquipment().setHelmet(null);
-                    Location boardLoc = findBoardLoc(target);
-                    if (boardLoc != null) CuttingBoardBlock.boardDisplays.remove(boardLoc);
+                    CuttingBoardBlock.boardDisplays.remove(boardLoc);
                     target.remove();
                     return;
                 }

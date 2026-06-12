@@ -24,8 +24,12 @@ public class DishConsumptionListener implements Listener {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         if (!pdc.has(KEY_DISH_HUNGER, PersistentDataType.INTEGER)) return;
 
-        int hunger = pdc.get(KEY_DISH_HUNGER, PersistentDataType.INTEGER);
-        double saturation = pdc.getOrDefault(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
+        Integer hungerRaw = pdc.get(KEY_DISH_HUNGER, PersistentDataType.INTEGER);
+        if (hungerRaw == null) return;
+        int hunger = Math.max(0, Math.min(hungerRaw, 20));
+
+        Double saturationRaw = pdc.getOrDefault(KEY_DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
+        double saturation = Math.max(0, Math.min(saturationRaw == null ? 0.8 : saturationRaw, 20.0));
 
         e.setItem(new ItemStack(org.bukkit.Material.AIR));
 

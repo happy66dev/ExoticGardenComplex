@@ -32,8 +32,10 @@ public class SpatulaInteractionHandler implements StoveInteractionHandler {
                 flipped = true;
             }
         }
-        state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
-        if (flipped) player.sendMessage("§a已翻面！烹饪加速中...");
+        if (flipped) {
+            state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
+            player.sendMessage("§a已翻面！烹饪加速中...");
+        }
         return true;
     }
 }

@@ -8,17 +8,22 @@ import org.bukkit.inventory.ItemStack;
 
 public class ClearFuelInteractionHandler implements StoveInteractionHandler {
 
+    private static final long CONFIRM_TIMEOUT_MS = 60_000L;
+
     @Override
     public boolean handle(Player player, ItemStack handItem, StoveState state, Location location) {
         if (handItem.getType() != Material.AIR || !player.isSneaking()) return false;
 
-        if (state.pendingFuelClear) {
+        long now = System.currentTimeMillis();
+        if (state.pendingFuelClear && (now - state.fuelClearConfirmTime) <= CONFIRM_TIMEOUT_MS) {
             state.fuels.clear();
             state.pendingFuelClear = false;
+            state.fuelClearConfirmTime = 0L;
             player.sendMessage("§a已清除所有燃料");
         } else {
             state.pendingFuelClear = true;
-            player.sendMessage("§e再次潜行右键确认清除燃料");
+            state.fuelClearConfirmTime = now;
+            player.sendMessage("§e再次潜行右键确认清除燃料（60秒内有效）");
         }
         return true;
     }

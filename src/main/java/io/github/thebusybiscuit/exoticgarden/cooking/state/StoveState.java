@@ -10,6 +10,7 @@ public class StoveState {
     public List<SeasoningEntry> seasonings;
     public int spatulaBoostTicksLeft;
     public boolean pendingFuelClear;
+    public long fuelClearConfirmTime;
 
     public StoveState() {
         this.currentTemp = 30.0;
@@ -18,5 +19,6 @@ public class StoveState {
         this.seasonings = new ArrayList<>();
         this.spatulaBoostTicksLeft = 0;
         this.pendingFuelClear = false;
+        this.fuelClearConfirmTime = 0L;
     }
 }

@@ -39,6 +39,7 @@ public class CuttingBoardBlock extends SlimefunItem {
     private BlockUseHandler buildUseHandler() {
         return (PlayerRightClickEvent e) -> {
             e.cancel();
+            if (e.getClickedBlock().isEmpty()) return;
             Player player = e.getPlayer();
             Location loc = e.getClickedBlock().get().getLocation();
             Entity display = boardDisplays.get(loc);
@@ -48,6 +49,7 @@ public class CuttingBoardBlock extends SlimefunItem {
                 if (hand.getType() == Material.AIR) return;
 
                 if (display == null) {
+                    if (loc.getWorld() == null) return;
                     display = spawnDisplay(loc, hand.clone());
                     boardDisplays.put(loc, display);
                     hand.setAmount(hand.getAmount() - 1);
@@ -58,7 +60,10 @@ public class CuttingBoardBlock extends SlimefunItem {
                 if (display != null) {
                     ItemStack stored = getStoredItem(display);
                     if (stored != null) {
-                        player.getInventory().addItem(stored);
+                        Map<Integer, ItemStack> leftover = player.getInventory().addItem(stored);
+                        if (!leftover.isEmpty() && loc.getWorld() != null) {
+                            leftover.values().forEach(it -> loc.getWorld().dropItemNaturally(loc, it));
+                        }
                     }
                     display.remove();
                     boardDisplays.remove(loc);
@@ -97,7 +102,7 @@ public class CuttingBoardBlock extends SlimefunItem {
                 Entity display = boardDisplays.remove(loc);
                 if (display != null) {
                     ItemStack stored = getStoredItem(display);
-                    if (stored != null) {
+                    if (stored != null && loc.getWorld() != null) {
                         loc.getWorld().dropItemNaturally(loc, stored);
                     }
                     display.remove();

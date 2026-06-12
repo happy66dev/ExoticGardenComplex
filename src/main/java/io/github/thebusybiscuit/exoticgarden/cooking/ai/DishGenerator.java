@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
 
 public class DishGenerator {
 
@@ -61,6 +63,8 @@ public class DishGenerator {
             this.description = description;
         }
     }
+
+    private static final Logger LOGGER = Logger.getLogger("ExoticGardenComplex");
 
     public static CompletableFuture<DishResult> generate(
             List<IngredientInfo> ingredientInfos,
@@ -129,47 +133,70 @@ public class DishGenerator {
                 URL url = new URL(baseUrl.endsWith("/") ? baseUrl + "chat/completions"
                     : baseUrl + "/chat/completions");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-                conn.setDoOutput(true);
-                conn.setConnectTimeout(10000);
-                conn.setReadTimeout(30000);
+                try {
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+                    conn.setDoOutput(true);
+                    conn.setConnectTimeout(10000);
+                    conn.setReadTimeout(30000);
 
-                try (OutputStream os = conn.getOutputStream()) {
-                    os.write(gson.toJson(body).getBytes(StandardCharsets.UTF_8));
-                }
-
-                StringBuilder response = new StringBuilder();
-                try (BufferedReader br = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    String line;
-                    while ((line = br.readLine()) != null) response.append(line);
-                }
-
-                JsonObject resp = JsonParser.parseString(response.toString()).getAsJsonObject();
-                String content = resp.getAsJsonArray("choices")
-                    .get(0).getAsJsonObject()
-                    .getAsJsonObject("message")
-                    .get("content").getAsString().trim();
-
-                JsonObject dish = JsonParser.parseString(content).getAsJsonObject();
-                String name = dish.get("name").getAsString();
-                int hunger = dish.get("hunger").getAsInt();
-                double saturation = dish.get("saturation").getAsDouble();
-                String quality = dish.get("quality").getAsString();
-                String description = dish.get("description").getAsString();
-
-                List<String> effects = new java.util.ArrayList<>();
-                if (dish.has("effects")) {
-                    JsonArray efArr = dish.getAsJsonArray("effects");
-                    for (int i = 0; i < efArr.size(); i++) {
-                        effects.add(efArr.get(i).getAsString());
+                    try (OutputStream os = conn.getOutputStream()) {
+                        os.write(gson.toJson(body).getBytes(StandardCharsets.UTF_8));
                     }
-                }
 
-                return new DishResult(name, hunger, saturation, quality, effects, description);
+                    int statusCode = conn.getResponseCode();
+                    InputStream stream = statusCode >= 400 ? conn.getErrorStream() : conn.getInputStream();
+                    if (stream == null) {
+                        throw new RuntimeException("API returned status " + statusCode + " with no body");
+                    }
+
+                    StringBuilder response = new StringBuilder();
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+                        String line;
+                        while ((line = br.readLine()) != null) response.append(line);
+                    }
+
+                    if (statusCode >= 400) {
+                        throw new RuntimeException("API error " + statusCode + ": " + response);
+                    }
+
+                    JsonObject resp = JsonParser.parseString(response.toString()).getAsJsonObject();
+                    JsonArray choices = resp.getAsJsonArray("choices");
+                    if (choices == null || choices.size() == 0) {
+                        throw new RuntimeException("API returned empty choices");
+                    }
+                    String content = choices.get(0).getAsJsonObject()
+                        .getAsJsonObject("message")
+                        .get("content").getAsString().trim();
+
+                    JsonObject dish = JsonParser.parseString(content).getAsJsonObject();
+                    String name = dish.has("name") && !dish.get("name").isJsonNull()
+                        ? dish.get("name").getAsString() : "未知菜肴";
+                    int hunger = dish.has("hunger") && !dish.get("hunger").isJsonNull()
+                        ? Math.max(0, Math.min(dish.get("hunger").getAsInt(), 20)) : 4;
+                    double saturation = dish.has("saturation") && !dish.get("saturation").isJsonNull()
+                        ? Math.max(0, Math.min(dish.get("saturation").getAsDouble(), 20.0)) : 0.8;
+                    String quality = dish.has("quality") && !dish.get("quality").isJsonNull()
+                        ? dish.get("quality").getAsString() : "普通";
+                    String description = dish.has("description") && !dish.get("description").isJsonNull()
+                        ? dish.get("description").getAsString() : "";
+
+                    List<String> effects = new java.util.ArrayList<>();
+                    if (dish.has("effects")) {
+                        JsonArray efArr = dish.getAsJsonArray("effects");
+                        for (int i = 0; i < efArr.size(); i++) {
+                            effects.add(efArr.get(i).getAsString());
+                        }
+                    }
+
+                    return new DishResult(name, hunger, saturation, quality, effects, description);
+                } finally {
+                    conn.disconnect();
+                }
             } catch (Exception e) {
+                LOGGER.severe("[DishGenerator] 菜肴生成失败: " + e.getMessage());
                 throw new RuntimeException(e);
             }
         });
