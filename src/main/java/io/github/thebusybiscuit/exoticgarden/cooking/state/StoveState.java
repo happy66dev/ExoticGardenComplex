@@ -14,12 +14,14 @@ public class StoveState {
     public boolean cookingInProgress;
     public double waterAmount;
     public double oilAmount;
+    public List<String> waterSources;
 
     public StoveState() {
         this.currentTemp = 30.0;
         this.fuels = new ArrayList<>();
         this.slots = new IngredientSlot[4];
         this.seasonings = new ArrayList<>();
+        this.waterSources = new ArrayList<>();
         this.spatulaBoostTicksLeft = 0;
         this.pendingFuelClear = false;
         this.fuelClearConfirmTime = 0L;

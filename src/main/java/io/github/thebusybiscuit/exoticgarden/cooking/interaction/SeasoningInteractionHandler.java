@@ -34,6 +34,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         if ("WATER_BUCKET".equals(seasoningId)) {
             state.waterAmount += 1000;
+            if (!state.waterSources.contains("WATER_BUCKET")) state.waterSources.add("WATER_BUCKET");
             handItem.setAmount(handItem.getAmount() - 1);
             if (handItem.getAmount() <= 0) {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
@@ -45,6 +46,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         if ("WATER".equals(seasoningId)) {
             state.waterAmount += 250;
+            if (!state.waterSources.contains("WATER")) state.waterSources.add("WATER");
             handItem.setAmount(handItem.getAmount() - 1);
             if (handItem.getAmount() <= 0) {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.GLASS_BOTTLE));
@@ -60,11 +62,20 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             return true;
         }
 
+        SeasoningConfig.SeasoningData data = seasonings.get(seasoningId);
+
+        if (data != null && data.waterMl > 0) {
+            state.waterAmount += data.waterMl;
+            String src = data.displayName;
+            if (!state.waterSources.contains(src)) state.waterSources.add(src);
+        }
+
         if (state.seasonings.size() >= 10) {
             player.sendMessage("§c调料槽已满（最多10种）");
             return true;
         }
-        state.seasonings.add(new SeasoningEntry(seasoningId, 0));
+        double w = data != null ? data.weightGrams : 1;
+        state.seasonings.add(new SeasoningEntry(seasoningId, 0, w));
         handItem.setAmount(handItem.getAmount() - 1);
         return true;
     }

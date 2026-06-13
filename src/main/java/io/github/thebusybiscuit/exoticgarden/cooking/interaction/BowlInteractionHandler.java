@@ -96,6 +96,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 || "OIL".equals(se.seasoningId)) continue;
             SeasoningConfig.SeasoningData sd = seasonings.get(se.seasoningId);
             String displayName = sd != null ? sd.displayName : se.seasoningId;
+            totalWeight += se.weight;
             seaInfos.add(new DishGenerator.SeasoningInfo(
                 displayName,
                 sd != null && sd.hasDoneness ? se.progress : null));
@@ -111,8 +112,9 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             return true;
         }
 
+        List<String> waterSrcs = new ArrayList<>(state.waterSources);
         String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos, fxList,
-            state.waterAmount, state.oilAmount, totalHunger, totalWeight);
+            state.waterAmount, state.oilAmount, totalHunger, totalWeight, waterSrcs);
         player.sendMessage("§6§l──── AI 提示词调试 ────");
         player.sendMessage("§b[System] §f" + prompts[0]);
         player.sendMessage("§a[User]   §f" + prompts[1]);

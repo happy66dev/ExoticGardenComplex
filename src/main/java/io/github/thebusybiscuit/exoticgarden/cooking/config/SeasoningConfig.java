@@ -12,14 +12,19 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
         public final double minTemp;
         public final double optimalTemp;
         public final double baseTimeSeconds;
+        public final double weightGrams;
+        public final double waterMl;
 
         public SeasoningData(String displayName, boolean hasDoneness, double minTemp,
-                             double optimalTemp, double baseTimeSeconds) {
+                             double optimalTemp, double baseTimeSeconds,
+                             double weightGrams, double waterMl) {
             this.displayName = displayName;
             this.hasDoneness = hasDoneness;
             this.minTemp = minTemp;
             this.optimalTemp = optimalTemp;
             this.baseTimeSeconds = baseTimeSeconds;
+            this.weightGrams = weightGrams;
+            this.waterMl = waterMl;
         }
     }
 
@@ -34,7 +39,9 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             s.getBoolean("has_doneness", false),
             s.getDouble("min_temp", 0),
             s.getDouble("optimal_temp", 100),
-            s.getDouble("base_time_seconds", 30)
+            s.getDouble("base_time_seconds", 30),
+            s.getDouble("weight_grams", 1),
+            s.getDouble("water_ml", 0)
         );
     }
 }

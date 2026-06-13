@@ -59,7 +59,8 @@ public class DishGenerator {
             List<SeasoningInfo> seasoningInfos,
             List<String> fuelEffects,
             double waterMl, double oilMl,
-            int totalHunger, double totalWeight) {
+            int totalHunger, double totalWeight,
+            List<String> waterSources) {
         Gson gson = new Gson();
         JsonObject userContent = new JsonObject();
 
@@ -94,6 +95,11 @@ public class DishGenerator {
 
         userContent.addProperty("waterMl", waterMl);
         userContent.addProperty("oilMl", oilMl);
+
+        JsonArray wsArr = new JsonArray();
+        for (String ws : waterSources) wsArr.add(ws);
+        userContent.add("waterSources", wsArr);
+
         userContent.addProperty("totalHunger", totalHunger);
         userContent.addProperty("totalWeight", totalWeight);
         userContent.addProperty("language", "zh-CN");
@@ -104,6 +110,7 @@ public class DishGenerator {
             + "- seasonings: [{name:\"调料名\",progress:渗入度0-1}]\n"
             + "- fuelEffects: [\"燃料风味\"]\n"
             + "- waterMl: 水量(毫升), oilMl: 油量(毫升)\n"
+            + "- waterSources: [\"水来源名称\"] 如[\"柠檬汁\",\"椰奶\"]\n"
             + "- totalHunger: 食材饱食度之和, totalWeight: 食材总克重\n\n"
             + "烹饪方向推断(根据水量油量):\n"
             + "- 无水无油->烧烤/干烧(食材适合烤则品质不差,否则干烧品质差)\n"
