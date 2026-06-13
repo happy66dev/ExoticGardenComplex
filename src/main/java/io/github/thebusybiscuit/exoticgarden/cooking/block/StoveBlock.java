@@ -83,7 +83,7 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                     break;
                 }
             }
-            if (!handled) {
+            if (!handled && !player.isSneaking()) {
                 state.pendingFuelClear = false;
             }
         };

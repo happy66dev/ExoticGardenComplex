@@ -50,7 +50,9 @@ public class StoveHologram {
         if (!state.fuels.isEmpty()) {
             for (FuelEntry fe : state.fuels) {
                 double secs = fe.ticksRemaining / 20.0;
-                sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fe.fuelId, secs));
+                FuelConfig.FuelData fd = fuels.get(fe.fuelId);
+                String fuelName = fd != null ? fd.displayName : fe.fuelId;
+                sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fuelName, secs));
             }
             sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
             double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
@@ -79,7 +81,7 @@ public class StoveHologram {
             } else {
                 int pct = (int) (slot.frontDoneness * 100);
                 sb.append(String.format("§e主菜%d: §a%s[%s] §e%d%%\n",
-                    i + 1, ingName, slot.state.name(), pct));
+                    i + 1, ingName, foodStateDisplay(slot.state), pct));
             }
         }
 
