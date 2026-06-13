@@ -1,18 +1,141 @@
+# ===== 木材类 - 热值中等, 短燃烧, 产木炭 =====
 OAK_LOG:
   temp_gain: 300
   duration_seconds: 80
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
+BIRCH_LOG:
+  temp_gain: 280
+  duration_seconds: 75
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+SPRUCE_LOG:
+  temp_gain: 290
+  duration_seconds: 78
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+JUNGLE_LOG:
+  temp_gain: 310
+  duration_seconds: 82
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+ACACIA_LOG:
+  temp_gain: 270
+  duration_seconds: 72
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+DARK_OAK_LOG:
+  temp_gain: 320
+  duration_seconds: 85
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+MANGROVE_LOG:
+  temp_gain: 290
+  duration_seconds: 78
+  heat_rate: 6
+  effect: WOOD_SMOKE
+  byproduct: CHARCOAL
+CHERRY_LOG:
+  temp_gain: 300
+  duration_seconds: 80
+  heat_rate: 7
+  effect: FRUIT_WOOD
+  byproduct: CHARCOAL
+
+# ===== 炭类 - 高热, 长燃烧 =====
 CHARCOAL:
   temp_gain: 400
   duration_seconds: 180
   heat_rate: 4
   effect: SMOKY
   byproduct: null
+COAL:
+  temp_gain: 500
+  duration_seconds: 240
+  heat_rate: 5
+  effect: SMOKY
+  byproduct: null
+COAL_BLOCK:
+  temp_gain: 900
+  duration_seconds: 900
+  heat_rate: 8
+  effect: INTENSE_SMOKE
+  byproduct: null
+
+# ===== 高效燃料 - 超高温 =====
+BLAZE_ROD:
+  temp_gain: 700
+  duration_seconds: 120
+  heat_rate: 12
+  effect: BLAZING
+  byproduct: null
+BLAZE_POWDER:
+  temp_gain: 500
+  duration_seconds: 60
+  heat_rate: 15
+  effect: BLAZING
+  byproduct: null
+LAVA_BUCKET:
+  temp_gain: 1500
+  duration_seconds: 600
+  heat_rate: 20
+  effect: LAVA_INFUSED
+  byproduct: null
+MAGMA_BLOCK:
+  temp_gain: 600
+  duration_seconds: 300
+  heat_rate: 7
+  effect: MAGMATIC
+  byproduct: null
+
+# ===== 速燃类 - 低热, 短燃烧 =====
+STICK:
+  temp_gain: 50
+  duration_seconds: 10
+  heat_rate: 4
+  effect: LIGHT_SMOKE
+  byproduct: null
+BAMBOO:
+  temp_gain: 80
+  duration_seconds: 15
+  heat_rate: 5
+  effect: LIGHT_SMOKE
+  byproduct: null
+DRIED_KELP_BLOCK:
+  temp_gain: 350
+  duration_seconds: 200
+  heat_rate: 5
+  effect: KELP_SMOKE
+  byproduct: null
+
+# ===== 降温类 =====
 ICE:
   temp_gain: 0
   duration_seconds: 6
   heat_rate: -40
   effect: FREEZING
+  byproduct: null
+SNOW_BLOCK:
+  temp_gain: 0
+  duration_seconds: 4
+  heat_rate: -30
+  effect: FREEZING
+  byproduct: null
+POWDER_SNOW_BUCKET:
+  temp_gain: 0
+  duration_seconds: 8
+  heat_rate: -50
+  effect: DEEP_FREEZE
+  byproduct: null
+BLUE_ICE:
+  temp_gain: 0
+  duration_seconds: 10
+  heat_rate: -60
+  effect: DEEP_FREEZE
   byproduct: null

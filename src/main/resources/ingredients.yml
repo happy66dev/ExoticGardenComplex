@@ -35,6 +35,192 @@ CHICKEN:
   flip_required: true
   sauce_creation:
     clicks_required: 4
+
+# ===== DUAL: 熟肉 (7种) - 翻面: true, 可制肉酱 =====
+COOKED_BEEF:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 240
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 30
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+COOKED_PORKCHOP:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 230
+  optimal_temp_min: 170
+  optimal_temp_max: 200
+  base_cook_time_seconds: 30
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+COOKED_CHICKEN:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 70
+  max_temp: 180
+  optimal_temp_min: 140
+  optimal_temp_max: 170
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+COOKED_COD:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 160
+  optimal_temp_min: 110
+  optimal_temp_max: 140
+  base_cook_time_seconds: 20
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+COOKED_SALMON:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 160
+  optimal_temp_min: 110
+  optimal_temp_max: 140
+  base_cook_time_seconds: 20
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+COOKED_MUTTON:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 240
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 30
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+COOKED_RABBIT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+
+# ===== DUAL: 原版水果/食材补全 (5种) =====
+APPLE:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+GOLDEN_APPLE:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 70
+  max_temp: 220
+  optimal_temp_min: 150
+  optimal_temp_max: 190
+  base_cook_time_seconds: 40
+  flip_required: true
+  sauce_creation:
+    clicks_required: 5
+GOLDEN_CARROT:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 70
+  max_temp: 220
+  optimal_temp_min: 150
+  optimal_temp_max: 190
+  base_cook_time_seconds: 40
+  flip_required: true
+  sauce_creation:
+    clicks_required: 5
+PUMPKIN:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 45
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4
+DRIED_KELP:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+
+# ===== DUAL: 原版特殊 (2种) =====
+COCOA_BEANS:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 20
+  flip_required: false
+  sauce_creation:
+    clicks_required: 3
+BAKED_POTATO:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 30
+  flip_required: false
+  sauce_creation:
+    clicks_required: 3
+
+# ===== MAIN: 原版面包 =====
+BREAD:
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 120
+  optimal_temp_min: 60
+  optimal_temp_max: 90
+  base_cook_time_seconds: 15
+  flip_required: false
 COD:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
