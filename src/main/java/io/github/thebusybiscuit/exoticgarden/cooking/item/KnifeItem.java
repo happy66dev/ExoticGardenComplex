@@ -3,12 +3,10 @@ package io.github.thebusybiscuit.exoticgarden.cooking.item;
 import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -27,10 +25,6 @@ public class KnifeItem extends SlimefunItem {
     public KnifeItem(ItemGroup group, SlimefunItemStack item,
                      RecipeType recipeType, ItemStack[] recipe, JavaPlugin plugin) {
         super(group, item, recipeType, recipe);
-
-        addItemHandler((BlockUseHandler) (PlayerRightClickEvent e) -> {
-            e.cancel();
-        });
 
         plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
             @org.bukkit.event.EventHandler

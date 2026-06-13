@@ -1,3 +1,4 @@
+# config_version: 2
 # ===== 木材类 - 热值中等, 短燃烧, 产木炭 =====
 OAK_LOG:
   temp_gain: 300

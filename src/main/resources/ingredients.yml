@@ -1,3 +1,4 @@
+# config_version: 2
 # ===== DUAL: 原版肉类 (8种) - 翻面: true, 可制肉酱 =====
 BEEF:
   display_name: 牛肉

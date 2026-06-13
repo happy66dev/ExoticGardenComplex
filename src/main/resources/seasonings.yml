@@ -1,3 +1,4 @@
+# config_version: 2
 # ===== 基础调料 (has_doneness: false) =====
 SALT:
   weight_grams: 1

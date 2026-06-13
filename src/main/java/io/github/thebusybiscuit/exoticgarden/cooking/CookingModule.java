@@ -31,10 +31,12 @@ import org.bukkit.persistence.PersistentDataType;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.Scanner;
 
 public class CookingModule {
 
