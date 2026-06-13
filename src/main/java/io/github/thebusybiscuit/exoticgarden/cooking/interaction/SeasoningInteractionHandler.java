@@ -34,7 +34,19 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         if ("WATER_BUCKET".equals(seasoningId)) {
             state.waterAmount += 1000;
-            if (!state.waterSources.contains("WATER_BUCKET")) state.waterSources.add("WATER_BUCKET");
+            if (!state.waterSources.contains("水(桶)")) state.waterSources.add("水(桶)");
+            handItem.setAmount(handItem.getAmount() - 1);
+            if (handItem.getAmount() <= 0) {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
+            } else {
+                player.getInventory().addItem(new ItemStack(Material.BUCKET));
+            }
+            return true;
+        }
+
+        if ("MILK_BUCKET".equals(seasoningId)) {
+            state.waterAmount += 250;
+            if (!state.waterSources.contains("牛奶")) state.waterSources.add("牛奶");
             handItem.setAmount(handItem.getAmount() - 1);
             if (handItem.getAmount() <= 0) {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
@@ -46,7 +58,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         if ("WATER".equals(seasoningId)) {
             state.waterAmount += 250;
-            if (!state.waterSources.contains("WATER")) state.waterSources.add("WATER");
+            if (!state.waterSources.contains("水")) state.waterSources.add("水");
             handItem.setAmount(handItem.getAmount() - 1);
             if (handItem.getAmount() <= 0) {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.GLASS_BOTTLE));
@@ -95,6 +107,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         Material mat = item.getType();
         if (mat == Material.WATER_BUCKET) return "WATER_BUCKET";
+        if (mat == Material.MILK_BUCKET) return "MILK_BUCKET";
         if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
             return "_POTION_";
         }

@@ -27,6 +27,9 @@ WATER:
 WATER_BUCKET:
   display_name: "水(桶)"
   has_doneness: false
+MILK_BUCKET:
+  display_name: "牛奶(桶)"
+  has_doneness: false
 OIL:
   display_name: "油"
   has_doneness: false
