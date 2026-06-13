@@ -85,7 +85,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             totalHunger += getHungerValue(slot.ingredientId);
             totalWeight += weight;
             ingInfos.add(new DishGenerator.IngredientInfo(
-                displayName, slot.state.name(),
+                displayName, foodStateDisplay(slot.state),
                 doneness,
                 CharLevel.fromSeconds(slot.charSeconds).name(),
                 weight));
@@ -134,5 +134,14 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             return ((io.github.thebusybiscuit.exoticgarden.items.CustomFood) sfItem).getFoodValue();
         }
         return 0;
+    }
+
+    private String foodStateDisplay(FoodState state) {
+        return switch (state) {
+            case WHOLE -> "完整";
+            case SLICED -> "切片";
+            case DICED -> "切丁";
+            case SAUCE -> "酱汁";
+        };
     }
 }
