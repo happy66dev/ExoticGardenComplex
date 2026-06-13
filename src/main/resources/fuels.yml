@@ -107,6 +107,88 @@ BAMBOO:
   heat_rate: 5
   effect: LIGHT_SMOKE
   byproduct: null
+
+# ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
+WHEAT:
+  temp_gain: 30
+  duration_seconds: 6
+  heat_rate: 8
+  effect: GRASS_SMOKE
+  byproduct: null
+WHEAT_SEEDS:
+  temp_gain: 20
+  duration_seconds: 4
+  heat_rate: 6
+  effect: GRASS_SMOKE
+  byproduct: null
+SHORT_GRASS:
+  temp_gain: 15
+  duration_seconds: 3
+  heat_rate: 5
+  effect: GRASS_SMOKE
+  byproduct: null
+TALL_GRASS:
+  temp_gain: 30
+  duration_seconds: 5
+  heat_rate: 7
+  effect: GRASS_SMOKE
+  byproduct: null
+FERN:
+  temp_gain: 25
+  duration_seconds: 5
+  heat_rate: 6
+  effect: GRASS_SMOKE
+  byproduct: null
+LARGE_FERN:
+  temp_gain: 40
+  duration_seconds: 8
+  heat_rate: 7
+  effect: GRASS_SMOKE
+  byproduct: null
+DEAD_BUSH:
+  temp_gain: 35
+  duration_seconds: 6
+  heat_rate: 8
+  effect: GRASS_SMOKE
+  byproduct: null
+SUGAR_CANE:
+  temp_gain: 25
+  duration_seconds: 6
+  heat_rate: 6
+  effect: SWEET_SMOKE
+  byproduct: null
+VINE:
+  temp_gain: 20
+  duration_seconds: 4
+  heat_rate: 5
+  effect: GRASS_SMOKE
+  byproduct: null
+TWISTING_VINES:
+  temp_gain: 30
+  duration_seconds: 5
+  heat_rate: 6
+  effect: GRASS_SMOKE
+  byproduct: null
+WEEPING_VINES:
+  temp_gain: 30
+  duration_seconds: 5
+  heat_rate: 6
+  effect: GRASS_SMOKE
+  byproduct: null
+MOSS_BLOCK:
+  temp_gain: 50
+  duration_seconds: 12
+  heat_rate: 5
+  effect: MOSSY_SMOKE
+  byproduct: null
+HAY_BLOCK:
+  temp_gain: 100
+  duration_seconds: 25
+  heat_rate: 10
+  effect: GRASS_SMOKE
+  byproduct: null
+
+# ===== 海藻类 =====
 DRIED_KELP_BLOCK:
   temp_gain: 350
   duration_seconds: 200
