@@ -53,6 +53,7 @@ public class StoveTickTask extends BukkitRunnable {
             }
             tickIngredients(state);
             tickSeasonings(state);
+            StoveBlock.syncCampfireSlots(loc, state);
             if (hologramCounter == 0) {
                 StoveHologram.update(loc, state, fuels, ingredients, seasonings, stove);
             }
