@@ -4,6 +4,7 @@ import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.SeasoningEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -14,6 +15,9 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Map;
 
 public class SeasoningInteractionHandler implements StoveInteractionHandler {
+
+    private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
+            new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
 
     private final Map<String, SeasoningConfig.SeasoningData> seasonings;
 
@@ -42,8 +46,20 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
             String id = pdc.get(CookingKeys.SEASONING_ID, PersistentDataType.STRING);
             if (id != null && seasonings.containsKey(id)) return id;
+
+            String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
+            if (sfId != null) {
+                SlimefunItem sfItem = SlimefunItem.getById(sfId);
+                if (sfItem != null && seasonings.containsKey(sfItem.getId())) return sfItem.getId();
+            }
         }
-        String matName = item.getType().name();
+
+        Material mat = item.getType();
+        if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
+            return "_POTION_";
+        }
+
+        String matName = mat.name();
         if (seasonings.containsKey(matName)) return matName;
         return null;
     }

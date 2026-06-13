@@ -1,5 +1,6 @@
+# ===== DUAL: 原版肉类 (8种) - 翻面: true, 可制肉酱 =====
 BEEF:
-  type: MAIN
+  type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   min_temp: 60
@@ -8,15 +9,627 @@ BEEF:
   optimal_temp_max: 210
   base_cook_time_seconds: 45
   flip_required: true
-TOMATO:
-  type: SAUCE_BASE
-  states: [WHOLE, SAUCE]
+  sauce_creation:
+    clicks_required: 5
+PORKCHOP:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
   calculator_type: standard
+  min_temp: 60
+  max_temp: 230
+  optimal_temp_min: 170
+  optimal_temp_max: 200
+  base_cook_time_seconds: 45
+  flip_required: true
+  sauce_creation:
+    clicks_required: 5
+CHICKEN:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 70
+  max_temp: 180
+  optimal_temp_min: 140
+  optimal_temp_max: 170
+  base_cook_time_seconds: 40
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+COD:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 160
+  optimal_temp_min: 110
+  optimal_temp_max: 140
+  base_cook_time_seconds: 30
+  flip_required: true
   sauce_creation:
     clicks_required: 3
+SALMON:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 160
+  optimal_temp_min: 110
+  optimal_temp_max: 140
+  base_cook_time_seconds: 30
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+MUTTON:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 240
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 45
+  flip_required: true
+  sauce_creation:
+    clicks_required: 5
+RABBIT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+EGG:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+
+# ===== DUAL: 原版蔬菜 (5种) - 翻面: false, DICED保留 =====
+POTATO:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 50
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4
+CARROT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4
+BEETROOT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4
+BROWN_MUSHROOM:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 120
+  optimal_temp_min: 70
+  optimal_temp_max: 100
+  base_cook_time_seconds: 20
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+RED_MUSHROOM:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 120
+  optimal_temp_min: 70
+  optimal_temp_max: 100
+  base_cook_time_seconds: 20
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+
+# ===== DUAL: 原版水果/浆果 (3种) =====
+MELON_SLICE:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+SWEET_BERRIES:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+GLOW_BERRIES:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+
+# ===== MAIN: ExoticGarden 作物 (14种) =====
+CORN:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 50
+  flip_required: true
+CABBAGE:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 30
+  flip_required: false
+LETTUCE:
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 60
+  base_cook_time_seconds: 10
+  flip_required: false
+GARLIC:
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 20
+  flip_required: false
+BREADFRUIT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: true
+ALIEN_FRUIT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: true
+PUNCH_FRUIT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: true
+JACKFRUIT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 220
+  optimal_temp_min: 160
+  optimal_temp_max: 190
+  base_cook_time_seconds: 45
+  flip_required: true
+BIG_CARROT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 200
+  optimal_temp_min: 150
+  optimal_temp_max: 180
+  base_cook_time_seconds: 40
+  flip_required: true
+ACORN_SQUASH:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 50
+  flip_required: true
+GINSENGBABY:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 180
+  optimal_temp_min: 120
+  optimal_temp_max: 150
+  base_cook_time_seconds: 35
+  flip_required: true
+BIG_WHEAT:
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 50
+  flip_required: true
+AMARANTH:
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 25
+  flip_required: false
+TEQUILA:
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 20
+  flip_required: false
+
+# ===== DUAL: ExoticGarden 蔬菜 (3种) =====
+TOMATO:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
   min_temp: 40
   max_temp: 100
   optimal_temp_min: 70
   optimal_temp_max: 90
   base_cook_time_seconds: 30
   flip_required: false
+  sauce_creation:
+    clicks_required: 3
+ONION:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 120
+  optimal_temp_min: 80
+  optimal_temp_max: 100
+  base_cook_time_seconds: 25
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4
+RED_BELL_PEPPER:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 130
+  optimal_temp_min: 80
+  optimal_temp_max: 110
+  base_cook_time_seconds: 25
+  flip_required: false
+  sauce_creation:
+    clicks_required: 3
+
+# ===== DUAL: ExoticGarden 大果类 (12种) - 翻面: true =====
+OAK_APPLE:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+CHERRY:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 120
+  optimal_temp_min: 70
+  optimal_temp_max: 100
+  base_cook_time_seconds: 20
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+POMEGRANATE:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+LEMON:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 15
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+PLUM:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 140
+  optimal_temp_min: 90
+  optimal_temp_max: 110
+  base_cook_time_seconds: 22
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+LIME:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 100
+  optimal_temp_min: 60
+  optimal_temp_max: 80
+  base_cook_time_seconds: 15
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+ORANGE:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 130
+  optimal_temp_min: 80
+  optimal_temp_max: 110
+  base_cook_time_seconds: 22
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+PEACH:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 140
+  optimal_temp_min: 90
+  optimal_temp_max: 110
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+PEAR:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 140
+  optimal_temp_min: 90
+  optimal_temp_max: 110
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+DRAGON_FRUIT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 40
+  max_temp: 120
+  optimal_temp_min: 70
+  optimal_temp_max: 100
+  base_cook_time_seconds: 20
+  flip_required: true
+  sauce_creation:
+    clicks_required: 2
+PINEAPPLE:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 50
+  max_temp: 150
+  optimal_temp_min: 90
+  optimal_temp_max: 120
+  base_cook_time_seconds: 25
+  flip_required: true
+  sauce_creation:
+    clicks_required: 3
+COCONUT:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 180
+  optimal_temp_min: 120
+  optimal_temp_max: 150
+  base_cook_time_seconds: 35
+  flip_required: true
+  sauce_creation:
+    clicks_required: 4
+
+# ===== DUAL: ExoticGarden 浆果类 (8种) - 翻面: false, 无 DICED =====
+STRAWBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+GRAPE:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+BLUEBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+RASPBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 12
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+BLACKBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+CRANBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+ELDERBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+COWBERRY:
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  min_temp: 30
+  max_temp: 80
+  optimal_temp_min: 50
+  optimal_temp_max: 70
+  base_cook_time_seconds: 15
+  flip_required: false
+  sauce_creation:
+    clicks_required: 2
+
+# ===== DUAL: ExoticGarden 根茎类 (1种) =====
+SWEET_POTATO:
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  min_temp: 60
+  max_temp: 250
+  optimal_temp_min: 180
+  optimal_temp_max: 210
+  base_cook_time_seconds: 50
+  flip_required: false
+  sauce_creation:
+    clicks_required: 4

@@ -53,6 +53,7 @@ public class CookingModule {
         registerSpatula(plugin, cookingGroup, ingredients);
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
+        plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
         // Temporarily disable dish consumption custom logic.
         // plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);

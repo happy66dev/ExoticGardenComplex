@@ -1,12 +1,309 @@
+# ===== 基础调料 (has_doneness: false) =====
 SALT:
   display_name: "盐"
   has_doneness: false
 SUGAR:
   display_name: "白糖"
   has_doneness: false
+
+# ===== 料酒 (has_doneness: true, 热渗入) =====
 RICE_WINE:
   display_name: "料酒"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
+
+# ===== 原版药水 (has_doneness: true, 通用渗入) =====
+_POTION_:
+  display_name: "药水"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 18
+
+# ===== 香料/装饰 (has_doneness: false, 纯增味) =====
+CILANTRO:
+  display_name: "香菜碎"
+  has_doneness: false
+CURRY_LEAF:
+  display_name: "咖喱叶"
+  has_doneness: false
+TEA_LEAF:
+  display_name: "茶叶"
+  has_doneness: false
+BLACK_PEPPER:
+  display_name: "黑胡椒碎"
+  has_doneness: false
+LEEK:
+  display_name: "葱花"
+  has_doneness: false
+PEANUT:
+  display_name: "花生碎"
+  has_doneness: false
+DEVIL_MELON:
+  display_name: "恶魔瓜丁"
+  has_doneness: false
+INFERNOFRUIT:
+  display_name: "地狱果片"
+  has_doneness: false
+
+# ===== 柑橘类果汁 (has_doneness: true, 酸性强-快速渗入) =====
+LEMON_JUICE:
+  display_name: "柠檬汁"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 12
+LIME_JUICE:
+  display_name: "酸橙汁"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 12
+ORANGE_JUICE:
+  display_name: "橙汁"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 12
+
+# ===== 浆果类果汁 (has_doneness: true, 中快速渗入) =====
+APPLE_JUICE:
+  display_name: "苹果汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+MELON_JUICE:
+  display_name: "西瓜汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+SWEET_BERRY_JUICE:
+  display_name: "甜浆果汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+GLOW_BERRY_JUICE:
+  display_name: "发光浆果汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+GRAPE_JUICE:
+  display_name: "葡萄汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+BLUEBERRY_JUICE:
+  display_name: "蓝莓汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+RASPBERRY_JUICE:
+  display_name: "树莓汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+BLACKBERRY_JUICE:
+  display_name: "黑莓汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+CRANBERRY_JUICE:
+  display_name: "蔓越莓汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+STRAWBERRY_JUICE:
+  display_name: "草莓汁"
+  has_doneness: true
+  min_temp: 45
+  optimal_temp: 70
+  base_time_seconds: 16
+
+# ===== 核果类果汁 (has_doneness: true, 中速渗入) =====
+PEACH_JUICE:
+  display_name: "桃子汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+PLUM_JUICE:
+  display_name: "梅子汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+PEAR_JUICE:
+  display_name: "梨汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+CHERRY_JUICE:
+  display_name: "樱桃汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+POMEGRANATE_JUICE:
+  display_name: "石榴汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+DRAGON_FRUIT_JUICE:
+  display_name: "火龙果汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+OAK_APPLE_JUICE:
+  display_name: "橡树苹果汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+
+# ===== 浓郁类果汁 (has_doneness: true, 慢渗入) =====
+COCONUT_MILK:
+  display_name: "椰奶"
+  has_doneness: true
+  min_temp: 55
+  optimal_temp: 90
+  base_time_seconds: 25
+PINEAPPLE_JUICE:
+  display_name: "菠萝汁"
+  has_doneness: true
+  min_temp: 55
+  optimal_temp: 90
+  base_time_seconds: 25
+TOMATO_JUICE:
+  display_name: "番茄汁"
+  has_doneness: true
+  min_temp: 55
+  optimal_temp: 90
+  base_time_seconds: 25
+
+# ===== 根茎/大果类果汁 (has_doneness: true, 最慢渗入) =====
+PUMPKIN_JUICE:
+  display_name: "南瓜汁"
+  has_doneness: true
+  min_temp: 60
+  optimal_temp: 100
+  base_time_seconds: 30
+CARROT_JUICE:
+  display_name: "胡萝卜汁"
+  has_doneness: true
+  min_temp: 60
+  optimal_temp: 100
+  base_time_seconds: 30
+
+# ===== 异域特调果汁 (has_doneness: true, 中速渗入) =====
+BREADFRUIT_JUICE:
+  display_name: "面包果汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+ALIEN_FRUIT_JUICE:
+  display_name: "外星果汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+PUNCH_FRUIT_JUICE:
+  display_name: "潘趣果汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+JACKFRUIT_JUICE:
+  display_name: "菠萝蜜汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+BIG_CARROT_JUICE:
+  display_name: "大萝卜汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+BIG_WHEAT_JUICE:
+  display_name: "大麦汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+AMARANTH_JUICE:
+  display_name: "苋菜汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+DEVIL_MELON_JUICE:
+  display_name: "恶魔瓜汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+ACORN_SQUASH_JUICE:
+  display_name: "橡子南瓜汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 20
+
+# ===== 烹饪成品辅料 (has_doneness: false, 纯topping) =====
+BACON:
+  display_name: "培根碎"
+  has_doneness: false
+CHEESE:
+  display_name: "芝士碎"
+  has_doneness: false
+FRIED_CHICKEN:
+  display_name: "炸鸡碎"
+  has_doneness: false
+FRIES:
+  display_name: "薯条碎"
+  has_doneness: false
+HASHBROWN:
+  display_name: "土豆饼碎"
+  has_doneness: false
+ONION_RINGS:
+  display_name: "洋葱圈碎"
+  has_doneness: false
+CHICKEN_NUGGETS:
+  display_name: "鸡块碎"
+  has_doneness: false
+BUTTER:
+  display_name: "黄油"
+  has_doneness: false
+HEAVY_CREAM:
+  display_name: "奶油"
+  has_doneness: false
+BROWN_SUGAR:
+  display_name: "红糖"
+  has_doneness: false
+COUNTRY_GRAVY:
+  display_name: "肉汁"
+  has_doneness: false
+MAYO:
+  display_name: "蛋黄酱"
+  has_doneness: false
+BBQ_SAUCE:
+  display_name: "烤肉酱"
+  has_doneness: false
+MUSTARD:
+  display_name: "芥末"
+  has_doneness: false
