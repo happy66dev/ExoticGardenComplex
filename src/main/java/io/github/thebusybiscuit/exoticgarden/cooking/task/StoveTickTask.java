@@ -113,13 +113,13 @@ public class StoveTickTask extends BukkitRunnable {
 
             if (slot.state == FoodState.WHOLE) {
                 if (slot.currentFace == ActiveFace.FRONT) {
-                    slot.frontDoneness = Math.min(slot.frontDoneness + increment, 1.0);
-                    slot.backDoneness = Math.min(slot.backDoneness + increment * 0.3, 1.0);
+                    slot.frontDoneness += increment;
+                    slot.backDoneness += increment * 0.3;
                 } else {
-                    slot.backDoneness = Math.min(slot.backDoneness + increment, 1.0);
+                    slot.backDoneness += increment;
                 }
             } else {
-                slot.frontDoneness = Math.min(slot.frontDoneness + increment, 1.0);
+                slot.frontDoneness += increment;
             }
         }
     }

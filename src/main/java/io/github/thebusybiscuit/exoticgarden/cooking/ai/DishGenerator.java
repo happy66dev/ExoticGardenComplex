@@ -37,18 +37,16 @@ public class DishGenerator {
 
     public static class DishResult {
         public final String name;
-        public final int hunger;
-        public final double saturation;
-        public final String quality;
+        public final int servings;
+        public final double qualityCoefficient;
         public final List<String> effects;
         public final String description;
 
-        public DishResult(String name, int hunger, double saturation, String quality,
+        public DishResult(String name, int servings, double qualityCoefficient,
                           List<String> effects, String description) {
             this.name = name;
-            this.hunger = hunger;
-            this.saturation = saturation;
-            this.quality = quality;
+            this.servings = servings;
+            this.qualityCoefficient = qualityCoefficient;
             this.effects = effects;
             this.description = description;
         }

@@ -36,11 +36,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             state.waterAmount += 1000;
             if (!state.waterSources.contains("水(桶)")) state.waterSources.add("水(桶)");
             handItem.setAmount(handItem.getAmount() - 1);
-            if (handItem.getAmount() <= 0) {
-                player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
-            } else {
-                player.getInventory().addItem(new ItemStack(Material.BUCKET));
-            }
+            returnBackItem(player, new ItemStack(Material.BUCKET));
             return true;
         }
 
@@ -48,11 +44,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             state.waterAmount += 250;
             if (!state.waterSources.contains("牛奶")) state.waterSources.add("牛奶");
             handItem.setAmount(handItem.getAmount() - 1);
-            if (handItem.getAmount() <= 0) {
-                player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
-            } else {
-                player.getInventory().addItem(new ItemStack(Material.BUCKET));
-            }
+            returnBackItem(player, new ItemStack(Material.BUCKET));
             return true;
         }
 
@@ -60,11 +52,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             state.waterAmount += 250;
             if (!state.waterSources.contains("水")) state.waterSources.add("水");
             handItem.setAmount(handItem.getAmount() - 1);
-            if (handItem.getAmount() <= 0) {
-                player.getInventory().setItemInMainHand(new ItemStack(Material.GLASS_BOTTLE));
-            } else {
-                player.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE));
-            }
+            returnBackItem(player, new ItemStack(Material.GLASS_BOTTLE));
             return true;
         }
 
@@ -115,5 +103,13 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         String matName = mat.name();
         if (seasonings.containsKey(matName)) return matName;
         return null;
+    }
+
+    private void returnBackItem(Player player, ItemStack item) {
+        Map<Integer, ItemStack> leftover = player.getInventory().addItem(item);
+        if (!leftover.isEmpty() && player.getLocation().getWorld() != null) {
+            leftover.values().forEach(it ->
+                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), it));
+        }
     }
 }
