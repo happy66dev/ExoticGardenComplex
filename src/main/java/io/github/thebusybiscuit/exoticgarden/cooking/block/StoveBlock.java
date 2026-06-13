@@ -16,9 +16,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Campfire;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,6 +46,19 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             public void onBlockCook(BlockCookEvent e) {
                 if (activeStoves.containsKey(e.getBlock().getLocation())) {
                     e.setCancelled(true);
+                }
+            }
+
+            @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+            public void onPlayerInteract(PlayerInteractEvent e) {
+                if (e.getClickedBlock() == null) return;
+                if (e.getClickedBlock().getType() != org.bukkit.Material.CAMPFIRE) return;
+                if (!activeStoves.containsKey(e.getClickedBlock().getLocation())) return;
+                ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
+                if (hand.getType().isEdible() || hand.getType() == org.bukkit.Material.BOWL) {
+                    if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
+                        e.setCancelled(true);
+                    }
                 }
             }
         }, plugin);

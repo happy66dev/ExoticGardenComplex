@@ -10,22 +10,20 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.EulerAngle;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -34,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CuttingBoardBlock extends SlimefunItem {
 
-    public static final Map<Location, ItemFrame> boardDisplays = new ConcurrentHashMap<>();
+    public static final Map<Location, ArmorStand> boardDisplays = new ConcurrentHashMap<>();
 
     public CuttingBoardBlock(ItemGroup group, SlimefunItemStack item,
                              RecipeType recipeType, ItemStack[] recipe,
@@ -50,15 +48,16 @@ public class CuttingBoardBlock extends SlimefunItem {
             if (e.getClickedBlock().isEmpty()) return;
             Player player = e.getPlayer();
             Location loc = e.getClickedBlock().get().getLocation();
-            ItemFrame frame = boardDisplays.get(loc);
+            ArmorStand stand = boardDisplays.get(loc);
 
             if (!player.isSneaking()) {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getType() == Material.AIR) return;
 
-                if (frame == null) {
+                if (stand == null) {
                     if (loc.getWorld() == null) return;
-                    ItemFrame spawned = spawnFrame(loc, hand.clone());
+                    ItemStack toPlace = ensureIngredientId(hand.clone());
+                    ArmorStand spawned = spawnStand(loc, toPlace);
                     if (spawned == null) return;
                     boardDisplays.put(loc, spawned);
                     hand.setAmount(hand.getAmount() - 1);
@@ -66,32 +65,53 @@ public class CuttingBoardBlock extends SlimefunItem {
                     player.sendMessage("§c砧板上已有物品，请潜行右键取回");
                 }
             } else {
-                if (frame != null) {
-                    ItemStack stored = frame.getItem().clone();
+                if (stand != null) {
+                    ItemStack stored = stand.getEquipment().getHelmet().clone();
                     if (!stored.getType().isAir()) {
                         Map<Integer, ItemStack> leftover = player.getInventory().addItem(stored);
                         if (!leftover.isEmpty() && loc.getWorld() != null) {
                             leftover.values().forEach(it -> loc.getWorld().dropItemNaturally(loc, it));
                         }
                     }
-                    frame.remove();
+                    stand.remove();
                     boardDisplays.remove(loc);
                 }
             }
         };
     }
 
-    private ItemFrame spawnFrame(Location loc, ItemStack item) {
+    private ArmorStand spawnStand(Location loc, ItemStack item) {
         if (loc.getWorld() == null) return null;
-        Location spawnLoc = loc.clone().add(0.5, 0.5, 0.5);
-        ItemFrame frame = (ItemFrame) loc.getWorld().spawnEntity(spawnLoc, EntityType.ITEM_FRAME);
-        frame.setFacingDirection(BlockFace.UP, true);
-        frame.setFixed(true);
-        frame.setVisible(false);
-        frame.setItem(item);
-        PersistentDataContainer pdc = frame.getPersistentDataContainer();
+        Location spawnLoc = loc.clone().add(0.5, -0.3, 0.5);
+        ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
+        stand.setVisible(false);
+        stand.setGravity(false);
+        stand.setMarker(true);
+        stand.setArms(false);
+        stand.setBasePlate(false);
+        stand.setCollidable(false);
+        stand.getEquipment().setHelmet(item);
+        stand.setHeadPose(new EulerAngle(Math.toRadians(180), 0, 0));
+        PersistentDataContainer pdc = stand.getPersistentDataContainer();
         pdc.set(CookingKeys.BOARD_ITEM, PersistentDataType.STRING, "true");
-        return frame;
+        return stand;
+    }
+
+    private static ItemStack ensureIngredientId(ItemStack item) {
+        if (item.getItemMeta() == null) return item;
+        org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
+            io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem =
+                io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
+            String id = sfItem != null ? sfItem.getId() : item.getType().name();
+            pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, id);
+        }
+        if (!pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
+            pdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, "WHOLE");
+        }
+        item.setItemMeta(meta);
+        return item;
     }
 
     private BlockBreakHandler buildBreakHandler() {
@@ -101,52 +121,43 @@ public class CuttingBoardBlock extends SlimefunItem {
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
                 Location loc = e.getBlock().getLocation();
-                ItemFrame frame = boardDisplays.remove(loc);
-                if (frame != null) {
-                    ItemStack stored = frame.getItem();
+                ArmorStand stand = boardDisplays.remove(loc);
+                if (stand != null) {
+                    ItemStack stored = stand.getEquipment().getHelmet();
                     if (stored != null && !stored.getType().isAir() && loc.getWorld() != null) {
                         loc.getWorld().dropItemNaturally(loc, stored);
                     }
-                    frame.remove();
+                    stand.remove();
                 }
             }
         };
     }
 
     public static ItemStack getStoredItem(Location boardLoc) {
-        ItemFrame frame = boardDisplays.get(boardLoc);
-        if (frame == null) return null;
-        ItemStack item = frame.getItem();
-        return item.getType().isAir() ? null : item.clone();
+        ArmorStand stand = boardDisplays.get(boardLoc);
+        if (stand == null) return null;
+        ItemStack item = stand.getEquipment().getHelmet();
+        return (item == null || item.getType().isAir()) ? null : item.clone();
     }
 
     public static void setStoredItem(Location boardLoc, ItemStack item) {
-        ItemFrame frame = boardDisplays.get(boardLoc);
-        if (frame == null) return;
-        frame.setItem(item);
+        ArmorStand stand = boardDisplays.get(boardLoc);
+        if (stand == null) return;
+        stand.getEquipment().setHelmet(item);
     }
 
     private static class BoardProtectionListener implements Listener {
 
         @EventHandler(ignoreCancelled = true)
-        public void onHangingBreak(HangingBreakByEntityEvent e) {
-            if (!(e.getEntity() instanceof ItemFrame frame)) return;
-            if (!frame.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
-            e.setCancelled(true);
-        }
-
-        @EventHandler(ignoreCancelled = true)
         public void onEntityDamage(EntityDamageByEntityEvent e) {
-            if (!(e.getEntity() instanceof ItemFrame frame)) return;
-            if (!frame.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
+            if (!(e.getEntity() instanceof ArmorStand stand)) return;
+            if (!stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
             e.setCancelled(true);
         }
 
         @EventHandler(ignoreCancelled = true)
-        public void onPlayerInteract(PlayerInteractEntityEvent e) {
-            if (e.getHand() != EquipmentSlot.HAND) return;
-            if (!(e.getRightClicked() instanceof ItemFrame frame)) return;
-            if (!frame.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
+        public void onArmorStandManipulate(PlayerArmorStandManipulateEvent e) {
+            if (!e.getRightClicked().getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
             e.setCancelled(true);
         }
     }

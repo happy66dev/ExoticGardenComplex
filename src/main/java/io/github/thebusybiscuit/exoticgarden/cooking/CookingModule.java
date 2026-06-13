@@ -97,7 +97,6 @@ public class CookingModule {
             Map<String, IngredientConfig.IngredientData> ingredients,
             Map<String, SeasoningConfig.SeasoningData> seasonings) {
         return List.of(
-            new SpatulaInteractionHandler(),
             new BowlInteractionHandler(fuels, ingredients, seasonings),
             new FuelInteractionHandler(fuels),
             new SeasoningInteractionHandler(seasonings),
@@ -166,7 +165,17 @@ public class CookingModule {
 
     private static void saveResourceIfMissing(ExoticGarden plugin, String name) {
         File file = new File(plugin.getDataFolder(), name);
-        if (file.exists()) return;
+        int jarVersion = readJarVersion(plugin, name);
+        int fileVersion = readFileVersion(file);
+        if (file.exists() && jarVersion <= fileVersion) return;
+
+        if (file.exists()) {
+            File backup = new File(file.getParentFile(), name + ".bak");
+            try { java.nio.file.Files.move(file.toPath(), backup.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
+            catch (Exception ignored) {}
+            plugin.getLogger().info("[Cooking] 配置文件 " + name + " 已更新 (v" + fileVersion + " -> v" + jarVersion + ")");
+        }
+
         try (InputStream in = plugin.getResource(name)) {
             if (in == null) {
                 plugin.getLogger().severe("[Cooking] 资源文件未找到: " + name + "，请检查 jar 是否完整");
@@ -176,5 +185,32 @@ public class CookingModule {
         } catch (Exception e) {
             plugin.getLogger().warning("Failed to save resource: " + name + " - " + e.getMessage());
         }
+    }
+
+    private static int readJarVersion(ExoticGarden plugin, String name) {
+        try (InputStream in = plugin.getResource(name)) {
+            if (in == null) return 0;
+            java.util.Scanner sc = new java.util.Scanner(in, "UTF-8");
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (line.startsWith("# config_version:")) {
+                    return Integer.parseInt(line.substring("# config_version:".length()).trim());
+                }
+            }
+        } catch (Exception ignored) {}
+        return 0;
+    }
+
+    private static int readFileVersion(File file) {
+        if (!file.exists()) return 0;
+        try (java.util.Scanner sc = new java.util.Scanner(file, "UTF-8")) {
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (line.startsWith("# config_version:")) {
+                    return Integer.parseInt(line.substring("# config_version:".length()).trim());
+                }
+            }
+        } catch (Exception ignored) {}
+        return 0;
     }
 }

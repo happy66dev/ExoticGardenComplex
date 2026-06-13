@@ -15,10 +15,10 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -43,12 +43,11 @@ public class SpatulaItem extends SlimefunItem {
         this.ingredients = ingredients;
 
         plugin.getServer().getPluginManager().registerEvents(new Listener() {
-            @EventHandler
+
+            @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
             public void onInteract(PlayerInteractEvent e) {
                 if (e.getHand() != EquipmentSlot.HAND) return;
-                if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-                Block block = e.getClickedBlock();
-                if (block == null || block.getType() != Material.CAMPFIRE) return;
+                if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
 
                 Player player = e.getPlayer();
                 ItemStack hand = player.getInventory().getItemInMainHand();
@@ -56,48 +55,41 @@ public class SpatulaItem extends SlimefunItem {
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
                 if (!"SPATULA".equals(handPdc.get(CookingKeys.ITEM_TYPE, PersistentDataType.STRING))) return;
 
-                SlimefunItem sfItem = SlimefunItem.getById("EG_COOKING_STOVE");
-                if (!(sfItem instanceof StoveBlock stove)) return;
-                Location loc = block.getLocation();
-                StoveState state = stove.activeStoves.get(loc);
-                if (state == null) return;
+                Block block = e.getClickedBlock();
+                if (block != null && block.getType() == Material.CAMPFIRE) {
+                    SlimefunItem sfItem = SlimefunItem.getById("EG_COOKING_STOVE");
+                    if (!(sfItem instanceof StoveBlock stove)) return;
+                    Location loc = block.getLocation();
+                    StoveState state = stove.activeStoves.get(loc);
+                    if (state == null) return;
 
-                e.setCancelled(true);
-
-                state.pendingFuelClear = false;
-                boolean flipped = false;
-                for (IngredientSlot slot : state.slots) {
-                    if (slot == null) continue;
-                    if (slot.state == FoodState.WHOLE) {
-                        if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
-                            slot.currentFace = ActiveFace.BACK;
-                            flipped = true;
-                        } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
-                            slot.currentFace = ActiveFace.FRONT;
-                            flipped = true;
+                    e.setCancelled(true);
+                    state.pendingFuelClear = false;
+                    boolean flipped = false;
+                    for (IngredientSlot slot : state.slots) {
+                        if (slot == null) continue;
+                        if (slot.state == FoodState.WHOLE) {
+                            if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
+                                slot.currentFace = ActiveFace.BACK;
+                                flipped = true;
+                            } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
+                                slot.currentFace = ActiveFace.FRONT;
+                                flipped = true;
+                            }
                         }
                     }
+                    if (flipped) {
+                        state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
+                        player.sendMessage("§a已翻面！烹饪加速中...");
+                    } else {
+                        player.sendMessage("§e食材还不到翻面时机（需要熟度 ≥ 50%）");
+                    }
+                    return;
                 }
-                if (flipped) {
-                    state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
-                    player.sendMessage("§a已翻面！烹饪加速中...");
-                }
-            }
 
-            @EventHandler
-            public void onInteractEntity(PlayerInteractAtEntityEvent event) {
-                if (event.getHand() != EquipmentSlot.HAND) return;
-                Entity target = event.getRightClicked();
-                Location boardLoc = findBoardLoc(target);
+                Location boardLoc = findNearbyBoard(player);
                 if (boardLoc == null) return;
-
-                Player player = event.getPlayer();
-                ItemStack hand = player.getInventory().getItemInMainHand();
-                if (hand.getItemMeta() == null) return;
-                PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
-                if (!"SPATULA".equals(handPdc.get(CookingKeys.ITEM_TYPE, PersistentDataType.STRING))) return;
-
-                event.setCancelled(true);
+                e.setCancelled(true);
 
                 ItemStack held = CuttingBoardBlock.getStoredItem(boardLoc);
                 if (held == null) return;
@@ -114,9 +106,7 @@ public class SpatulaItem extends SlimefunItem {
                 if (current != FoodState.WHOLE) return;
 
                 String ingId = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-                if (ingId == null) {
-                    ingId = held.getType().name();
-                }
+                if (ingId == null) ingId = held.getType().name();
                 IngredientConfig.IngredientData data = ingredients.get(ingId);
                 if (data == null || data.sauceCreation == null) return;
 
@@ -132,12 +122,25 @@ public class SpatulaItem extends SlimefunItem {
                 held.setItemMeta(heldMeta);
                 CuttingBoardBlock.setStoredItem(boardLoc, held);
             }
+
+            @EventHandler(priority = EventPriority.LOW)
+            public void onInteractEntity(PlayerInteractAtEntityEvent event) {
+                if (event.getHand() != EquipmentSlot.HAND) return;
+                if (!(event.getRightClicked() instanceof ArmorStand stand)) return;
+                if (!stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
+                event.setCancelled(true);
+            }
         }, plugin);
     }
 
-    private static Location findBoardLoc(Entity entity) {
-        for (Map.Entry<Location, ItemFrame> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
-            if (entry.getValue().equals(entity)) return entry.getKey();
+    private Location findNearbyBoard(Player player) {
+        Location ploc = player.getLocation();
+        for (Map.Entry<Location, ArmorStand> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
+            Location bloc = entry.getKey();
+            if (bloc.getWorld() != null && bloc.getWorld().equals(ploc.getWorld())
+                    && ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5)) <= 9.0) {
+                return bloc;
+            }
         }
         return null;
     }

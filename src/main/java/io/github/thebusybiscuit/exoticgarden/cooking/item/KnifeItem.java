@@ -8,10 +8,13 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -27,20 +30,22 @@ public class KnifeItem extends SlimefunItem {
         super(group, item, recipeType, recipe);
 
         plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
-            @org.bukkit.event.EventHandler
-            public void onInteract(PlayerInteractAtEntityEvent event) {
-                if (event.getHand() != EquipmentSlot.HAND) return;
-                Entity target = event.getRightClicked();
-                Location boardLoc = findBoardLoc(target);
-                if (boardLoc == null) return;
 
-                Player player = event.getPlayer();
+            @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
+            public void onInteract(PlayerInteractEvent e) {
+                if (e.getHand() != EquipmentSlot.HAND) return;
+                if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
+
+                Player player = e.getPlayer();
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getItemMeta() == null) return;
                 PersistentDataContainer handPdc = hand.getItemMeta().getPersistentDataContainer();
                 if (!"KNIFE".equals(handPdc.get(CookingKeys.ITEM_TYPE, PersistentDataType.STRING))) return;
 
-                event.setCancelled(true);
+                Location boardLoc = findNearbyBoard(player);
+                if (boardLoc == null) return;
+
+                e.setCancelled(true);
 
                 ItemStack held = CuttingBoardBlock.getStoredItem(boardLoc);
                 if (held == null) return;
@@ -50,8 +55,8 @@ public class KnifeItem extends SlimefunItem {
                     if (!leftover.isEmpty() && boardLoc.getWorld() != null) {
                         leftover.values().forEach(it -> boardLoc.getWorld().dropItemNaturally(boardLoc, it));
                     }
-                    target.remove();
-                    CuttingBoardBlock.boardDisplays.remove(boardLoc);
+                    ArmorStand stand = CuttingBoardBlock.boardDisplays.remove(boardLoc);
+                    if (stand != null) stand.remove();
                     return;
                 }
 
@@ -64,12 +69,33 @@ public class KnifeItem extends SlimefunItem {
                     try { current = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
                 }
                 FoodState next = advanceState(current);
+                if (next == current) return;
                 heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, next.name());
                 held.setItemMeta(heldMeta);
                 CuttingBoardBlock.setStoredItem(boardLoc, held);
-                player.sendMessage("§a食材状态: " + next.name());
+                player.sendMessage("§a食材状态: " + stateDisplayName(next));
+            }
+
+            @EventHandler(priority = EventPriority.LOW)
+            public void onInteractEntity(PlayerInteractAtEntityEvent event) {
+                if (event.getHand() != EquipmentSlot.HAND) return;
+                if (!(event.getRightClicked() instanceof ArmorStand stand)) return;
+                if (!stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
+                event.setCancelled(true);
             }
         }, plugin);
+    }
+
+    private Location findNearbyBoard(Player player) {
+        Location ploc = player.getLocation();
+        for (Map.Entry<Location, ArmorStand> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
+            Location bloc = entry.getKey();
+            if (bloc.getWorld() != null && bloc.getWorld().equals(ploc.getWorld())
+                    && ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5)) <= 9.0) {
+                return bloc;
+            }
+        }
+        return null;
     }
 
     private FoodState advanceState(FoodState current) {
@@ -80,10 +106,12 @@ public class KnifeItem extends SlimefunItem {
         };
     }
 
-    private Location findBoardLoc(Entity entity) {
-        for (Map.Entry<Location, ItemFrame> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
-            if (entry.getValue().equals(entity)) return entry.getKey();
-        }
-        return null;
+    private String stateDisplayName(FoodState state) {
+        return switch (state) {
+            case WHOLE -> "完整";
+            case SLICED -> "切片";
+            case DICED -> "切丁";
+            case SAUCE -> "酱汁";
+        };
     }
 }
