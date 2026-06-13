@@ -83,18 +83,21 @@ public class StoveTickTask extends BukkitRunnable {
     }
 
     private void tickTemperature(StoveState state) {
+        double maxTemp = 30;
+        double totalHeatRate = 0;
+        for (FuelEntry fe : state.fuels) {
+            FuelConfig.FuelData data = fuels.get(fe.fuelId);
+            if (data != null) {
+                maxTemp += data.tempGain;
+                totalHeatRate += data.heatRate;
+            }
+        }
+
         double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
         state.currentTemp = Math.max(state.currentTemp - coolRate * 0.1, 30.0);
 
-        if (!state.fuels.isEmpty()) {
-            double totalHeatRate = 0;
-            for (FuelEntry fe : state.fuels) {
-                FuelConfig.FuelData data = fuels.get(fe.fuelId);
-                if (data != null) {
-                    totalHeatRate += data.heatRate;
-                }
-            }
-            state.currentTemp += totalHeatRate * 0.1;
+        if (!state.fuels.isEmpty() && state.currentTemp < maxTemp) {
+            state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
         }
     }
 
