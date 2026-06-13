@@ -51,6 +51,7 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
 
             @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
             public void onPlayerInteract(PlayerInteractEvent e) {
+                if (e.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;
                 if (e.getClickedBlock() == null) return;
                 if (e.getClickedBlock().getType() != org.bukkit.Material.CAMPFIRE) return;
                 if (!activeStoves.containsKey(e.getClickedBlock().getLocation())) return;

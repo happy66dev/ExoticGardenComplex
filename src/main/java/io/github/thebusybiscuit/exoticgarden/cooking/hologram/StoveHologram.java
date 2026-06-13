@@ -67,7 +67,7 @@ public class StoveHologram {
             }
             CharLevel charLevel = CharLevel.fromSeconds(slot.charSeconds);
             String ingName = getIngredientName(slot.ingredientId, ingredients);
-            if (charLevel == CharLevel.SEVERE || charLevel == CharLevel.HEAVY) {
+            if (charLevel == CharLevel.SEVERE || charLevel == CharLevel.HEAVY || charLevel == CharLevel.MEDIUM) {
                 sb.append(String.format("§e主菜%d: §c%s §c⚠烧焦\n", i + 1, ingName));
             } else if (slot.state == FoodState.WHOLE) {
                 int front = (int) (slot.frontDoneness * 100);

@@ -41,8 +41,10 @@ public class FoodTagListener implements Listener {
         if (e.getClickedInventory().getType() == InventoryType.PLAYER
                 || e.getClickedInventory().getType() == InventoryType.CRAFTING
                 || e.getClickedInventory().getType() == InventoryType.CREATIVE) {
-            tagIfIngredient(e.getCursor());
-            tagIfIngredient(e.getCurrentItem());
+            ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
+            if (tagIfIngredient(cursor)) e.setCursor(cursor);
+            ItemStack current = e.getCurrentItem() != null ? e.getCurrentItem().clone() : null;
+            if (tagIfIngredient(current)) e.setCurrentItem(current);
         }
     }
 

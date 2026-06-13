@@ -172,7 +172,9 @@ public class CookingModule {
                 if (stand.getPersistentDataContainer().has(
                         io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.BOARD_ITEM,
                         org.bukkit.persistence.PersistentDataType.STRING)) {
-                    Location blockLoc = stand.getLocation().getBlock().getLocation();
+                    Location spawnLoc = stand.getLocation();
+                    Location blockLoc = new Location(spawnLoc.getWorld(),
+                        Math.floor(spawnLoc.getX()), Math.floor(spawnLoc.getY() + 0.3), Math.floor(spawnLoc.getZ()));
                     CuttingBoardBlock.boardDisplays.put(blockLoc, stand);
                 }
             }

@@ -66,8 +66,9 @@ public class CuttingBoardBlock extends SlimefunItem {
                 }
             } else {
                 if (stand != null) {
-                    ItemStack stored = stand.getEquipment().getHelmet().clone();
-                    if (!stored.getType().isAir()) {
+                    ItemStack helmet = stand.getEquipment().getHelmet();
+                    if (helmet != null && !helmet.getType().isAir()) {
+                        ItemStack stored = helmet.clone();
                         Map<Integer, ItemStack> leftover = player.getInventory().addItem(stored);
                         if (!leftover.isEmpty() && loc.getWorld() != null) {
                             leftover.values().forEach(it -> loc.getWorld().dropItemNaturally(loc, it));
