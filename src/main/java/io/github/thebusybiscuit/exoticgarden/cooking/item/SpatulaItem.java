@@ -2,12 +2,18 @@ package io.github.thebusybiscuit.exoticgarden.cooking.item;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
+import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.ActiveFace;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -31,6 +37,8 @@ public class SpatulaItem extends SlimefunItem {
                        Map<String, IngredientConfig.IngredientData> ingredients) {
         super(group, item, recipeType, recipe);
         this.ingredients = ingredients;
+
+        addItemHandler(buildStoveHandler());
 
         plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
             @org.bukkit.event.EventHandler
@@ -82,6 +90,40 @@ public class SpatulaItem extends SlimefunItem {
                 CuttingBoardBlock.setStoredItem(boardLoc, held);
             }
         }, plugin);
+    }
+
+    private BlockUseHandler buildStoveHandler() {
+        return (PlayerRightClickEvent e) -> {
+            e.cancel();
+            if (e.getClickedBlock().isEmpty()) return;
+            org.bukkit.block.Block block = e.getClickedBlock().get();
+            SlimefunItem sfItem = SlimefunItem.getById("EG_COOKING_STOVE");
+            if (!(sfItem instanceof StoveBlock stove)) return;
+
+            Player player = e.getPlayer();
+            Location loc = block.getLocation();
+            StoveState state = stove.activeStoves.get(loc);
+            if (state == null) return;
+
+            state.pendingFuelClear = false;
+            boolean flipped = false;
+            for (IngredientSlot slot : state.slots) {
+                if (slot == null) continue;
+                if (slot.state == FoodState.WHOLE) {
+                    if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
+                        slot.currentFace = ActiveFace.BACK;
+                        flipped = true;
+                    } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
+                        slot.currentFace = ActiveFace.FRONT;
+                        flipped = true;
+                    }
+                }
+            }
+            if (flipped) {
+                state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
+                player.sendMessage("§a已翻面！烹饪加速中...");
+            }
+        };
     }
 
     private static Location findBoardLoc(Entity entity) {
