@@ -55,7 +55,9 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 if (e.getClickedBlock().getType() != org.bukkit.Material.CAMPFIRE) return;
                 if (!activeStoves.containsKey(e.getClickedBlock().getLocation())) return;
                 ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
-                if (hand.getType().isEdible() || hand.getType() == org.bukkit.Material.BOWL) {
+                if (hand.getType().isEdible()
+                        || hand.getType() == org.bukkit.Material.BOWL
+                        || hand.getType() == org.bukkit.Material.MILK_BUCKET) {
                     if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
                         e.setCancelled(true);
                     }

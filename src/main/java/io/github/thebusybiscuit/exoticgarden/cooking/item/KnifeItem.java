@@ -88,14 +88,15 @@ public class KnifeItem extends SlimefunItem {
 
     private Location findNearbyBoard(Player player) {
         Location ploc = player.getLocation();
+        Location best = null;
+        double bestDist = Double.MAX_VALUE;
         for (Map.Entry<Location, ArmorStand> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
             Location bloc = entry.getKey();
-            if (bloc.getWorld() != null && bloc.getWorld().equals(ploc.getWorld())
-                    && ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5)) <= 9.0) {
-                return bloc;
-            }
+            if (bloc.getWorld() == null || !bloc.getWorld().equals(ploc.getWorld())) continue;
+            double d = ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5));
+            if (d <= 9.0 && d < bestDist) { bestDist = d; best = bloc; }
         }
-        return null;
+        return best;
     }
 
     private FoodState advanceState(FoodState current) {

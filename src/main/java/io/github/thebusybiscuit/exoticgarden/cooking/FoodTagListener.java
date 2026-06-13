@@ -46,23 +46,27 @@ public class FoodTagListener implements Listener {
         }
     }
 
-    private void tagIfIngredient(ItemStack item) {
-        if (item == null || item.getType().isAir()) return;
+    private boolean tagIfIngredient(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
         String ingId = resolveIngredientId(item);
-        if (ingId == null) return;
+        if (ingId == null) return false;
 
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) return;
+        if (meta == null) return false;
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        if (pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) return;
+        if (pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) return false;
 
         pdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, "WHOLE");
+        if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
+            pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, ingId);
+        }
 
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         lore.add("§7[烹饪食材]");
         meta.setLore(lore);
 
         item.setItemMeta(meta);
+        return true;
     }
 
     private String resolveIngredientId(ItemStack item) {

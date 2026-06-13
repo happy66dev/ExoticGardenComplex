@@ -60,6 +60,10 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
             String id = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
             if (id != null && ingredients.containsKey(id)) return id;
+
+            io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem =
+                io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
+            if (sfItem != null && ingredients.containsKey(sfItem.getId())) return sfItem.getId();
         }
         String matName = item.getType().name();
         if (ingredients.containsKey(matName)) return matName;

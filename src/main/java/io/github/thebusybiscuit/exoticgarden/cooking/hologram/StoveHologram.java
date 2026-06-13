@@ -104,4 +104,13 @@ public class StoveHologram {
         IngredientConfig.IngredientData data = ingredients.get(id);
         return data != null ? data.displayName : id;
     }
+
+    private static String foodStateDisplay(FoodState state) {
+        return switch (state) {
+            case WHOLE -> "完整";
+            case SLICED -> "切片";
+            case DICED -> "切丁";
+            case SAUCE -> "酱汁";
+        };
+    }
 }

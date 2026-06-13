@@ -8,7 +8,6 @@ import io.github.thebusybiscuit.exoticgarden.cooking.interaction.ClearFuelIntera
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.FuelInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.IngredientInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.SeasoningInteractionHandler;
-import io.github.thebusybiscuit.exoticgarden.cooking.interaction.SpatulaInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.DonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.StandardDonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
@@ -22,6 +21,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -57,6 +57,7 @@ public class CookingModule {
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
         plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> rebuildBoardDisplays(plugin), 20L);
         // Temporarily disable dish consumption custom logic.
         // plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
     }
@@ -161,6 +162,22 @@ public class CookingModule {
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.STICK),      null
             }, plugin, ingredients).register(plugin);
+    }
+
+    private static void rebuildBoardDisplays(ExoticGarden plugin) {
+        CuttingBoardBlock.boardDisplays.clear();
+        for (org.bukkit.World world : plugin.getServer().getWorlds()) {
+            for (org.bukkit.entity.Entity entity : world.getEntitiesByClass(org.bukkit.entity.ArmorStand.class)) {
+                org.bukkit.entity.ArmorStand stand = (org.bukkit.entity.ArmorStand) entity;
+                if (stand.getPersistentDataContainer().has(
+                        io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.BOARD_ITEM,
+                        org.bukkit.persistence.PersistentDataType.STRING)) {
+                    Location blockLoc = stand.getLocation().getBlock().getLocation();
+                    CuttingBoardBlock.boardDisplays.put(blockLoc, stand);
+                }
+            }
+        }
+        plugin.getLogger().info("[Cooking] 重建砧板盔甲架映射: " + CuttingBoardBlock.boardDisplays.size() + " 个");
     }
 
     private static void saveResourceIfMissing(ExoticGarden plugin, String name) {

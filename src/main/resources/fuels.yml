@@ -1,48 +1,56 @@
 # config_version: 2
 # ===== 木材类 - 热值中等, 短燃烧, 产木炭 =====
 OAK_LOG:
+  display_name: 橡木原木
   temp_gain: 300
   duration_seconds: 80
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 BIRCH_LOG:
+  display_name: 桦木原木
   temp_gain: 280
   duration_seconds: 75
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 SPRUCE_LOG:
+  display_name: 云杉原木
   temp_gain: 290
   duration_seconds: 78
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 JUNGLE_LOG:
+  display_name: 丛林原木
   temp_gain: 310
   duration_seconds: 82
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 ACACIA_LOG:
+  display_name: 金合欢原木
   temp_gain: 270
   duration_seconds: 72
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 DARK_OAK_LOG:
+  display_name: 深色橡木原木
   temp_gain: 320
   duration_seconds: 85
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 MANGROVE_LOG:
+  display_name: 红树原木
   temp_gain: 290
   duration_seconds: 78
   heat_rate: 6
   effect: WOOD_SMOKE
   byproduct: CHARCOAL
 CHERRY_LOG:
+  display_name: 樱花原木
   temp_gain: 300
   duration_seconds: 80
   heat_rate: 7
@@ -51,18 +59,21 @@ CHERRY_LOG:
 
 # ===== 炭类 - 高热, 长燃烧 =====
 CHARCOAL:
+  display_name: 木炭
   temp_gain: 400
   duration_seconds: 180
   heat_rate: 4
   effect: SMOKY
   byproduct: null
 COAL:
+  display_name: 煤炭
   temp_gain: 500
   duration_seconds: 240
   heat_rate: 5
   effect: SMOKY
   byproduct: null
 COAL_BLOCK:
+  display_name: 煤炭块
   temp_gain: 900
   duration_seconds: 900
   heat_rate: 8
@@ -71,24 +82,28 @@ COAL_BLOCK:
 
 # ===== 高效燃料 - 超高温 =====
 BLAZE_ROD:
+  display_name: 烈焰棒
   temp_gain: 700
   duration_seconds: 120
   heat_rate: 12
   effect: BLAZING
   byproduct: null
 BLAZE_POWDER:
+  display_name: 烈焰粉
   temp_gain: 500
   duration_seconds: 60
   heat_rate: 15
   effect: BLAZING
   byproduct: null
 LAVA_BUCKET:
+  display_name: 岩浆桶
   temp_gain: 1500
   duration_seconds: 600
   heat_rate: 20
   effect: LAVA_INFUSED
   byproduct: null
 MAGMA_BLOCK:
+  display_name: 岩浆块
   temp_gain: 600
   duration_seconds: 300
   heat_rate: 7
@@ -97,12 +112,14 @@ MAGMA_BLOCK:
 
 # ===== 速燃类 - 低热, 短燃烧 =====
 STICK:
+  display_name: 木棍
   temp_gain: 50
   duration_seconds: 10
   heat_rate: 4
   effect: LIGHT_SMOKE
   byproduct: null
 BAMBOO:
+  display_name: 竹子
   temp_gain: 80
   duration_seconds: 15
   heat_rate: 5
@@ -111,78 +128,91 @@ BAMBOO:
 
 # ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
 WHEAT:
+  display_name: 小麦
   temp_gain: 30
   duration_seconds: 6
   heat_rate: 8
   effect: GRASS_SMOKE
   byproduct: null
 WHEAT_SEEDS:
+  display_name: 小麦种子
   temp_gain: 20
   duration_seconds: 4
   heat_rate: 6
   effect: GRASS_SMOKE
   byproduct: null
 SHORT_GRASS:
+  display_name: 矮草
   temp_gain: 15
   duration_seconds: 3
   heat_rate: 5
   effect: GRASS_SMOKE
   byproduct: null
 TALL_GRASS:
+  display_name: 高草
   temp_gain: 30
   duration_seconds: 5
   heat_rate: 7
   effect: GRASS_SMOKE
   byproduct: null
 FERN:
+  display_name: 蕨
   temp_gain: 25
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
   byproduct: null
 LARGE_FERN:
+  display_name: 大型蕨
   temp_gain: 40
   duration_seconds: 8
   heat_rate: 7
   effect: GRASS_SMOKE
   byproduct: null
 DEAD_BUSH:
+  display_name: 枯萎的灌木
   temp_gain: 35
   duration_seconds: 6
   heat_rate: 8
   effect: GRASS_SMOKE
   byproduct: null
 SUGAR_CANE:
+  display_name: 甘蔗
   temp_gain: 25
   duration_seconds: 6
   heat_rate: 6
   effect: SWEET_SMOKE
   byproduct: null
 VINE:
+  display_name: 藤蔓
   temp_gain: 20
   duration_seconds: 4
   heat_rate: 5
   effect: GRASS_SMOKE
   byproduct: null
 TWISTING_VINES:
+  display_name: 扭曲藤蔓
   temp_gain: 30
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
   byproduct: null
 WEEPING_VINES:
+  display_name: 垂泪藤蔓
   temp_gain: 30
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
   byproduct: null
 MOSS_BLOCK:
+  display_name: 苔藓块
   temp_gain: 50
   duration_seconds: 12
   heat_rate: 5
   effect: MOSSY_SMOKE
   byproduct: null
 HAY_BLOCK:
+  display_name: 干草块
   temp_gain: 100
   duration_seconds: 25
   heat_rate: 10
@@ -191,6 +221,7 @@ HAY_BLOCK:
 
 # ===== 海藻类 =====
 DRIED_KELP_BLOCK:
+  display_name: 干海带块
   temp_gain: 350
   duration_seconds: 200
   heat_rate: 5
@@ -199,24 +230,28 @@ DRIED_KELP_BLOCK:
 
 # ===== 降温类 =====
 ICE:
+  display_name: 冰
   temp_gain: 0
   duration_seconds: 6
   heat_rate: -40
   effect: FREEZING
   byproduct: null
 SNOW_BLOCK:
+  display_name: 雪块
   temp_gain: 0
   duration_seconds: 4
   heat_rate: -30
   effect: FREEZING
   byproduct: null
 POWDER_SNOW_BUCKET:
+  display_name: 细雪桶
   temp_gain: 0
   duration_seconds: 8
   heat_rate: -50
   effect: DEEP_FREEZE
   byproduct: null
 BLUE_ICE:
+  display_name: 蓝冰
   temp_gain: 0
   duration_seconds: 10
   heat_rate: -60

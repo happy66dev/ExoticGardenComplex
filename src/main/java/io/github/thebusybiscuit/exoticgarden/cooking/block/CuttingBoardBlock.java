@@ -91,7 +91,7 @@ public class CuttingBoardBlock extends SlimefunItem {
         stand.setBasePlate(false);
         stand.setCollidable(false);
         stand.getEquipment().setHelmet(item);
-        stand.setHeadPose(new EulerAngle(Math.toRadians(180), 0, 0));
+        stand.setHeadPose(new EulerAngle(0, 0, 0));
         PersistentDataContainer pdc = stand.getPersistentDataContainer();
         pdc.set(CookingKeys.BOARD_ITEM, PersistentDataType.STRING, "true");
         return stand;

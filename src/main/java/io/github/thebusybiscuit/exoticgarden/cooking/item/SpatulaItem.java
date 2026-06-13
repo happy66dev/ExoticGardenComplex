@@ -64,6 +64,19 @@ public class SpatulaItem extends SlimefunItem {
                     if (state == null) return;
 
                     e.setCancelled(true);
+
+                    if (player.isSneaking()) {
+                        java.util.Arrays.fill(state.slots, null);
+                        state.seasonings.clear();
+                        state.waterAmount = 0;
+                        state.oilAmount = 0;
+                        state.waterSources.clear();
+                        state.cookingInProgress = false;
+                        StoveBlock.syncCampfireSlots(loc, state);
+                        player.sendMessage("§a灶台已清空（温度与燃料保留）");
+                        return;
+                    }
+
                     state.pendingFuelClear = false;
                     boolean flipped = false;
                     for (IngredientSlot slot : state.slots) {
@@ -135,13 +148,14 @@ public class SpatulaItem extends SlimefunItem {
 
     private Location findNearbyBoard(Player player) {
         Location ploc = player.getLocation();
+        Location best = null;
+        double bestDist = Double.MAX_VALUE;
         for (Map.Entry<Location, ArmorStand> entry : CuttingBoardBlock.boardDisplays.entrySet()) {
             Location bloc = entry.getKey();
-            if (bloc.getWorld() != null && bloc.getWorld().equals(ploc.getWorld())
-                    && ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5)) <= 9.0) {
-                return bloc;
-            }
+            if (bloc.getWorld() == null || !bloc.getWorld().equals(ploc.getWorld())) continue;
+            double d = ploc.distanceSquared(bloc.clone().add(0.5, 0.5, 0.5));
+            if (d <= 9.0 && d < bestDist) { bestDist = d; best = bloc; }
         }
-        return null;
+        return best;
     }
 }

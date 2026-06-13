@@ -12,14 +12,16 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
         public final double heatRate;
         public final String effect;
         public final String byproduct;
+        public final String displayName;
 
         public FuelData(double tempGain, double durationSeconds, double heatRate,
-                        String effect, String byproduct) {
+                        String effect, String byproduct, String displayName) {
             this.tempGain = tempGain;
             this.durationSeconds = durationSeconds;
             this.heatRate = heatRate;
             this.effect = effect;
             this.byproduct = byproduct;
+            this.displayName = displayName;
         }
     }
 
@@ -38,7 +40,8 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
             durationSeconds,
             s.getDouble("heat_rate"),
             s.getString("effect", ""),
-            s.getString("byproduct", null)
+            s.getString("byproduct", null),
+            s.getString("display_name", key)
         );
     }
 }
