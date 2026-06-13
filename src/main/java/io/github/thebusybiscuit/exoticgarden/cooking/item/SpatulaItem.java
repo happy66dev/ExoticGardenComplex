@@ -78,24 +78,23 @@ public class SpatulaItem extends SlimefunItem {
                     }
 
                     state.pendingFuelClear = false;
-                    boolean flipped = false;
+                    boolean hasFood = false;
                     for (IngredientSlot slot : state.slots) {
                         if (slot == null) continue;
+                        hasFood = true;
                         if (slot.state == FoodState.WHOLE) {
                             if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
                                 slot.currentFace = ActiveFace.BACK;
-                                flipped = true;
                             } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
                                 slot.currentFace = ActiveFace.FRONT;
-                                flipped = true;
                             }
                         }
                     }
-                    if (flipped) {
+                    if (hasFood) {
                         state.spatulaBoostTicksLeft = Math.max(state.spatulaBoostTicksLeft, 200);
                         player.sendMessage("§a已翻面！烹饪加速中...");
                     } else {
-                        player.sendMessage("§e食材还不到翻面时机（需要熟度 ≥ 50%）");
+                        player.sendMessage("§e灶台上没有食材");
                     }
                     return;
                 }
