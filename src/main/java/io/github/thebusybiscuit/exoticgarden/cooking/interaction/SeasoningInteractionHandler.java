@@ -1,6 +1,5 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
-import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.SeasoningEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
@@ -32,6 +31,35 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         if (seasoningId == null) return false;
 
         state.pendingFuelClear = false;
+
+        if ("WATER_BUCKET".equals(seasoningId)) {
+            state.waterAmount += 1000;
+            handItem.setAmount(handItem.getAmount() - 1);
+            if (handItem.getAmount() <= 0) {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.BUCKET));
+            } else {
+                player.getInventory().addItem(new ItemStack(Material.BUCKET));
+            }
+            return true;
+        }
+
+        if ("WATER".equals(seasoningId)) {
+            state.waterAmount += 250;
+            handItem.setAmount(handItem.getAmount() - 1);
+            if (handItem.getAmount() <= 0) {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.GLASS_BOTTLE));
+            } else {
+                player.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE));
+            }
+            return true;
+        }
+
+        if ("OIL".equals(seasoningId)) {
+            state.oilAmount += 100;
+            handItem.setAmount(handItem.getAmount() - 1);
+            return true;
+        }
+
         if (state.seasonings.size() >= 10) {
             player.sendMessage("§c调料槽已满（最多10种）");
             return true;
@@ -44,7 +72,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
     private String resolve(ItemStack item) {
         if (item.getItemMeta() != null) {
             PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
-            String id = pdc.get(CookingKeys.SEASONING_ID, PersistentDataType.STRING);
+            String id = pdc.get(io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.SEASONING_ID, PersistentDataType.STRING);
             if (id != null && seasonings.containsKey(id)) return id;
 
             String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
@@ -55,6 +83,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         }
 
         Material mat = item.getType();
+        if (mat == Material.WATER_BUCKET) return "WATER_BUCKET";
         if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
             return "_POTION_";
         }

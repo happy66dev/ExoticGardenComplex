@@ -1,5 +1,7 @@
 # ===== DUAL: 原版肉类 (8种) - 翻面: true, 可制肉酱 =====
 BEEF:
+  display_name: 牛肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -12,6 +14,8 @@ BEEF:
   sauce_creation:
     clicks_required: 5
 PORKCHOP:
+  display_name: 猪排
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -24,6 +28,8 @@ PORKCHOP:
   sauce_creation:
     clicks_required: 5
 CHICKEN:
+  display_name: 鸡肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -38,6 +44,8 @@ CHICKEN:
 
 # ===== DUAL: 熟肉 (7种) - 翻面: true, 可制肉酱 =====
 COOKED_BEEF:
+  display_name: 熟牛肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -50,6 +58,8 @@ COOKED_BEEF:
   sauce_creation:
     clicks_required: 4
 COOKED_PORKCHOP:
+  display_name: 熟猪排
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -62,6 +72,8 @@ COOKED_PORKCHOP:
   sauce_creation:
     clicks_required: 4
 COOKED_CHICKEN:
+  display_name: 熟鸡肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -74,6 +86,8 @@ COOKED_CHICKEN:
   sauce_creation:
     clicks_required: 3
 COOKED_COD:
+  display_name: 熟鳕鱼
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -86,6 +100,8 @@ COOKED_COD:
   sauce_creation:
     clicks_required: 2
 COOKED_SALMON:
+  display_name: 熟鲑鱼
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -98,6 +114,8 @@ COOKED_SALMON:
   sauce_creation:
     clicks_required: 2
 COOKED_MUTTON:
+  display_name: 熟羊肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -110,6 +128,8 @@ COOKED_MUTTON:
   sauce_creation:
     clicks_required: 4
 COOKED_RABBIT:
+  display_name: 熟兔肉
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -124,6 +144,8 @@ COOKED_RABBIT:
 
 # ===== DUAL: 原版水果/食材补全 (5种) =====
 APPLE:
+  display_name: 苹果
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -136,6 +158,8 @@ APPLE:
   sauce_creation:
     clicks_required: 3
 GOLDEN_APPLE:
+  display_name: 金苹果
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -148,6 +172,8 @@ GOLDEN_APPLE:
   sauce_creation:
     clicks_required: 5
 GOLDEN_CARROT:
+  display_name: 金胡萝卜
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -160,6 +186,8 @@ GOLDEN_CARROT:
   sauce_creation:
     clicks_required: 5
 PUMPKIN:
+  display_name: 南瓜
+  weight_grams: 400
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -172,6 +200,8 @@ PUMPKIN:
   sauce_creation:
     clicks_required: 4
 DRIED_KELP:
+  display_name: 干海带
+  weight_grams: 30
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -186,6 +216,8 @@ DRIED_KELP:
 
 # ===== DUAL: 原版特殊 (2种) =====
 COCOA_BEANS:
+  display_name: 可可豆
+  weight_grams: 30
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -198,6 +230,8 @@ COCOA_BEANS:
   sauce_creation:
     clicks_required: 3
 BAKED_POTATO:
+  display_name: 烤土豆
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -212,6 +246,8 @@ BAKED_POTATO:
 
 # ===== MAIN: 原版面包 =====
 BREAD:
+  display_name: 面包
+  weight_grams: 300
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -222,6 +258,8 @@ BREAD:
   base_cook_time_seconds: 15
   flip_required: false
 COD:
+  display_name: 鳕鱼
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -234,6 +272,8 @@ COD:
   sauce_creation:
     clicks_required: 3
 SALMON:
+  display_name: 鲑鱼
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -246,6 +286,8 @@ SALMON:
   sauce_creation:
     clicks_required: 3
 MUTTON:
+  display_name: 羊肉
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -258,6 +300,8 @@ MUTTON:
   sauce_creation:
     clicks_required: 5
 RABBIT:
+  display_name: 兔肉
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -270,6 +314,8 @@ RABBIT:
   sauce_creation:
     clicks_required: 4
 EGG:
+  display_name: 鸡蛋
+  weight_grams: 60
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -284,6 +330,8 @@ EGG:
 
 # ===== DUAL: 原版蔬菜 (5种) - 翻面: false, DICED保留 =====
 POTATO:
+  display_name: 土豆
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -296,6 +344,8 @@ POTATO:
   sauce_creation:
     clicks_required: 4
 CARROT:
+  display_name: 胡萝卜
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -308,6 +358,8 @@ CARROT:
   sauce_creation:
     clicks_required: 4
 BEETROOT:
+  display_name: 甜菜根
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -320,6 +372,8 @@ BEETROOT:
   sauce_creation:
     clicks_required: 4
 BROWN_MUSHROOM:
+  display_name: 蘑菇
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -332,6 +386,8 @@ BROWN_MUSHROOM:
   sauce_creation:
     clicks_required: 2
 RED_MUSHROOM:
+  display_name: 红蘑菇
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -346,6 +402,8 @@ RED_MUSHROOM:
 
 # ===== DUAL: 原版水果/浆果 (3种) =====
 MELON_SLICE:
+  display_name: 西瓜片
+  weight_grams: 100
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -358,6 +416,8 @@ MELON_SLICE:
   sauce_creation:
     clicks_required: 2
 SWEET_BERRIES:
+  display_name: 甜浆果
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -370,6 +430,8 @@ SWEET_BERRIES:
   sauce_creation:
     clicks_required: 2
 GLOW_BERRIES:
+  display_name: 发光浆果
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -384,6 +446,8 @@ GLOW_BERRIES:
 
 # ===== MAIN: ExoticGarden 作物 (14种) =====
 CORN:
+  display_name: 玉米
+  weight_grams: 150
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -394,6 +458,8 @@ CORN:
   base_cook_time_seconds: 50
   flip_required: true
 CABBAGE:
+  display_name: 卷心菜
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -404,6 +470,8 @@ CABBAGE:
   base_cook_time_seconds: 30
   flip_required: false
 LETTUCE:
+  display_name: 生菜
+  weight_grams: 100
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -414,6 +482,8 @@ LETTUCE:
   base_cook_time_seconds: 10
   flip_required: false
 GARLIC:
+  display_name: 大蒜
+  weight_grams: 50
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -424,6 +494,8 @@ GARLIC:
   base_cook_time_seconds: 20
   flip_required: false
 BREADFRUIT:
+  display_name: 面包果
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -434,6 +506,8 @@ BREADFRUIT:
   base_cook_time_seconds: 40
   flip_required: true
 ALIEN_FRUIT:
+  display_name: 外星果实
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -444,6 +518,8 @@ ALIEN_FRUIT:
   base_cook_time_seconds: 40
   flip_required: true
 PUNCH_FRUIT:
+  display_name: 潘趣果
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -454,6 +530,8 @@ PUNCH_FRUIT:
   base_cook_time_seconds: 40
   flip_required: true
 JACKFRUIT:
+  display_name: 菠萝蜜
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -464,6 +542,8 @@ JACKFRUIT:
   base_cook_time_seconds: 45
   flip_required: true
 BIG_CARROT:
+  display_name: 大萝卜
+  weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -474,6 +554,8 @@ BIG_CARROT:
   base_cook_time_seconds: 40
   flip_required: true
 ACORN_SQUASH:
+  display_name: 橡子南瓜
+  weight_grams: 300
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -484,6 +566,8 @@ ACORN_SQUASH:
   base_cook_time_seconds: 50
   flip_required: true
 GINSENGBABY:
+  display_name: 人参果娃
+  weight_grams: 80
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -494,6 +578,8 @@ GINSENGBABY:
   base_cook_time_seconds: 35
   flip_required: true
 BIG_WHEAT:
+  display_name: 异域大麦
+  weight_grams: 150
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -504,6 +590,8 @@ BIG_WHEAT:
   base_cook_time_seconds: 50
   flip_required: true
 AMARANTH:
+  display_name: 苋菜
+  weight_grams: 50
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -514,6 +602,8 @@ AMARANTH:
   base_cook_time_seconds: 25
   flip_required: false
 TEQUILA:
+  display_name: 龙舌兰
+  weight_grams: 100
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -526,6 +616,8 @@ TEQUILA:
 
 # ===== DUAL: ExoticGarden 蔬菜 (3种) =====
 TOMATO:
+  display_name: 番茄
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -538,6 +630,8 @@ TOMATO:
   sauce_creation:
     clicks_required: 3
 ONION:
+  display_name: 洋葱
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -550,6 +644,8 @@ ONION:
   sauce_creation:
     clicks_required: 4
 RED_BELL_PEPPER:
+  display_name: 红甜椒
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -564,6 +660,8 @@ RED_BELL_PEPPER:
 
 # ===== DUAL: ExoticGarden 大果类 (12种) - 翻面: true =====
 OAK_APPLE:
+  display_name: 橡树苹果
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -576,6 +674,8 @@ OAK_APPLE:
   sauce_creation:
     clicks_required: 3
 CHERRY:
+  display_name: 樱桃
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -588,6 +688,8 @@ CHERRY:
   sauce_creation:
     clicks_required: 2
 POMEGRANATE:
+  display_name: 石榴
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -600,6 +702,8 @@ POMEGRANATE:
   sauce_creation:
     clicks_required: 3
 LEMON:
+  display_name: 柠檬
+  weight_grams: 100
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -612,6 +716,8 @@ LEMON:
   sauce_creation:
     clicks_required: 2
 PLUM:
+  display_name: 梅子
+  weight_grams: 100
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -624,6 +730,8 @@ PLUM:
   sauce_creation:
     clicks_required: 3
 LIME:
+  display_name: 酸橙
+  weight_grams: 100
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -636,6 +744,8 @@ LIME:
   sauce_creation:
     clicks_required: 2
 ORANGE:
+  display_name: 橙子
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -648,6 +758,8 @@ ORANGE:
   sauce_creation:
     clicks_required: 3
 PEACH:
+  display_name: 桃子
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -660,6 +772,8 @@ PEACH:
   sauce_creation:
     clicks_required: 3
 PEAR:
+  display_name: 梨子
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -672,6 +786,8 @@ PEAR:
   sauce_creation:
     clicks_required: 3
 DRAGON_FRUIT:
+  display_name: 火龙果
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -684,6 +800,8 @@ DRAGON_FRUIT:
   sauce_creation:
     clicks_required: 2
 PINEAPPLE:
+  display_name: 菠萝
+  weight_grams: 300
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -696,6 +814,8 @@ PINEAPPLE:
   sauce_creation:
     clicks_required: 3
 COCONUT:
+  display_name: 椰子
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
@@ -710,6 +830,8 @@ COCONUT:
 
 # ===== DUAL: ExoticGarden 浆果类 (8种) - 翻面: false, 无 DICED =====
 STRAWBERRY:
+  display_name: 草莓
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -722,6 +844,8 @@ STRAWBERRY:
   sauce_creation:
     clicks_required: 2
 GRAPE:
+  display_name: 葡萄
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -734,6 +858,8 @@ GRAPE:
   sauce_creation:
     clicks_required: 2
 BLUEBERRY:
+  display_name: 蓝莓
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -746,6 +872,8 @@ BLUEBERRY:
   sauce_creation:
     clicks_required: 2
 RASPBERRY:
+  display_name: 树莓
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -758,6 +886,8 @@ RASPBERRY:
   sauce_creation:
     clicks_required: 2
 BLACKBERRY:
+  display_name: 黑莓
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -770,6 +900,8 @@ BLACKBERRY:
   sauce_creation:
     clicks_required: 2
 CRANBERRY:
+  display_name: 蔓越莓
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -782,6 +914,8 @@ CRANBERRY:
   sauce_creation:
     clicks_required: 2
 ELDERBERRY:
+  display_name: 接骨木果
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -794,6 +928,8 @@ ELDERBERRY:
   sauce_creation:
     clicks_required: 2
 COWBERRY:
+  display_name: 越橘
+  weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
@@ -808,6 +944,8 @@ COWBERRY:
 
 # ===== DUAL: ExoticGarden 根茎类 (1种) =====
 SWEET_POTATO:
+  display_name: 地瓜
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard

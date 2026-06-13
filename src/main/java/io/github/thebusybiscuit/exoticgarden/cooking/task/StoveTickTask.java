@@ -47,6 +47,7 @@ public class StoveTickTask extends BukkitRunnable {
             StoveState state = entry.getValue();
             tickFuels(state, loc);
             tickTemperature(state);
+            tickEvaporation(state);
             if (state.spatulaBoostTicksLeft > 0) {
                 state.spatulaBoostTicksLeft -= 2;
             }
@@ -131,6 +132,13 @@ public class StoveTickTask extends BukkitRunnable {
             if (state.currentTemp < data.minTemp) continue;
             double increment = (1.0 / data.baseTimeSeconds) * 0.1;
             se.progress = Math.min(se.progress + increment, 1.0);
+        }
+    }
+
+    private void tickEvaporation(StoveState state) {
+        if (state.waterAmount > 0 && state.currentTemp > 100) {
+            double evapRate = (state.currentTemp - 100) * 0.02;
+            state.waterAmount = Math.max(0, state.waterAmount - evapRate);
         }
     }
 }

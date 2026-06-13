@@ -14,6 +14,17 @@ RICE_WINE:
   optimal_temp: 80
   base_time_seconds: 20
 
+# ===== 水/油 (特殊处理, 不计入调料槽) =====
+WATER:
+  display_name: "水"
+  has_doneness: false
+WATER_BUCKET:
+  display_name: "水(桶)"
+  has_doneness: false
+OIL:
+  display_name: "油"
+  has_doneness: false
+
 # ===== 原版药水 (has_doneness: true, 通用渗入) =====
 _POTION_:
   display_name: "药水"

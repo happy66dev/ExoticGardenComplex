@@ -42,6 +42,11 @@ public class StoveHologram {
         sb.append(String.format("§6[灶台] §e温度: §a%.0f°C §7/ §f%.0f°C\n",
             state.currentTemp, maxTemp));
 
+        if (state.waterAmount > 0 || state.oilAmount > 0) {
+            sb.append(String.format("§b水量: §f%.0fml  §e油量: §f%.0fml\n",
+                state.waterAmount, state.oilAmount));
+        }
+
         if (!state.fuels.isEmpty()) {
             for (FuelEntry fe : state.fuels) {
                 double secs = fe.ticksRemaining / 20.0;
@@ -61,17 +66,18 @@ public class StoveHologram {
                 continue;
             }
             CharLevel charLevel = CharLevel.fromSeconds(slot.charSeconds);
+            String ingName = getIngredientName(slot.ingredientId, ingredients);
             if (charLevel == CharLevel.SEVERE || charLevel == CharLevel.HEAVY) {
-                sb.append(String.format("§e主菜%d: §c%s §c⚠烧焦\n", i + 1, slot.ingredientId));
+                sb.append(String.format("§e主菜%d: §c%s §c⚠烧焦\n", i + 1, ingName));
             } else if (slot.state == FoodState.WHOLE) {
                 int front = (int) (slot.frontDoneness * 100);
                 int back = (int) (slot.backDoneness * 100);
                 sb.append(String.format("§e主菜%d: §a%s[完整] §6正面%d%% 背面%d%%\n",
-                    i + 1, slot.ingredientId, front, back));
+                    i + 1, ingName, front, back));
             } else {
                 int pct = (int) (slot.frontDoneness * 100);
                 sb.append(String.format("§e主菜%d: §a%s[%s] §e%d%%\n",
-                    i + 1, slot.ingredientId, slot.state.name(), pct));
+                    i + 1, ingName, slot.state.name(), pct));
             }
         }
 
@@ -90,5 +96,10 @@ public class StoveHologram {
         }
 
         return sb.toString().trim();
+    }
+
+    private static String getIngredientName(String id, Map<String, IngredientConfig.IngredientData> ingredients) {
+        IngredientConfig.IngredientData data = ingredients.get(id);
+        return data != null ? data.displayName : id;
     }
 }

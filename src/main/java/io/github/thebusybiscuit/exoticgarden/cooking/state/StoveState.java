@@ -12,6 +12,8 @@ public class StoveState {
     public boolean pendingFuelClear;
     public long fuelClearConfirmTime;
     public boolean cookingInProgress;
+    public double waterAmount;
+    public double oilAmount;
 
     public StoveState() {
         this.currentTemp = 30.0;
@@ -22,5 +24,7 @@ public class StoveState {
         this.pendingFuelClear = false;
         this.fuelClearConfirmTime = 0L;
         this.cookingInProgress = false;
+        this.waterAmount = 0;
+        this.oilAmount = 0;
     }
 }

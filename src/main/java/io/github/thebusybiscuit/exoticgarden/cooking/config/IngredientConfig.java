@@ -25,11 +25,14 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final List<String> states;
         public final SauceCreation sauceCreation;
         public final String calculatorType;
+        public final String displayName;
+        public final double weightGrams;
 
         public IngredientData(double minTemp, double maxTemp, double optimalTempMin,
                               double optimalTempMax, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
-                              SauceCreation sauceCreation, String calculatorType) {
+                              SauceCreation sauceCreation, String calculatorType,
+                              String displayName, double weightGrams) {
             this.minTemp = minTemp;
             this.maxTemp = maxTemp;
             this.optimalTempMin = optimalTempMin;
@@ -39,6 +42,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.states = states;
             this.sauceCreation = sauceCreation;
             this.calculatorType = calculatorType;
+            this.displayName = displayName;
+            this.weightGrams = weightGrams;
         }
     }
 
@@ -61,7 +66,9 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getBoolean("flip_required", false),
             s.getStringList("states"),
             sauce,
-            s.getString("calculator_type", "standard")
+            s.getString("calculator_type", "standard"),
+            s.getString("display_name", key),
+            s.getDouble("weight_grams", 100)
         );
     }
 }
