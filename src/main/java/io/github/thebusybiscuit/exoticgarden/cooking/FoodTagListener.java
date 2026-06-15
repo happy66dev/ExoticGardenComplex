@@ -152,11 +152,11 @@ public class FoodTagListener implements Listener {
             lore.add(ingredientLine);
         }
 
-        // 生成生产日期lore行，格式："§8生产日期: X分钟前" 或 "§8生产日期: 刚刚"喵
-        String productionLine = "§8生产日期: " + buildTimeDesc(nowMs);
+        // 生成生产日期lore行，格式："§8生产日期: xxxx年xx月xx日 xx时xx分xx秒"喵
+        String productionLine = "§8生产日期: " + formatTimestamp(nowMs);
 
-        // 生成保质期固定行，格式："§8保质期: X分钟"喵
-        String shelfLifeLine = "§8保质期: " + shelfLifeMinutes + "分钟";
+        // 生成保质期固定行，自动转换为最合适的单位（天/小时/分钟）喵
+        String shelfLifeLine = "§8保质期: " + formatShelfLife(shelfLifeMinutes);
 
         // 判断是否已过期喵
         long diffMinutes = (System.currentTimeMillis() - nowMs) / 60000L;
@@ -254,6 +254,35 @@ public class FoodTagListener implements Listener {
     // 兼容旧调用，委托给新方法喵
     static String buildFreshnessLore(long timestampMs) {
         return "§8生产日期: " + buildTimeDesc(timestampMs);
+    }
+
+    /**
+     * 将毫秒时间戳格式化为"xxxx年xx月xx日 xx时xx分xx秒"喵~
+     */
+    static String formatTimestamp(long timestampMs) {
+        java.time.LocalDateTime dt = java.time.LocalDateTime.ofInstant(
+                java.time.Instant.ofEpochMilli(timestampMs),
+                java.time.ZoneId.systemDefault());
+        return String.format("%d年%02d月%02d日 %02d时%02d分%02d秒",
+                dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth(),
+                dt.getHour(), dt.getMinute(), dt.getSecond());
+    }
+
+    /**
+     * 将保质期分钟数转换为可读单位字符串，最小单位分钟，自动升级到小时/天喵~
+     * 例：10→"10分钟"，90→"1小时30分钟"，1440→"1天"，1500→"1天1小时"
+     */
+    static String formatShelfLife(int totalMinutes) {
+        // 喵~防御：负数或0视为无效，返回0分钟喵
+        if (totalMinutes <= 0) return "0分钟";
+        int days    = totalMinutes / 1440; // 1天=1440分钟喵
+        int hours   = (totalMinutes % 1440) / 60;
+        int minutes = totalMinutes % 60;
+        StringBuilder sb = new StringBuilder();
+        if (days > 0)    sb.append(days).append("天");
+        if (hours > 0)   sb.append(hours).append("小时");
+        if (minutes > 0) sb.append(minutes).append("分钟");
+        return sb.toString();
     }
 
     // 将食材状态枚举转为中文显示名喵
