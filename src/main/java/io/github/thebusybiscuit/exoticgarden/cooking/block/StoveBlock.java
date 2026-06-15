@@ -54,12 +54,21 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 if (e.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;
                 if (e.getClickedBlock() == null) return;
                 if (e.getClickedBlock().getType() != org.bukkit.Material.CAMPFIRE) return;
-                if (!activeStoves.containsKey(e.getClickedBlock().getLocation())) return;
+                Location loc = e.getClickedBlock().getLocation();
+                if (!activeStoves.containsKey(loc)) return;
                 ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
-                if (hand.getType().isEdible()
-                        || hand.getType() == org.bukkit.Material.BOWL
-                        || hand.getType() == org.bukkit.Material.MILK_BUCKET) {
-                    if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
+                if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
+                    // 碗交互：走handler链路喵
+                    if (hand.getType() == org.bukkit.Material.BOWL) {
+                        e.setCancelled(true);
+                        StoveState state = activeStoves.get(loc);
+                        for (StoveInteractionHandler handler : handlers) {
+                            if (handler.handle(e.getPlayer(), hand, state, loc)) break;
+                        }
+                        return;
+                    }
+                    // 其余edible/MILK_BUCKET只取消原版交互，由BlockUseHandler处理喵
+                    if (hand.getType().isEdible() || hand.getType() == org.bukkit.Material.MILK_BUCKET) {
                         e.setCancelled(true);
                     }
                 }
