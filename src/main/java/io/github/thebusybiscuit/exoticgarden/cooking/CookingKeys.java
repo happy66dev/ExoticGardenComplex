@@ -21,6 +21,10 @@ public final class CookingKeys {
     public static final NamespacedKey ITEM_TYPE       = new NamespacedKey(NS, "item_type");
     public static final NamespacedKey SPATULA_CLICKS  = new NamespacedKey(NS, "spatula_clicks");
     public static final NamespacedKey BOARD_ITEM      = new NamespacedKey(NS, "board_item");
+    // 记录砧板上食材被刀切击的次数，用于 DICED→SAUCE 进度计数喵
+    public static final NamespacedKey KNIFE_CLICKS    = new NamespacedKey(NS, "knife_clicks");
+    // 记录食材/菜肴最后一次被标记时的时间戳（毫秒），用于计算保质期显示喵
+    public static final NamespacedKey FOOD_TIMESTAMP  = new NamespacedKey(NS, "food_timestamp");
 
     private CookingKeys() {}
 }
