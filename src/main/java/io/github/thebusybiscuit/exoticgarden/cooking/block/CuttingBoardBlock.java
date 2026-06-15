@@ -56,6 +56,7 @@ public class CuttingBoardBlock extends SlimefunItem {
                 if (stand == null) {
                     if (loc.getWorld() == null) return;
                     ItemStack toPlace = ensureIngredientId(hand.clone());
+                    toPlace.setAmount(1); // 喵~防御：只放置1个，避免clone保留原始数量导致取回时数量翻倍
                     ArmorStand spawned = spawnStand(loc, toPlace);
                     if (spawned == null) return;
                     boardDisplays.put(loc, spawned);
