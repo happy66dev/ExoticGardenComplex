@@ -73,8 +73,16 @@ public class DishConsumptionListener implements Listener {
         Double saturationRaw = pdc.getOrDefault(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
         double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
-        // 将原物品替换为空气，等效消耗喵
-        e.setItem(new ItemStack(org.bukkit.Material.AIR));
+        // 喵~防御：取消原版消耗事件，手动处理饱食度恢复+药水效果，避免干扰第三方插件
+        e.setCancelled(true);
+        // 手动扣除物品喵
+        Player player = e.getPlayer();
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
+            mainHand.setAmount(mainHand.getAmount() - 1);
+            player.getInventory().setItemInMainHand(mainHand.getAmount() == 0
+                    ? new ItemStack(org.bukkit.Material.AIR) : mainHand);
+        }
 
         // 更新lore中的生产日期行喵
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
@@ -83,7 +91,6 @@ public class DishConsumptionListener implements Listener {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        Player player = e.getPlayer();
         int newFood = Math.min(player.getFoodLevel() + hunger, 20);
         float newSat = (float) Math.min(player.getSaturation() + saturation, newFood);
         player.setFoodLevel(newFood);

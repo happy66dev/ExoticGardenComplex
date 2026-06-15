@@ -35,7 +35,7 @@ public class FoodListener implements Listener {
     public FoodListener(ExoticGarden plugin, Map<String, IngredientConfig.IngredientData> ingredients) {
         this.plugin = plugin;
         this.ingredients = ingredients;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        // 喵~不在构造函数中自注册，由CookingModule.initialize()统一注册，避免双重注册导致事件处理两次
     }
 
     @EventHandler(priority = EventPriority.HIGH)

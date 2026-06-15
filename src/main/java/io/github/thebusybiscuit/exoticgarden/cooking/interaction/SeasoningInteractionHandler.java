@@ -32,6 +32,14 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         state.pendingFuelClear = false;
 
+        // 喵~防御：调料槽满时仍允许加水/加油（水和油不占调料槽），但普通调料拒绝
+        boolean isWaterOrOil = "WATER_BUCKET".equals(seasoningId) || "MILK_BUCKET".equals(seasoningId)
+                || "WATER".equals(seasoningId) || "OIL".equals(seasoningId);
+        if (!isWaterOrOil && state.seasonings.size() >= 10) {
+            player.sendMessage("§c调料槽已满（最多10种）");
+            return true;
+        }
+
         if ("WATER_BUCKET".equals(seasoningId)) {
             state.waterAmount += 1000;
             if (!state.waterSources.contains("水(桶)")) state.waterSources.add("水(桶)");
@@ -70,10 +78,6 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             if (!state.waterSources.contains(src)) state.waterSources.add(src);
         }
 
-        if (state.seasonings.size() >= 10) {
-            player.sendMessage("§c调料槽已满（最多10种）");
-            return true;
-        }
         double w = data != null ? data.weightGrams : 1;
         state.seasonings.add(new SeasoningEntry(seasoningId, 0, w));
         handItem.setAmount(handItem.getAmount() - 1);

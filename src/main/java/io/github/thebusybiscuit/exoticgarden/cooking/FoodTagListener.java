@@ -354,8 +354,10 @@ public class FoodTagListener implements Listener {
     }
 
     private String resolveIngredientId(ItemStack item) {
-        if (item.getItemMeta() != null) {
-            PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        // 喵~防御：只调用一次getItemMeta()避免重复创建ItemMeta副本
+        ItemMeta itemMeta = item.getItemMeta();
+        if (itemMeta != null) {
+            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
             String id = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
             if (id != null && ingredients.containsKey(id)) return id;
 

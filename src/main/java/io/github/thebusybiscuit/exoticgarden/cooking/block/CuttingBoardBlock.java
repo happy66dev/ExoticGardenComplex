@@ -161,7 +161,7 @@ public class CuttingBoardBlock extends SlimefunItem {
     }
 
     // 喵~将当前所有砧板数据保存到storge.yml的CuttingBoards section
-    private static void saveCuttingBoardToYaml() {
+    public static void saveCuttingBoardToYaml() {
         io.github.thebusybiscuit.exoticgarden.ExoticGarden plugin = io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance();
         // 喵~防御：插件实例不存在时跳过保存
         if (plugin == null) return;

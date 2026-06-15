@@ -28,10 +28,14 @@ import java.util.Map;
 
 public class KnifeItem extends SlimefunItem {
 
+    // 保存插件引用，用于调用持久化方法喵
+    private final JavaPlugin pluginInstance;
+
     public KnifeItem(ItemGroup group, SlimefunItemStack item,
                      RecipeType recipeType, ItemStack[] recipe, JavaPlugin plugin,
                      Map<String, IngredientConfig.IngredientData> ingredients) {
         super(group, item, recipeType, recipe);
+        this.pluginInstance = plugin;
 
         plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
 
@@ -73,6 +77,8 @@ public class KnifeItem extends SlimefunItem {
                     }
                     ArmorStand stand = CuttingBoardBlock.boardDisplays.remove(boardLoc);
                     if (stand != null) stand.remove();
+                    // 喵~防御：取回物品后清除YAML记录，防止重启时物品复制
+                    CuttingBoardBlock.saveCuttingBoardToYaml();
                     return;
                 }
 

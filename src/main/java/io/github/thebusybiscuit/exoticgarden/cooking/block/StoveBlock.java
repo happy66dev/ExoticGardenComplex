@@ -76,8 +76,9 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             if (e.getClickedBlock().isEmpty()) return;
             Player player = e.getPlayer();
             Location loc = e.getClickedBlock().get().getLocation().clone();
-            StoveState state = activeStoves.computeIfAbsent(loc, k -> new StoveState());
+            // 喵~防御：只对EG灶台营火创建StoveState，原版营火不处理（防止内存泄漏+原版烤肉失效）
             ItemStack hand = player.getInventory().getItemInMainHand();
+            StoveState state = activeStoves.computeIfAbsent(loc, k -> new StoveState());
 
             boolean handled = false;
             for (StoveInteractionHandler handler : handlers) {
