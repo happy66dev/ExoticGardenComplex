@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.*;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -20,7 +21,14 @@ public class StoveHologram {
                               StoveBlock stove) {
         Block block = loc.getBlock();
         String[] lines = buildLines(state, fuels, ingredients, seasonings).split("\\n");
-        stove.updateMultiLineHologram(block, lines);
+        // 最后一行固定在 getHologramOffset 位置，行数增多时向上扩展喵~
+        // SF4 setMultiLineHologram 从 baseLoc 向下排列，每行间距 LINE_SPACING=0.3
+        // 所以把 baseLoc 上移 (n-1)*0.3 使最后一行始终在原始偏移处喵~
+        double LINE_SPACING = 0.3;
+        Location baseLoc = block.getLocation()
+                .add(stove.getHologramOffset(block))
+                .add(0, (lines.length - 1) * LINE_SPACING, 0);
+        Slimefun.getHologramsService().setMultiLineHologram(baseLoc, lines);
     }
 
     public static String buildLines(StoveState state,
