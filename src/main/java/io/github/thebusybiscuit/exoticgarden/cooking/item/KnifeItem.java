@@ -79,6 +79,14 @@ public class KnifeItem extends SlimefunItem {
                 org.bukkit.inventory.meta.ItemMeta heldMeta = held.getItemMeta();
                 if (heldMeta == null) return;
                 PersistentDataContainer heldPdc = heldMeta.getPersistentDataContainer();
+
+                // 喵~防御：非食材（配置文件无记录）不允许加工，直接提示喵
+                String ingIdCheck2 = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+                if (ingIdCheck2 == null || !ingredients.containsKey(ingIdCheck2)) {
+                    player.sendMessage("§c此物品不是烹饪食材，无法加工");
+                    return;
+                }
+
                 String rawState = heldPdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
                 FoodState current = FoodState.WHOLE;
                 if (rawState != null) {
