@@ -94,6 +94,11 @@ public class KnifeItem extends SlimefunItem {
                 }
                 FoodState next = advanceState(current, heldPdc, ingredients);
                 if (next == current) {
+                    // SAUCE终态：已加工到最细喵
+                    if (current == FoodState.SAUCE) {
+                        player.sendMessage("§c此食材已加工到最细");
+                        return;
+                    }
                     // DICED研磨进度中：PDC已更新clicks计数，写回砧板；无配置时提示不可加工喵
                     String ingIdCheck = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
                     IngredientConfig.IngredientData dataCheck = ingIdCheck != null ? ingredients.get(ingIdCheck) : null;
