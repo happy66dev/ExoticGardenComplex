@@ -59,7 +59,7 @@ public class CookingModule {
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> rebuildBoardDisplays(plugin), 20L);
         // Temporarily disable dish consumption custom logic.
-        // plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(ingredients), plugin);
     }
 
     private static Map<String, FuelConfig.FuelData> loadConfigs(ExoticGarden plugin) {
