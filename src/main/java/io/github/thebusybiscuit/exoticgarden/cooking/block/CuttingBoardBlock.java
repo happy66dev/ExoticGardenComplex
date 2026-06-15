@@ -32,11 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CuttingBoardBlock extends SlimefunItem {
 
     public static final Map<Location, ArmorStand> boardDisplays = new ConcurrentHashMap<>();
+    // 喵~保存插件实例引用，用于调用YAML持久化方法
+    private final io.github.thebusybiscuit.exoticgarden.ExoticGarden pluginInstance;
 
     public CuttingBoardBlock(ItemGroup group, SlimefunItemStack item,
                              RecipeType recipeType, ItemStack[] recipe,
                              JavaPlugin plugin) {
         super(group, item, recipeType, recipe);
+        this.pluginInstance = (io.github.thebusybiscuit.exoticgarden.ExoticGarden) plugin;
         addItemHandler(buildUseHandler(), buildBreakHandler());
         plugin.getServer().getPluginManager().registerEvents(new BoardProtectionListener(), plugin);
     }
@@ -61,6 +64,8 @@ public class CuttingBoardBlock extends SlimefunItem {
                     if (spawned == null) return;
                     boardDisplays.put(loc, spawned);
                     hand.setAmount(hand.getAmount() - 1);
+                    // 喵~放置物品后，保存到YAML持久化
+                    saveCuttingBoardToYaml();
                 } else {
                     player.sendMessage("§c砧板上已有物品，请潜行右键取回");
                 }
@@ -76,12 +81,15 @@ public class CuttingBoardBlock extends SlimefunItem {
                     }
                     stand.remove();
                     boardDisplays.remove(loc);
+                    // 喵~取走物品后，保存到YAML持久化
+                    saveCuttingBoardToYaml();
                 }
             }
         };
     }
 
-    private ArmorStand spawnStand(Location loc, ItemStack item) {
+    // 喵~改为static，ExoticGarden加载YAML数据时也需要调用这个方法来生成盔甲架
+    private static ArmorStand spawnStand(Location loc, ItemStack item) {
         if (loc.getWorld() == null) return null;
         Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
@@ -122,7 +130,9 @@ public class CuttingBoardBlock extends SlimefunItem {
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
                 Location loc = e.getBlock().getLocation();
+                // 喵~破坏砧板后，从缓存移除并保存到YAML
                 ArmorStand stand = boardDisplays.remove(loc);
+                saveCuttingBoardToYaml();
                 if (stand != null) {
                     ItemStack stored = stand.getEquipment().getHelmet();
                     if (stored != null && !stored.getType().isAir() && loc.getWorld() != null) {
@@ -141,10 +151,21 @@ public class CuttingBoardBlock extends SlimefunItem {
         return (item == null || item.getType().isAir()) ? null : item.clone();
     }
 
+    // 喵~辅助方法：将setStoredItem也触发YAML保存，因为KnifeItem/SpatulaItem可能通过这个方法更新砧板物品
     public static void setStoredItem(Location boardLoc, ItemStack item) {
         ArmorStand stand = boardDisplays.get(boardLoc);
         if (stand == null) return;
         stand.getEquipment().setHelmet(item);
+        // 喵~物品更新后也要同步到YAML，确保切割等操作也能持久化
+        saveCuttingBoardToYaml();
+    }
+
+    // 喵~将当前所有砧板数据保存到storge.yml的CuttingBoards section
+    private static void saveCuttingBoardToYaml() {
+        io.github.thebusybiscuit.exoticgarden.ExoticGarden plugin = io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance();
+        // 喵~防御：插件实例不存在时跳过保存
+        if (plugin == null) return;
+        plugin.saveCuttingBoards();
     }
 
     private static class BoardProtectionListener implements Listener {

@@ -57,7 +57,7 @@ public class CookingModule {
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
         plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> rebuildBoardDisplays(plugin), 20L);
+        // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
         // Temporarily disable dish consumption custom logic.
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(ingredients), plugin);
     }
@@ -165,6 +165,9 @@ public class CookingModule {
             }, plugin, ingredients).register(plugin);
     }
 
+    // 喵~此方法已废弃，砧板数据加载逻辑已移到ExoticGarden.loadCuttingBoards()
+    // 保留注释供参考：原来用于启动后20tick扫描ArmorStand重建缓存
+    /*
     private static void rebuildBoardDisplays(ExoticGarden plugin) {
         CuttingBoardBlock.boardDisplays.clear();
         for (org.bukkit.World world : plugin.getServer().getWorlds()) {
@@ -182,6 +185,7 @@ public class CookingModule {
         }
         plugin.getLogger().info("[Cooking] 重建砧板盔甲架映射: " + CuttingBoardBlock.boardDisplays.size() + " 个");
     }
+    */
 
     private static void saveResourceIfMissing(ExoticGarden plugin, String name) {
         File file = new File(plugin.getDataFolder(), name);

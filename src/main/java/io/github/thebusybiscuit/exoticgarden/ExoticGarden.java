@@ -255,6 +255,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         File storgeFile = new File(getDataFolder() + File.separator + "storage.yml");
         createDefaultConfiguration(storgeFile, "storage.yml");
         initDataFromYAML(storgeFile);
+        // 喵~启动时从YAML加载砧板数据并重建盔甲架
+        loadCuttingBoards();
 
         registerDrunkMessage();
 
@@ -1442,6 +1444,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
                 this.yamlStorge.set(player + ".Alcohol", o.getValue().getAlcohol());
                 this.yamlStorge.set(player + ".Drunk", o.getValue().isDrunk());
             }
+            // 喵~保存玩家数据时，同时保存砧板数据
+            saveCuttingBoards();
             this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -1456,6 +1460,165 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
             this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 喵~将当前所有砧板(CuttingBoard)的物品数据保存到storge.yml的CuttingBoards section
+     * 数据格式为 "世界名,x,y,z" -> ItemStack序列化Map
+     * 每次砧板上放/取/加工物品时调用，确保数据不丢失
+     */
+    public void saveCuttingBoards() {
+        // 喵~防御：yamlStorge还没初始化就跳过
+        if (this.yamlStorge == null) return;
+
+        // 喵~先清空旧的砧板数据，再写入最新的
+        this.yamlStorge.set("CuttingBoards", null);
+
+        // 遍历所有缓存中的砧板，序列化位置和物品到YAML
+        for (Map.Entry<Location, org.bukkit.entity.ArmorStand> entry :
+                io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.entrySet()) {
+            Location loc = entry.getKey();
+            org.bukkit.entity.ArmorStand stand = entry.getValue();
+            // 喵~防御：位置的世界不存在时跳过
+            if (loc.getWorld() == null) continue;
+
+            ItemStack helmet = stand.getEquipment().getHelmet();
+            // 喵~防御：盔甲架没有头盔物品时跳过
+            if (helmet == null || helmet.getType().isAir()) continue;
+
+            // 喵~把位置拼成 "world,x,y,z" 字符串作为YAML的key
+            String locKey = loc.getWorld().getName() + ","
+                    + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+
+            // 喵~把ItemStack序列化成Map存到YAML，Bukkit内置方法可以直接存
+            this.yamlStorge.set("CuttingBoards." + locKey, helmet.serialize());
+        }
+
+        // 喵~保存文件到磁盘
+        try {
+            this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 喵~从storge.yml的CuttingBoards section加载砧板数据
+     * 优先从YAML加载；如果YAML没有数据但ArmorStand存在，补写YAML
+     * 启动时在initDataFromYAML之后调用
+     */
+    public void loadCuttingBoards() {
+        // 喵~先清空之前的缓存
+        io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.clear();
+
+        ConfigurationSection section = this.yamlStorge.getConfigurationSection("CuttingBoards");
+
+        // 喵~从YAML加载所有保存的砧板数据
+        if (section != null) {
+            for (String key : section.getKeys(false)) {
+                // 喵~解析 "world,x,y,z" 格式的位置字符串
+                Location loc = parseLocationKey(key);
+                if (loc == null) continue;
+
+                // 喵~从YAML读取序列化的ItemStack
+                Object raw = section.get(key);
+                if (!(raw instanceof Map)) continue;
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> itemData = (Map<String, Object>) raw;
+                ItemStack item = ItemStack.deserialize(itemData);
+                // 喵~防御：反序列化出来的物品是空气就跳过
+                if (item.getType().isAir()) continue;
+
+                // 喵~在对应位置生成盔甲架来展示物品
+                org.bukkit.entity.ArmorStand stand = spawnBoardArmorStand(loc, item);
+                if (stand != null) {
+                    io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.put(loc, stand);
+                }
+            }
+        }
+
+        // 喵~再扫描所有ArmorStand，找出YAML里没有的（防止YAML丢失但实体还在的情况）
+        for (org.bukkit.World world : getServer().getWorlds()) {
+            for (org.bukkit.entity.Entity entity : world.getEntitiesByClass(org.bukkit.entity.ArmorStand.class)) {
+                org.bukkit.entity.ArmorStand stand = (org.bukkit.entity.ArmorStand) entity;
+                // 喵~只处理带砧板标记的盔甲架
+                if (!stand.getPersistentDataContainer().has(
+                        io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.BOARD_ITEM,
+                        org.bukkit.persistence.PersistentDataType.STRING)) continue;
+
+                Location spawnLoc = stand.getLocation();
+                // 喵~根据盔甲架位置反推方块位置（盔甲架在方块中心偏下方）
+                Location blockLoc = new Location(spawnLoc.getWorld(),
+                        Math.floor(spawnLoc.getX()), Math.floor(spawnLoc.getY() + 0.3), Math.floor(spawnLoc.getZ()));
+
+                // 喵~如果这个位置已经在map里了就跳过（YAML已加载）
+                if (io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.containsKey(blockLoc)) continue;
+
+                // 喵~补写到缓存里
+                io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.put(blockLoc, stand);
+            }
+        }
+
+        // 喵~如果有从ArmorStand补录的数据，也一起保存到YAML（补写缺失的持久化数据）
+        if (section == null && !io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.isEmpty()) {
+            saveCuttingBoards();
+        }
+
+        getLogger().info("[Cooking] 砧板数据加载完成，共 "
+                + io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.size() + " 个");
+    }
+
+    /**
+     * 喵~在指定位置生成展示用盔甲架，头上戴着对应物品
+     * 和CuttingBoardBlock.spawnStand逻辑一致，但这里单独提出来方便启动时调用
+     */
+    private org.bukkit.entity.ArmorStand spawnBoardArmorStand(Location loc, ItemStack item) {
+        // 喵~防御：世界为空时返回null
+        if (loc.getWorld() == null) return null;
+        // 喵~盔甲架生成在方块中心偏下方，这样头盔看起来像是放在方块上面
+        Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
+        org.bukkit.entity.ArmorStand stand = (org.bukkit.entity.ArmorStand) loc.getWorld().spawnEntity(spawnLoc, org.bukkit.entity.EntityType.ARMOR_STAND);
+        stand.setVisible(false);           // 喵~不可见，只展示头盔物品
+        stand.setGravity(false);           // 喵~关闭重力，防止掉落
+        stand.setMarker(true);             // 喵~标记模式，不参与碰撞
+        stand.setArms(false);              // 喵~不显示手臂
+        stand.setBasePlate(false);         // 喵~不显示底座
+        stand.setCollidable(false);        // 喵~不可碰撞
+        stand.getEquipment().setHelmet(item); // 喵~把物品放到头上展示
+        stand.setHeadPose(new org.bukkit.util.EulerAngle(0, 0, 0)); // 喵~头的角度归零
+        // 喵~设置PersistentDataContainer标记，这样插件知道这是砧板用的盔甲架
+        org.bukkit.persistence.PersistentDataContainer pdc = stand.getPersistentDataContainer();
+        pdc.set(io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.BOARD_ITEM,
+                org.bukkit.persistence.PersistentDataType.STRING, "true");
+        return stand;
+    }
+
+    /**
+     * 喵~把 "world,x,y,z" 格式的字符串解析回Location对象
+     * 用于从YAML加载数据时还原砧板位置
+     */
+    private Location parseLocationKey(String key) {
+        // 喵~防御：null或空字符串
+        if (key == null || key.isEmpty()) return null;
+
+        String[] parts = key.split(",");
+        // 喵~防御：格式不正确（需要world,x,y,z共4段）
+        if (parts.length != 4) return null;
+
+        org.bukkit.World world = getServer().getWorld(parts[0]);
+        // 喵~防御：世界不存在（可能已删除）
+        if (world == null) return null;
+
+        try {
+            int x = Integer.parseInt(parts[1].trim());
+            int y = Integer.parseInt(parts[2].trim());
+            int z = Integer.parseInt(parts[3].trim());
+            return new Location(world, x, y, z);
+        } catch (NumberFormatException e) {
+            // 喵~防御：坐标不是有效数字
+            return null;
         }
     }
 
