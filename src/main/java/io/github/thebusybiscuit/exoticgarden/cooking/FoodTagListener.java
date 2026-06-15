@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -50,6 +51,19 @@ public class FoodTagListener implements Listener {
                     if (tagIfIngredient(it)) player.getInventory().setItem(i, it);
                 }
             }, 1L);
+    }
+
+    // 玩家切换主手槽位时，检查目标槽物品并更新时间戳喵
+    @EventHandler(ignoreCancelled = true)
+    public void onHeldItemChange(PlayerItemHeldEvent e) {
+        // 获取切换后目标槽的物品喵
+        ItemStack target = e.getPlayer().getInventory().getItem(e.getNewSlot());
+        if (target == null || target.getType().isAir()) return;
+        // 喵~防御：是食材则原地更新时间戳/lore，不是食材静默跳过喵
+        ItemStack copy = target.clone();
+        if (tagIfIngredient(copy)) {
+            e.getPlayer().getInventory().setItem(e.getNewSlot(), copy);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
