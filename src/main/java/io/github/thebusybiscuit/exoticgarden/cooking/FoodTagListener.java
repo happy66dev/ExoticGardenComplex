@@ -120,22 +120,27 @@ public class FoodTagListener implements Listener {
             pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, ingId);
         }
 
-        // 每次调用都更新时间戳，记录本次标记时刻（毫秒）喵
-        long nowMs = System.currentTimeMillis(); // 当前时间戳，单位：毫秒喵
-        pdc.set(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, nowMs);
+        // 时间戳不可变：首次写入后不再更新，用于计算保质期喵
+        if (!pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
+            pdc.set(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, System.currentTimeMillis());
+        }
+        // 从PDC读取不可变时间戳喵
+        long nowMs = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
 
         // 构建lore列表，已有lore则复制一份可修改的副本喵
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
         // 从食材配置读取饱食度+饱和度+保质期，未配置时为默认值喵
+        // 可变标签：营养值随配置变化，每次刷新喵
         IngredientConfig.IngredientData data = ingredients.get(ingId);
         double nutrition = data != null ? data.foodPoints + data.saturation : 0;
         int shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 保质期分钟数，默认10喵
         String nutritionStr = nutrition > 0
                 ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
                 : "";
-        // 烹饪食材标签行内容喵
-        String ingredientLine = "§7[烹饪食材] §f" + translateState("WHOLE") + nutritionStr;
+        // 不可变标签：读取实际 FOOD_STATE，而非硬编码"WHOLE"喵
+        String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
+        String ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr;
 
         // 检查lore中是否已有烹饪食材行，有则替换，没有则追加喵
         boolean hasIngredientLine = false; // 标记是否已找到并替换了食材行喵
@@ -152,28 +157,25 @@ public class FoodTagListener implements Listener {
             lore.add(ingredientLine);
         }
 
-        // 生成生产日期lore行，格式："§8生产日期: xxxx年xx月xx日 xx时xx分xx秒"喵
-        String productionLine = "§8生产日期: " + formatTimestamp(nowMs);
-
-        // 生成保质期固定行，自动转换为最合适的单位（天/小时/分钟）喵
+        // 可变标签：保质期随配置变化，每次刷新喵
         String shelfLifeLine = "§8保质期: " + formatShelfLife(shelfLifeMinutes);
 
-        // 判断是否已过期喵
+        // 可变标签：过期状态随时间变化，每次刷新喵
         long diffMinutes = (System.currentTimeMillis() - nowMs) / 60000L;
         // 喵~防御：diffMinutes为负（时钟回拨）视为未过期喵
         boolean expired = diffMinutes >= shelfLifeMinutes;
 
-        // 替换或追加生产日期行喵
+        // 生产日期不可变：首次写入后不再更新喵
         boolean hasProductionLine = false;
         for (int loreIdx = 0; loreIdx < lore.size(); loreIdx++) {
             if (lore.get(loreIdx).startsWith("§8生产日期:")) {
-                lore.set(loreIdx, productionLine);
                 hasProductionLine = true;
                 break;
             }
         }
         if (!hasProductionLine) {
-            lore.add(productionLine);
+            // 首次写入生产日期喵
+            lore.add("§8生产日期: " + formatTimestamp(nowMs));
         }
 
         // 替换或追加保质期固定行喵
