@@ -83,7 +83,7 @@ public class CuttingBoardBlock extends SlimefunItem {
 
     private ArmorStand spawnStand(Location loc, ItemStack item) {
         if (loc.getWorld() == null) return null;
-        Location spawnLoc = loc.clone().add(0.5, -0.3, 0.5);
+        Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
