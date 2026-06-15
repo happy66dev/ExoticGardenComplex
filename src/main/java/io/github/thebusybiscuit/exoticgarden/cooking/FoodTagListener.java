@@ -6,8 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCreativeEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -54,15 +52,23 @@ public class FoodTagListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
-        if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player)) return;
-        if (e.getClickedInventory() == null) return;
-        if (e.getClickedInventory().getType() == InventoryType.PLAYER
-                || e.getClickedInventory().getType() == InventoryType.CRAFTING
-                || e.getClickedInventory().getType() == InventoryType.CREATIVE) {
-            ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
-            if (tagIfIngredient(cursor)) e.setCursor(cursor);
-            ItemStack current = e.getCurrentItem() != null ? e.getCurrentItem().clone() : null;
-            if (tagIfIngredient(current)) e.setCurrentItem(current);
+        if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
+        // cursor 跟随鼠标，任何情况下都扫喵
+        ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
+        if (tagIfIngredient(cursor)) e.setCursor(cursor);
+        // currentItem：点击的格子物品喵
+        ItemStack current = e.getCurrentItem() != null ? e.getCurrentItem().clone() : null;
+        if (tagIfIngredient(current)) e.setCurrentItem(current);
+        // shift+click 会直接把物品转移进背包，延迟1tick扫玩家背包兜底喵
+        if (e.isShiftClick()) {
+            org.bukkit.Bukkit.getScheduler().runTaskLater(
+                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
+                () -> {
+                    for (int i = 0; i < player.getInventory().getSize(); i++) {
+                        ItemStack it = player.getInventory().getItem(i);
+                        if (tagIfIngredient(it)) player.getInventory().setItem(i, it);
+                    }
+                }, 1L);
         }
     }
 
