@@ -43,7 +43,7 @@ public class FoodTagListener implements Listener {
         if (tagIfIngredient(cursor)) e.setCursor(cursor);
         // 延迟1tick扫描背包，覆盖创造模式直接放入背包的物品喵
         org.bukkit.Bukkit.getScheduler().runTaskLater(
-            io.github.thebusybiscuit.exoticgarden.ExoticGarden.instance(),
+            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
             () -> {
                 for (int i = 0; i < player.getInventory().getSize(); i++) {
                     ItemStack it = player.getInventory().getItem(i);
