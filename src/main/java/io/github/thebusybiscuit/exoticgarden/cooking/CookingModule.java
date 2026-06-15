@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden.cooking;
 
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
+import io.github.thebusybiscuit.exoticgarden.FoodListener;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.BowlInteractionHandler;
@@ -60,6 +61,8 @@ public class CookingModule {
         // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
         // Temporarily disable dish consumption custom logic.
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(ingredients), plugin);
+        // 喵~头颅食物(EGPlant)右键食用也受过期机制影响
+        plugin.getServer().getPluginManager().registerEvents(new FoodListener(plugin, ingredients), plugin);
     }
 
     private static Map<String, FuelConfig.FuelData> loadConfigs(ExoticGarden plugin) {

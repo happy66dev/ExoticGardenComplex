@@ -235,7 +235,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         new AndroidListener(this);
         new PlantsListener(this);
-        new FoodListener(this);
+        // FoodListener 已移至 CookingModule.initialize() 中注册，需要传入食材配置喵
         new PlayerListener(this);
 
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("Sanity")) {
