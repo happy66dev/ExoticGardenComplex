@@ -51,7 +51,7 @@ public class CookingModule {
 
         StoveBlock stove = registerStove(plugin, cookingGroup, stoveHandlers);
         registerBoard(plugin, cookingGroup);
-        registerKnife(plugin, cookingGroup);
+        registerKnife(plugin, cookingGroup, ingredients);
         registerSpatula(plugin, cookingGroup, ingredients);
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
@@ -131,7 +131,8 @@ public class CookingModule {
             }, plugin).register(plugin);
     }
 
-    private static void registerKnife(ExoticGarden plugin, ItemGroup group) {
+    private static void registerKnife(ExoticGarden plugin, ItemGroup group,
+                                       Map<String, IngredientConfig.IngredientData> ingredients) {
         SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_KNIFE", Material.IRON_SWORD,
             "&f烹饪刀", "&7右键砧板上的食材进行切割", "&7潜行右键取回食材");
         ItemMeta meta = stack.getItemMeta();
@@ -144,7 +145,7 @@ public class CookingModule {
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.STICK),      null
-            }, plugin).register(plugin);
+            }, plugin, ingredients).register(plugin);
     }
 
     private static void registerSpatula(ExoticGarden plugin, ItemGroup group,
