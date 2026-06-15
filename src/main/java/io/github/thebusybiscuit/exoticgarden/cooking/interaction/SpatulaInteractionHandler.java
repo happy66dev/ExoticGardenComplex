@@ -25,10 +25,11 @@ public class SpatulaInteractionHandler implements StoveInteractionHandler {
         for (IngredientSlot slot : state.slots) {
             if (slot == null) continue;
             if (slot.state == FoodState.WHOLE) {
-                if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
+                // 喵~无条件翻面，无论成熟度多少都可以翻喵
+                if (slot.currentFace == ActiveFace.FRONT) {
                     slot.currentFace = ActiveFace.BACK;
                     flipped = true;
-                } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
+                } else if (slot.currentFace == ActiveFace.BACK) {
                     slot.currentFace = ActiveFace.FRONT;
                     flipped = true;
                 }

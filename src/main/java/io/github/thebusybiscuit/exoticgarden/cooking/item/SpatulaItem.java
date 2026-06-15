@@ -83,9 +83,10 @@ public class SpatulaItem extends SlimefunItem {
                         if (slot == null) continue;
                         hasFood = true;
                         if (slot.state == FoodState.WHOLE) {
-                            if (slot.currentFace == ActiveFace.FRONT && slot.frontDoneness >= 0.5) {
+                            // 喵~无条件翻面，无论成熟度多少都可以翻喵
+                            if (slot.currentFace == ActiveFace.FRONT) {
                                 slot.currentFace = ActiveFace.BACK;
-                            } else if (slot.currentFace == ActiveFace.BACK && slot.backDoneness >= 0.5) {
+                            } else if (slot.currentFace == ActiveFace.BACK) {
                                 slot.currentFace = ActiveFace.FRONT;
                             }
                         }
