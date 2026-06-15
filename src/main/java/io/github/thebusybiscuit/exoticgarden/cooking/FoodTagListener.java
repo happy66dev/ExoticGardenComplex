@@ -127,9 +127,10 @@ public class FoodTagListener implements Listener {
         // 构建lore列表，已有lore则复制一份可修改的副本喵
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
-        // 从食材配置读取饱食度+饱和度，未配置时为0喵
+        // 从食材配置读取饱食度+饱和度+保质期，未配置时为默认值喵
         IngredientConfig.IngredientData data = ingredients.get(ingId);
         double nutrition = data != null ? data.foodPoints + data.saturation : 0;
+        int shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 保质期分钟数，默认10喵
         String nutritionStr = nutrition > 0
                 ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
                 : "";
@@ -151,22 +152,67 @@ public class FoodTagListener implements Listener {
             lore.add(ingredientLine);
         }
 
-        // 生成保质期显示文字，格式："§8保质期: X天X小时前" 或 "§8保质期: 刚刚"喵
-        String freshnesLine = buildFreshnessLore(nowMs); // 保质期lore行文字喵
+        // 生成生产日期lore行，格式："§8生产日期: X分钟前" 或 "§8生产日期: 刚刚"喵
+        String productionLine = "§8生产日期: " + buildTimeDesc(nowMs);
 
-        // 在lore中查找已有保质期行（以"§8保质期:"开头），找到则替换，没有则追加喵
-        boolean hasFreshnessLine = false; // 标记是否已找到并替换了保质期行喵
+        // 生成保质期固定行，格式："§8保质期: X分钟"喵
+        String shelfLifeLine = "§8保质期: " + shelfLifeMinutes + "分钟";
+
+        // 判断是否已过期喵
+        long diffMinutes = (System.currentTimeMillis() - nowMs) / 60000L;
+        // 喵~防御：diffMinutes为负（时钟回拨）视为未过期喵
+        boolean expired = diffMinutes >= shelfLifeMinutes;
+
+        // 替换或追加生产日期行喵
+        boolean hasProductionLine = false;
         for (int loreIdx = 0; loreIdx < lore.size(); loreIdx++) {
-            if (lore.get(loreIdx).startsWith("§8保质期:")) {
-                // 找到旧的保质期行，替换为新时间喵
-                lore.set(loreIdx, freshnesLine);
-                hasFreshnessLine = true;
+            if (lore.get(loreIdx).startsWith("§8生产日期:")) {
+                lore.set(loreIdx, productionLine);
+                hasProductionLine = true;
                 break;
             }
         }
-        if (!hasFreshnessLine) {
-            // 没有找到旧保质期行，直接追加喵
-            lore.add(freshnesLine);
+        if (!hasProductionLine) {
+            lore.add(productionLine);
+        }
+
+        // 替换或追加保质期固定行喵
+        boolean hasShelfLifeLine = false;
+        for (int loreIdx = 0; loreIdx < lore.size(); loreIdx++) {
+            if (lore.get(loreIdx).startsWith("§8保质期:")) {
+                lore.set(loreIdx, shelfLifeLine);
+                hasShelfLifeLine = true;
+                break;
+            }
+        }
+        if (!hasShelfLifeLine) {
+            lore.add(shelfLifeLine);
+        }
+
+        // 处理过期：首行插入/移除"§c已过期"标记，并修改displayName喵
+        String expiredMark = "§c已过期";
+        boolean hasExpiredMark = !lore.isEmpty() && lore.get(0).equals(expiredMark);
+        if (expired && !hasExpiredMark) {
+            // 过期时在lore最前插入红色过期标记喵
+            lore.add(0, expiredMark);
+        } else if (!expired && hasExpiredMark) {
+            // 未过期但有旧过期标记，移除喵
+            lore.remove(0);
+        }
+
+        // 处理过期时displayName追加§7(过期)喵
+        String displayName = meta.hasDisplayName() ? meta.getDisplayName() : null;
+        if (expired) {
+            if (displayName != null && !displayName.endsWith("§7(过期)")) {
+                // 追加过期后缀喵
+                meta.setDisplayName(displayName + "§7(过期)");
+            } else if (displayName == null) {
+                // 原版物品无displayName，用material name兜底并追加喵
+                meta.setDisplayName(item.getType().name() + "§7(过期)");
+            }
+        } else if (displayName != null && displayName.endsWith("§7(过期)")) {
+            // 未过期时移除过期后缀喵
+            meta.setDisplayName(displayName.substring(0, displayName.length() - "§7(过期)".length()));
         }
 
         // 把修改后的lore和meta写回物品喵
@@ -176,44 +222,38 @@ public class FoodTagListener implements Listener {
     }
 
     /**
-     * 根据时间戳生成已存放时间的lore文字喵~
-     * 输入：timestampMs - 食材/菜肴被标记时的毫秒时间戳
-     * 输出：带颜色代码的lore字符串，例如 "§8保质期: 2天3小时前"
-     * 边界：刚刚打标签时（差值<1分钟）显示"刚刚"喵
+     * 根据时间戳生成已存放时间的描述文字喵~
+     * 输入：timestampMs - 食材被标记时的毫秒时间戳
+     * 输出：时间描述字符串，例如 "2分钟前"/"刚刚"
      */
-    static String buildFreshnessLore(long timestampMs) {
+    static String buildTimeDesc(long timestampMs) {
         // 计算距今的毫秒差值喵
-        long diffMs = System.currentTimeMillis() - timestampMs; // 经过的时间，单位：毫秒喵
+        long diffMs = System.currentTimeMillis() - timestampMs;
         // 喵~防御：差值为负（时钟回拨等异常情况），视为刚刚标记喵
         if (diffMs < 0) diffMs = 0;
 
-        long totalSeconds = diffMs / 1000L; // 转换为秒喵
-        long totalMinutes = totalSeconds / 60L; // 转换为分钟喵
-        long totalHours   = totalMinutes / 60L; // 转换为小时喵
-        long days         = totalHours / 24L;   // 转换为天数喵
-        long hours        = totalHours % 24L;   // 剩余不足一天的小时数喵
+        long totalSeconds = diffMs / 1000L;
+        long totalMinutes = totalSeconds / 60L;
+        long totalHours   = totalMinutes / 60L;
+        long days         = totalHours / 24L;
+        long hours        = totalHours % 24L;
 
-        // 根据时长范围拼装显示文字喵
-        String timeDesc; // 已存放时间的文字描述喵
         if (totalMinutes < 1) {
-            // 不足1分钟，显示"刚刚"喵
-            timeDesc = "刚刚";
+            return "刚刚";
         } else if (totalHours < 1) {
-            // 不足1小时，只显示分钟喵
-            timeDesc = totalMinutes + "分钟前";
+            return totalMinutes + "分钟前";
         } else if (days < 1) {
-            // 不足1天，只显示小时喵
-            timeDesc = totalHours + "小时前";
+            return totalHours + "小时前";
         } else if (hours == 0) {
-            // 整天，只显示天数喵
-            timeDesc = days + "天前";
+            return days + "天前";
         } else {
-            // 超过1天，显示天+小时喵
-            timeDesc = days + "天" + hours + "小时前";
+            return days + "天" + hours + "小时前";
         }
+    }
 
-        // 返回带颜色代码的保质期lore行喵
-        return "§8保质期: " + timeDesc;
+    // 兼容旧调用，委托给新方法喵
+    static String buildFreshnessLore(long timestampMs) {
+        return "§8生产日期: " + buildTimeDesc(timestampMs);
     }
 
     // 将食材状态枚举转为中文显示名喵

@@ -14,6 +14,7 @@ BEEF:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 5
 PORKCHOP:
@@ -30,6 +31,7 @@ PORKCHOP:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 5
 CHICKEN:
@@ -46,6 +48,7 @@ CHICKEN:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 
@@ -64,6 +67,7 @@ COOKED_BEEF:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 COOKED_PORKCHOP:
@@ -80,6 +84,7 @@ COOKED_PORKCHOP:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 COOKED_CHICKEN:
@@ -96,6 +101,7 @@ COOKED_CHICKEN:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 COOKED_COD:
@@ -112,6 +118,7 @@ COOKED_COD:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 COOKED_SALMON:
@@ -128,6 +135,7 @@ COOKED_SALMON:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 COOKED_MUTTON:
@@ -144,6 +152,7 @@ COOKED_MUTTON:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 COOKED_RABBIT:
@@ -160,6 +169,7 @@ COOKED_RABBIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 
@@ -178,6 +188,7 @@ APPLE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 GOLDEN_APPLE:
@@ -194,6 +205,7 @@ GOLDEN_APPLE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 5
 GOLDEN_CARROT:
@@ -210,6 +222,7 @@ GOLDEN_CARROT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 5
 PUMPKIN:
@@ -226,6 +239,7 @@ PUMPKIN:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 DRIED_KELP:
@@ -242,6 +256,7 @@ DRIED_KELP:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 
@@ -260,6 +275,7 @@ COCOA_BEANS:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 BAKED_POTATO:
@@ -276,6 +292,7 @@ BAKED_POTATO:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 
@@ -294,6 +311,7 @@ BREAD:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 COD:
   display_name: 鳕鱼
   weight_grams: 150
@@ -308,6 +326,7 @@ COD:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 SALMON:
@@ -324,6 +343,7 @@ SALMON:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 MUTTON:
@@ -340,6 +360,7 @@ MUTTON:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 5
 RABBIT:
@@ -356,6 +377,7 @@ RABBIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 EGG:
@@ -372,6 +394,7 @@ EGG:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 
@@ -390,6 +413,7 @@ POTATO:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 CARROT:
@@ -406,6 +430,7 @@ CARROT:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 BEETROOT:
@@ -422,6 +447,7 @@ BEETROOT:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 BROWN_MUSHROOM:
@@ -438,6 +464,7 @@ BROWN_MUSHROOM:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 RED_MUSHROOM:
@@ -454,6 +481,7 @@ RED_MUSHROOM:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 
@@ -472,6 +500,7 @@ MELON_SLICE:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 SWEET_BERRIES:
@@ -488,6 +517,7 @@ SWEET_BERRIES:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 GLOW_BERRIES:
@@ -504,6 +534,7 @@ GLOW_BERRIES:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 
@@ -522,6 +553,7 @@ CORN:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 CABBAGE:
   display_name: 卷心菜
   weight_grams: 200
@@ -536,6 +568,7 @@ CABBAGE:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 LETTUCE:
   display_name: 生菜
   weight_grams: 100
@@ -550,6 +583,7 @@ LETTUCE:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 GARLIC:
   display_name: 大蒜
   weight_grams: 50
@@ -564,6 +598,7 @@ GARLIC:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 BREADFRUIT:
   display_name: 面包果
   weight_grams: 200
@@ -578,6 +613,7 @@ BREADFRUIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 ALIEN_FRUIT:
   display_name: 外星果实
   weight_grams: 200
@@ -592,6 +628,7 @@ ALIEN_FRUIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 PUNCH_FRUIT:
   display_name: 潘趣果
   weight_grams: 200
@@ -606,6 +643,7 @@ PUNCH_FRUIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 JACKFRUIT:
   display_name: 菠萝蜜
   weight_grams: 200
@@ -620,6 +658,7 @@ JACKFRUIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 BIG_CARROT:
   display_name: 大萝卜
   weight_grams: 200
@@ -634,6 +673,7 @@ BIG_CARROT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 ACORN_SQUASH:
   display_name: 橡子南瓜
   weight_grams: 300
@@ -648,6 +688,7 @@ ACORN_SQUASH:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 GINSENGBABY:
   display_name: 人参果娃
   weight_grams: 80
@@ -662,6 +703,7 @@ GINSENGBABY:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 BIG_WHEAT:
   display_name: 异域大麦
   weight_grams: 150
@@ -676,6 +718,7 @@ BIG_WHEAT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 AMARANTH:
   display_name: 苋菜
   weight_grams: 50
@@ -690,6 +733,7 @@ AMARANTH:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 TEQUILA:
   display_name: 龙舌兰
   weight_grams: 100
@@ -704,6 +748,7 @@ TEQUILA:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
 
 # ===== DUAL: ExoticGarden 蔬菜 (3种) =====
 TOMATO:
@@ -720,6 +765,7 @@ TOMATO:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 ONION:
@@ -736,6 +782,7 @@ ONION:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 RED_BELL_PEPPER:
@@ -752,6 +799,7 @@ RED_BELL_PEPPER:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 
@@ -770,6 +818,7 @@ OAK_APPLE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 CHERRY:
@@ -786,6 +835,7 @@ CHERRY:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 POMEGRANATE:
@@ -802,6 +852,7 @@ POMEGRANATE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 LEMON:
@@ -818,6 +869,7 @@ LEMON:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 PLUM:
@@ -834,6 +886,7 @@ PLUM:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 LIME:
@@ -850,6 +903,7 @@ LIME:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 ORANGE:
@@ -866,6 +920,7 @@ ORANGE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 PEACH:
@@ -882,6 +937,7 @@ PEACH:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 PEAR:
@@ -898,6 +954,7 @@ PEAR:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 DRAGON_FRUIT:
@@ -914,6 +971,7 @@ DRAGON_FRUIT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 PINEAPPLE:
@@ -930,6 +988,7 @@ PINEAPPLE:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 3
 COCONUT:
@@ -946,6 +1005,7 @@ COCONUT:
   flip_required: true
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
 
@@ -964,6 +1024,7 @@ STRAWBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 GRAPE:
@@ -980,6 +1041,7 @@ GRAPE:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 BLUEBERRY:
@@ -996,6 +1058,7 @@ BLUEBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 RASPBERRY:
@@ -1012,6 +1075,7 @@ RASPBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 BLACKBERRY:
@@ -1028,6 +1092,7 @@ BLACKBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 CRANBERRY:
@@ -1044,6 +1109,7 @@ CRANBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 ELDERBERRY:
@@ -1060,6 +1126,7 @@ ELDERBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 COWBERRY:
@@ -1076,6 +1143,7 @@ COWBERRY:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 2
 
@@ -1094,5 +1162,6 @@ SWEET_POTATO:
   flip_required: false
   food_points: 2
   saturation: 2
+  shelf_life_minutes: 10
   sauce_creation:
     clicks_required: 4
