@@ -27,12 +27,17 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final String calculatorType;
         public final String displayName;
         public final double weightGrams;
+        // 饱食度恢复量（hunger points），未配置时为0喵
+        public final double foodPoints;
+        // 饱和度，未配置时为0喵
+        public final double saturation;
 
         public IngredientData(double minTemp, double maxTemp, double optimalTempMin,
                               double optimalTempMax, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
                               SauceCreation sauceCreation, String calculatorType,
-                              String displayName, double weightGrams) {
+                              String displayName, double weightGrams,
+                              double foodPoints, double saturation) {
             this.minTemp = minTemp;
             this.maxTemp = maxTemp;
             this.optimalTempMin = optimalTempMin;
@@ -44,6 +49,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.calculatorType = calculatorType;
             this.displayName = displayName;
             this.weightGrams = weightGrams;
+            this.foodPoints = foodPoints;
+            this.saturation = saturation;
         }
     }
 
@@ -68,7 +75,9 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             sauce,
             s.getString("calculator_type", "standard"),
             s.getString("display_name", key),
-            s.getDouble("weight_grams", 100)
+            s.getDouble("weight_grams", 100),
+            s.getDouble("food_points", 0),
+            s.getDouble("saturation", 0)
         );
     }
 }

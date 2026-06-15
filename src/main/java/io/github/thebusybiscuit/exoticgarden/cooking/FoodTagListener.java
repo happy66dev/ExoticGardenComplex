@@ -82,26 +82,13 @@ public class FoodTagListener implements Listener {
         }
 
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        // 获取食材状态显示名（初始为整块）喵
-        String stateDisplay = translateState("WHOLE");
-        // 从Bukkit食物组件读取营养度（饱食度+饱和度），用反射兼容旧编译依赖喵
-        String nutritionDisplay = "";
-        try {
-            // Paper 1.21+ API：Material#getFoodComponent()，旧版返回null喵
-            var foodComp = item.getType().getClass().getMethod("getFoodComponent")
-                    .invoke(item.getType());
-            if (foodComp != null) {
-                // 饱食度恢复量喵
-                int nutrition = (int) foodComp.getClass().getMethod("getNutrition").invoke(foodComp);
-                // 实际饱和度 = nutrition * saturationModifier * 2喵
-                float satMod = (float) foodComp.getClass().getMethod("getSaturationModifier").invoke(foodComp);
-                double total = Math.round((nutrition + nutrition * satMod * 2f) * 10.0) / 10.0;
-                nutritionDisplay = " §e营养度: " + total;
-            }
-        } catch (Exception ignored) {
-            // 喵~防御：API不存在或非食物物品时静默忽略喵
-        }
-        lore.add("§7[烹饪食材] §f" + stateDisplay + nutritionDisplay);
+        // 从食材配置读取饱食度+饱和度，未配置时为0喵
+        IngredientConfig.IngredientData data = ingredients.get(ingId);
+        double nutrition = data != null ? data.foodPoints + data.saturation : 0;
+        String nutritionStr = nutrition > 0
+                ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
+                : "";
+        lore.add("§7[烹饪食材] §f" + translateState("WHOLE") + nutritionStr);
         meta.setLore(lore);
 
         item.setItemMeta(meta);
