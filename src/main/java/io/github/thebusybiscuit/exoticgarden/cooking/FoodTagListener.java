@@ -209,8 +209,9 @@ public class FoodTagListener implements Listener {
                 // 追加过期后缀喵
                 meta.setDisplayName(displayName + "§7(过期)");
             } else if (displayName == null) {
-                // 原版物品无displayName，用material name兜底并追加喵
-                meta.setDisplayName(item.getType().name() + "§7(过期)");
+                // 原版物品无displayName，用本地化译名兜底并追加喵
+                String localizedName = getLocalizedName(item);
+                meta.setDisplayName(localizedName + "§7(过期)");
             }
         } else if (displayName != null && displayName.endsWith("§7(过期)")) {
             // 未过期时移除过期后缀喵
@@ -296,6 +297,60 @@ public class FoodTagListener implements Listener {
             case "SAUCE"  -> "酱料";
             default       -> state;
         };
+    }
+
+    /**
+     * 获取物品的本地化译名：优先Slimefun物品名，其次用zh_cn.json查原版中文译名，兜底英文枚举名喵
+     * 输入：ItemStack物品。
+     * 输出：本地化后的显示名称字符串。
+     */
+    private static String getLocalizedName(ItemStack item) {
+        // 喵~防御：item为null时返回空字符串喵
+        if (item == null) return "";
+        // 优先：Slimefun物品的自定义名称喵
+        SlimefunItem sfItem = SlimefunItem.getByItem(item);
+        if (sfItem != null) {
+            String sfName = sfItem.getItemName();
+            if (sfName != null && !sfName.isEmpty()) return sfName;
+        }
+        // 其次：原版材质的中文译名（从zh_cn.json懒加载查找）喵
+        String vanillaName = VanillaLocalization.getItemName(item.getType());
+        if (vanillaName != null && !vanillaName.isEmpty()) return vanillaName;
+        // 兜底：英文枚举名喵
+        return item.getType().name();
+    }
+
+    /**
+     * 原版材质中文译名懒加载工具类，从jar内zh_cn.json读取喵
+     */
+    private static class VanillaLocalization {
+        private static final java.util.Map<String, String> CACHE = new java.util.HashMap<>();
+        private static boolean loaded = false;
+
+        static String getItemName(org.bukkit.Material mat) {
+            if (!loaded) load();
+            return CACHE.get(mat.name());
+        }
+
+        private static void load() {
+            loaded = true;
+            try (java.io.InputStream in = FoodTagListener.class.getResourceAsStream("/zh_cn.json")) {
+                if (in == null) return;
+                com.google.gson.JsonObject root = new com.google.gson.JsonParser()
+                        .parse(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
+                        .getAsJsonObject();
+                for (java.util.Map.Entry<String, com.google.gson.JsonElement> entry : root.entrySet()) {
+                    String key = entry.getKey();
+                    if (key.startsWith("item.minecraft.") || key.startsWith("block.minecraft.")) {
+                        // 将 "item.minecraft.apple" 转为 "APPLE" 枚举名喵
+                        String matName = key.substring(key.lastIndexOf('.') + 1).toUpperCase(java.util.Locale.ENGLISH);
+                        CACHE.put(matName, entry.getValue().getAsString());
+                    }
+                }
+            } catch (Exception ignored) {
+                // 喵~防御：zh_cn.json不存在或解析失败时静默忽略，使用兜底名称喵
+            }
+        }
     }
 
     private String resolveIngredientId(ItemStack item) {

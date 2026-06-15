@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -46,6 +47,9 @@ public class FoodListener implements Listener {
         if (hand == null) {
             return;
         }
+
+        // 喵~防御：右键方块时不触发食用（防止与灶台、砧板等交互冲突）喵
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK) return;
 
         switch (hand) {
             case HAND:
