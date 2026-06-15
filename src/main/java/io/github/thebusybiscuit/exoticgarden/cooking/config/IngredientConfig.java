@@ -76,8 +76,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getString("calculator_type", "standard"),
             s.getString("display_name", key),
             s.getDouble("weight_grams", 100),
-            s.getDouble("food_points", 0),
-            s.getDouble("saturation", 0)
+            s.getDouble("food_points", 2),
+            s.getDouble("saturation", 2)
         );
     }
 }

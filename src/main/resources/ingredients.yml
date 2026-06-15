@@ -12,6 +12,8 @@ BEEF:
   optimal_temp_max: 210
   base_cook_time_seconds: 45
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 5
 PORKCHOP:
@@ -26,6 +28,8 @@ PORKCHOP:
   optimal_temp_max: 200
   base_cook_time_seconds: 45
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 5
 CHICKEN:
@@ -40,6 +44,8 @@ CHICKEN:
   optimal_temp_max: 170
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 
@@ -56,6 +62,8 @@ COOKED_BEEF:
   optimal_temp_max: 210
   base_cook_time_seconds: 30
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 COOKED_PORKCHOP:
@@ -70,6 +78,8 @@ COOKED_PORKCHOP:
   optimal_temp_max: 200
   base_cook_time_seconds: 30
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 COOKED_CHICKEN:
@@ -84,6 +94,8 @@ COOKED_CHICKEN:
   optimal_temp_max: 170
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 COOKED_COD:
@@ -98,6 +110,8 @@ COOKED_COD:
   optimal_temp_max: 140
   base_cook_time_seconds: 20
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 COOKED_SALMON:
@@ -112,6 +126,8 @@ COOKED_SALMON:
   optimal_temp_max: 140
   base_cook_time_seconds: 20
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 COOKED_MUTTON:
@@ -126,6 +142,8 @@ COOKED_MUTTON:
   optimal_temp_max: 210
   base_cook_time_seconds: 30
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 COOKED_RABBIT:
@@ -140,6 +158,8 @@ COOKED_RABBIT:
   optimal_temp_max: 180
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 
@@ -156,6 +176,8 @@ APPLE:
   optimal_temp_max: 120
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 GOLDEN_APPLE:
@@ -170,6 +192,8 @@ GOLDEN_APPLE:
   optimal_temp_max: 190
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 5
 GOLDEN_CARROT:
@@ -184,6 +208,8 @@ GOLDEN_CARROT:
   optimal_temp_max: 190
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 5
 PUMPKIN:
@@ -198,6 +224,8 @@ PUMPKIN:
   optimal_temp_max: 180
   base_cook_time_seconds: 45
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 DRIED_KELP:
@@ -212,6 +240,8 @@ DRIED_KELP:
   optimal_temp_max: 80
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 
@@ -228,6 +258,8 @@ COCOA_BEANS:
   optimal_temp_max: 80
   base_cook_time_seconds: 20
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 BAKED_POTATO:
@@ -242,6 +274,8 @@ BAKED_POTATO:
   optimal_temp_max: 210
   base_cook_time_seconds: 30
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 
@@ -258,6 +292,8 @@ BREAD:
   optimal_temp_max: 90
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
 COD:
   display_name: 鳕鱼
   weight_grams: 150
@@ -270,6 +306,8 @@ COD:
   optimal_temp_max: 140
   base_cook_time_seconds: 30
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 SALMON:
@@ -284,6 +322,8 @@ SALMON:
   optimal_temp_max: 140
   base_cook_time_seconds: 30
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 MUTTON:
@@ -298,6 +338,8 @@ MUTTON:
   optimal_temp_max: 210
   base_cook_time_seconds: 45
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 5
 RABBIT:
@@ -312,6 +354,8 @@ RABBIT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 EGG:
@@ -326,6 +370,8 @@ EGG:
   optimal_temp_max: 80
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 
@@ -342,6 +388,8 @@ POTATO:
   optimal_temp_max: 210
   base_cook_time_seconds: 50
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 CARROT:
@@ -356,6 +404,8 @@ CARROT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 BEETROOT:
@@ -370,6 +420,8 @@ BEETROOT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 BROWN_MUSHROOM:
@@ -384,6 +436,8 @@ BROWN_MUSHROOM:
   optimal_temp_max: 100
   base_cook_time_seconds: 20
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 RED_MUSHROOM:
@@ -398,6 +452,8 @@ RED_MUSHROOM:
   optimal_temp_max: 100
   base_cook_time_seconds: 20
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 
@@ -414,6 +470,8 @@ MELON_SLICE:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 SWEET_BERRIES:
@@ -428,6 +486,8 @@ SWEET_BERRIES:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 GLOW_BERRIES:
@@ -442,6 +502,8 @@ GLOW_BERRIES:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 
@@ -458,6 +520,8 @@ CORN:
   optimal_temp_max: 210
   base_cook_time_seconds: 50
   flip_required: true
+  food_points: 2
+  saturation: 2
 CABBAGE:
   display_name: 卷心菜
   weight_grams: 200
@@ -470,6 +534,8 @@ CABBAGE:
   optimal_temp_max: 120
   base_cook_time_seconds: 30
   flip_required: false
+  food_points: 2
+  saturation: 2
 LETTUCE:
   display_name: 生菜
   weight_grams: 100
@@ -482,6 +548,8 @@ LETTUCE:
   optimal_temp_max: 60
   base_cook_time_seconds: 10
   flip_required: false
+  food_points: 2
+  saturation: 2
 GARLIC:
   display_name: 大蒜
   weight_grams: 50
@@ -494,6 +562,8 @@ GARLIC:
   optimal_temp_max: 120
   base_cook_time_seconds: 20
   flip_required: false
+  food_points: 2
+  saturation: 2
 BREADFRUIT:
   display_name: 面包果
   weight_grams: 200
@@ -506,6 +576,8 @@ BREADFRUIT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
 ALIEN_FRUIT:
   display_name: 外星果实
   weight_grams: 200
@@ -518,6 +590,8 @@ ALIEN_FRUIT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
 PUNCH_FRUIT:
   display_name: 潘趣果
   weight_grams: 200
@@ -530,6 +604,8 @@ PUNCH_FRUIT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
 JACKFRUIT:
   display_name: 菠萝蜜
   weight_grams: 200
@@ -542,6 +618,8 @@ JACKFRUIT:
   optimal_temp_max: 190
   base_cook_time_seconds: 45
   flip_required: true
+  food_points: 2
+  saturation: 2
 BIG_CARROT:
   display_name: 大萝卜
   weight_grams: 200
@@ -554,6 +632,8 @@ BIG_CARROT:
   optimal_temp_max: 180
   base_cook_time_seconds: 40
   flip_required: true
+  food_points: 2
+  saturation: 2
 ACORN_SQUASH:
   display_name: 橡子南瓜
   weight_grams: 300
@@ -566,6 +646,8 @@ ACORN_SQUASH:
   optimal_temp_max: 210
   base_cook_time_seconds: 50
   flip_required: true
+  food_points: 2
+  saturation: 2
 GINSENGBABY:
   display_name: 人参果娃
   weight_grams: 80
@@ -578,6 +660,8 @@ GINSENGBABY:
   optimal_temp_max: 150
   base_cook_time_seconds: 35
   flip_required: true
+  food_points: 2
+  saturation: 2
 BIG_WHEAT:
   display_name: 异域大麦
   weight_grams: 150
@@ -590,6 +674,8 @@ BIG_WHEAT:
   optimal_temp_max: 210
   base_cook_time_seconds: 50
   flip_required: true
+  food_points: 2
+  saturation: 2
 AMARANTH:
   display_name: 苋菜
   weight_grams: 50
@@ -602,6 +688,8 @@ AMARANTH:
   optimal_temp_max: 120
   base_cook_time_seconds: 25
   flip_required: false
+  food_points: 2
+  saturation: 2
 TEQUILA:
   display_name: 龙舌兰
   weight_grams: 100
@@ -614,6 +702,8 @@ TEQUILA:
   optimal_temp_max: 80
   base_cook_time_seconds: 20
   flip_required: false
+  food_points: 2
+  saturation: 2
 
 # ===== DUAL: ExoticGarden 蔬菜 (3种) =====
 TOMATO:
@@ -628,6 +718,8 @@ TOMATO:
   optimal_temp_max: 90
   base_cook_time_seconds: 30
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 ONION:
@@ -642,6 +734,8 @@ ONION:
   optimal_temp_max: 100
   base_cook_time_seconds: 25
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 RED_BELL_PEPPER:
@@ -656,6 +750,8 @@ RED_BELL_PEPPER:
   optimal_temp_max: 110
   base_cook_time_seconds: 25
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 
@@ -672,6 +768,8 @@ OAK_APPLE:
   optimal_temp_max: 120
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 CHERRY:
@@ -686,6 +784,8 @@ CHERRY:
   optimal_temp_max: 100
   base_cook_time_seconds: 20
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 POMEGRANATE:
@@ -700,6 +800,8 @@ POMEGRANATE:
   optimal_temp_max: 120
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 LEMON:
@@ -714,6 +816,8 @@ LEMON:
   optimal_temp_max: 80
   base_cook_time_seconds: 15
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 PLUM:
@@ -728,6 +832,8 @@ PLUM:
   optimal_temp_max: 110
   base_cook_time_seconds: 22
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 LIME:
@@ -742,6 +848,8 @@ LIME:
   optimal_temp_max: 80
   base_cook_time_seconds: 15
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 ORANGE:
@@ -756,6 +864,8 @@ ORANGE:
   optimal_temp_max: 110
   base_cook_time_seconds: 22
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 PEACH:
@@ -770,6 +880,8 @@ PEACH:
   optimal_temp_max: 110
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 PEAR:
@@ -784,6 +896,8 @@ PEAR:
   optimal_temp_max: 110
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 DRAGON_FRUIT:
@@ -798,6 +912,8 @@ DRAGON_FRUIT:
   optimal_temp_max: 100
   base_cook_time_seconds: 20
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 PINEAPPLE:
@@ -812,6 +928,8 @@ PINEAPPLE:
   optimal_temp_max: 120
   base_cook_time_seconds: 25
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 3
 COCONUT:
@@ -826,6 +944,8 @@ COCONUT:
   optimal_temp_max: 150
   base_cook_time_seconds: 35
   flip_required: true
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
 
@@ -842,6 +962,8 @@ STRAWBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 GRAPE:
@@ -856,6 +978,8 @@ GRAPE:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 BLUEBERRY:
@@ -870,6 +994,8 @@ BLUEBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 RASPBERRY:
@@ -884,6 +1010,8 @@ RASPBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 12
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 BLACKBERRY:
@@ -898,6 +1026,8 @@ BLACKBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 CRANBERRY:
@@ -912,6 +1042,8 @@ CRANBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 ELDERBERRY:
@@ -926,6 +1058,8 @@ ELDERBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 COWBERRY:
@@ -940,6 +1074,8 @@ COWBERRY:
   optimal_temp_max: 70
   base_cook_time_seconds: 15
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 2
 
@@ -956,5 +1092,7 @@ SWEET_POTATO:
   optimal_temp_max: 210
   base_cook_time_seconds: 50
   flip_required: false
+  food_points: 2
+  saturation: 2
   sauce_creation:
     clicks_required: 4
