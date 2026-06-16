@@ -129,12 +129,12 @@ public class DishConsumptionListener implements Listener {
                 for (String effectStr : effectsRaw.split("\\|")) {
                     String[] parts = effectStr.trim().split(":");
                     String effectName = parts[0].toUpperCase().replace(" ", "_").replace("-", "_");
-                    int duration  = parts.length > 1 ? parseInt(parts[1], 200) : 200;
-                    int amplifier = parts.length > 2 ? parseInt(parts[2], 0)   : 0;
+                    // 喵~duration 单位是秒，转为 tick（*20）喵
+                    int durationSecs = parts.length > 1 ? parseInt(parts[1], 200) : 200;
+                    int amplifier    = parts.length > 2 ? parseInt(parts[2], 0)   : 0;
                     PotionEffectType type = PotionEffectType.getByName(effectName);
-                    // 喵~防御：type为null时跳过该效果喵
                     if (type != null) {
-                        player.addPotionEffect(new PotionEffect(type, duration, amplifier));
+                        player.addPotionEffect(new PotionEffect(type, durationSecs * 20, amplifier));
                     }
                 }
             }
