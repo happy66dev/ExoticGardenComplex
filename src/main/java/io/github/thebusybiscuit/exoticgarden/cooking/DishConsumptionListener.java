@@ -214,12 +214,12 @@ public class DishConsumptionListener implements Listener {
             ItemStack mainHand = player.getInventory().getItemInMainHand();
             if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
                 int newAmount = mainHand.getAmount() - 1;
-                // 喵~防御：数量归零时设为AIR，避免残留空物品喵
-                player.getInventory().setItemInMainHand(
-                    newAmount == 0 ? new ItemStack(Material.AIR) : mainHand
-                );
-                if (newAmount > 0) {
+                // 喵~先设置数量再写回背包，确保实际扣除喵
+                if (newAmount == 0) {
+                    player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                } else {
                     mainHand.setAmount(newAmount);
+                    player.getInventory().setItemInMainHand(mainHand);
                 }
             }
 
