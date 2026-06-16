@@ -96,7 +96,7 @@ public class DishConsumptionListener implements Listener {
         Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
 
         // 喵~防御：无 DISH_SHELF_LIFE 字段视为不过期；无时间戳也视为不过期喵
-        if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes > 0) {
+        if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes >= 0) {
             long nowMs = System.currentTimeMillis();
             long diffMinutes = (nowMs - timestamp) / 60000L;
             expired = diffMinutes >= shelfLifeMinutes;
