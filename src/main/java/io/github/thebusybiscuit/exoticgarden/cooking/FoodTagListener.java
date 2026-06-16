@@ -125,6 +125,14 @@ public class FoodTagListener implements Listener {
             final ItemStack snapshot = cur.clone();
             // 喵~已标记物品延迟更长，让客户端背包交互完成后再写回喵
             long delay = alreadyTagged ? 5L : 1L;
+            final long snapshotTimestamp;
+            {
+                // 喵~记录快照时的时间戳，用于延迟写回时比对物品一致性喵
+                ItemMeta sm = snapshot.getItemMeta();
+                Long ts = sm != null ? sm.getPersistentDataContainer().get(
+                        CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG) : null;
+                snapshotTimestamp = ts != null ? ts : -1L;
+            }
             org.bukkit.Bukkit.getScheduler().runTaskLater(
                 io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
                 () -> {
@@ -132,6 +140,11 @@ public class FoodTagListener implements Listener {
                     if (live == null || live.getType().isAir()) return;
                     // 喵~防御：类型和数量一致才写回，防止刷物品喵
                     if (live.getType() != snapshot.getType() || live.getAmount() != snapshot.getAmount()) return;
+                    // 喵~防御：PDC时间戳一致才写回，防止操作到移动后的不同物品喵
+                    ItemMeta lm = live.getItemMeta();
+                    long liveTimestamp = lm != null ? (lm.getPersistentDataContainer()
+                            .getOrDefault(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, -2L)) : -3L;
+                    if (snapshotTimestamp != liveTimestamp) return;
                     ItemStack toTag = live.clone();
                     if (tagIfIngredient(toTag)) inv.setItem(rawSlot, toTag);
                 }, delay);
