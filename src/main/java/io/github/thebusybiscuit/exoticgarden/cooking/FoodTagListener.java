@@ -155,12 +155,32 @@ public class FoodTagListener implements Listener {
     }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
+        // 喵~扫描背包36格喵
         for (int i = 0; i < player.getInventory().getSize(); i++) {
             ItemStack it = player.getInventory().getItem(i);
             if (it == null || it.getType().isAir()) continue;
             ItemStack copy = it.clone();
             if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
         }
+        // 喵~副手槽单独处理喵
+        ItemStack offHand = player.getInventory().getItemInOffHand();
+        if (!offHand.getType().isAir()) {
+            ItemStack copy = offHand.clone();
+            if (tagIfIngredient(copy)) player.getInventory().setItemInOffHand(copy);
+        }
+    }
+
+    /**
+     * 启动200tick定时扫描，兜底覆盖所有遗漏场景喵~
+     * 需在插件初始化时调用一次喵
+     */
+    public void startPeriodicScan(org.bukkit.plugin.java.JavaPlugin plugin) {
+        // 喵~每200tick(10秒)扫描所有在线玩家背包+副手喵
+        org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
+                scanPlayerInventory(p);
+            }
+        }, 200L, 200L);
     }
 
     /**
@@ -176,6 +196,10 @@ public class FoodTagListener implements Listener {
     private boolean tagIfIngredient(ItemStack item) {
         // 喵~防御：item为null或空气时直接返回，避免NPE喵
         if (item == null || item.getType().isAir()) return false;
+        // 喵~防御：菜肴物品（有DISH_HUNGER PDC）不参与保质期标签体系，跳过喵
+        ItemMeta preCheck = item.getItemMeta();
+        if (preCheck != null && preCheck.getPersistentDataContainer()
+                .has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) return false;
         // 解析该物品对应的食材ID，不是食材则跳过喵
         String ingId = resolveIngredientId(item);
         if (ingId == null) return false;

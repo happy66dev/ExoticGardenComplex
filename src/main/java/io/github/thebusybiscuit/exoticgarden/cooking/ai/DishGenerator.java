@@ -15,25 +15,24 @@ public class DishGenerator {
         public final double weight;
         public final double foodPoints;
         public final double saturation;
-        // 给 AI 的特殊属性提示，帮助 AI 更准确识别食材风味和用途喵
         public final String hint;
-        // 该食材烹饪期间经历的燃料风味效果列表（中文显示名），影响菜肴的烟熏/燃料风味描述喵
         public final List<String> fuelEffects;
+        // 食材放入灶台时是否已过期喵
+        public final boolean isExpired;
 
         public IngredientInfo(String name, String state, int doneness,
                               double weight,
                               double foodPoints, double saturation, String hint,
-                              List<String> fuelEffects) {
+                              List<String> fuelEffects, boolean isExpired) {
             this.name = name;
             this.state = state;
             this.doneness = doneness;
             this.weight = weight;
             this.foodPoints = foodPoints;
             this.saturation = saturation;
-            // 喵~防御：hint 为 null 时存为空字符串，避免 NPE 喵
             this.hint = hint != null ? hint : "";
-            // 喵~防御：fuelEffects 为 null 时存为空列表，避免 NPE 喵
             this.fuelEffects = fuelEffects != null ? fuelEffects : new java.util.ArrayList<>();
+            this.isExpired = isExpired;
         }
     }
 
@@ -127,6 +126,8 @@ public class DishGenerator {
                 for (String fx : info.fuelEffects) fxArr.add(fx);
                 obj.add("fuelEffects", fxArr);
             }
+            // 食材过期时传给 AI，影响品质判断和猎奇名喵
+            if (info.isExpired) obj.addProperty("expired", true);
             ingArr.add(obj);
         }
         userContent.add("ingredients", ingArr);
@@ -183,7 +184,8 @@ public class DishGenerator {
             + "菜类(可能有些菜可以生吃 你根据现实知识自行辨别):0%~70%生 70%~90%嫩 90%~110%熟 110%~140%老 140%+糊 "
             + "果类0~50%可以 50~100%熟了 100%~150%烂了 150%+焦了),"
             + "weight:克,foodPoints:饱食度,saturation:饱和度,"
-            + "hint(可选):该食材的特殊属性或用途,fuelEffects:烹饪期间经历的燃料风味（可为空）}]\n"
+            + "hint(可选):该食材的特殊属性或用途,fuelEffects:烹饪期间经历的燃料风味（可为空）,"
+            + "expired(可选):true表示食材放入灶台前已过期，会影响菜肴品质和命名风格}]\n"
             + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美,200%变味了),mlAmount:液体毫升量,hint(可选):该调料的特殊属性或用途}]\n"
             + "  可用调料参考(玩家实际投料在上方seasonings列表中): 盐 白糖 红糖 料酒 醋 黑胡椒碎 葱花 花生碎 香菜碎 咖喱叶 茶叶 蜂蜜 黄油(辅料) 淡奶油(辅料) 植物油(油类) 味精 "
             + "各类果汁(柠檬汁/橙汁/苹果汁/葡萄汁/草莓汁/樱桃汁/梅子汁/桃子汁/梨汁/石榴汁/火龙果汁/菠萝汁/椰奶/番茄汁/胡萝卜汁/南瓜汁等) "
@@ -207,7 +209,9 @@ public class DishGenerator {
             + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
             + "shelfLifeMinutes: 室温保质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
             + "name: 菜名必须包含§颜色符（如§6金苹果炖菜）品质与菜名自然结合 正常食材贴合菜名 猎奇加工/食材组合允许猎奇名\n"
-            + "description: 风味描述, 必须含§颜色符进行lore色彩搭配, 换行使用JSON标准\\n(即JSON字符串中的\\n转义符)每行严格控制在12字以内(含颜色符不算字数) 总行数3~7行 和分割线(&7---------)\n"
+            + "description: 风味描述, 颜色符必须使用§前缀(不用&前缀), 每行都必须包含颜色符(不支持跨行颜色继承), "
+            + "换行使用JSON标准\\n(即JSON字符串中的\\n转义符) 每行严格控制在12字以内(含颜色符不算字数) 总行数3~7行 "
+            + "分割线格式:§7---------\n"
             + "effects: 可选, 仅特殊食材或含药水或完美烹饪时出现, 支持多个效果, 格式[\"药水ID:等级:秒\",\"药水ID2:等级:秒\"];\n"
             + "  注意:等级从0开始 即0=1级 1=2级 以此类推 返回1实际为2级 请按实际期望等级-1填写\n\n"
             + "必须返回纯JSON，必须包含以下所有字段（无论如何不能省略）：\n"

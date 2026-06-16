@@ -60,16 +60,28 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
 
         // 读取物品已有的切割状态（WHOLE/SLICED/DICED），默认 WHOLE 喵
         FoodState foodState = FoodState.WHOLE;
+        boolean isExpired = false;
         if (handItem.getItemMeta() != null) {
             PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
             String rawState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
             if (rawState != null) {
                 try { foodState = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
             }
+            // 喵~检测食材是否已过期，记录到 IngredientSlot 供 AI 参考喵
+            Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
+            if (timestamp != null) {
+                String ingId2 = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+                io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData data2
+                    = ingId2 != null ? ingredients.get(ingId2) : null;
+                int shelfLife = data2 != null ? data2.shelfLifeMinutes : 10;
+                long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
+                isExpired = diffMinutes >= shelfLife;
+            }
         }
 
         // 将食材放入空槽，并同步灶台物理槽位显示喵
         IngredientSlot slot = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
+        slot.isExpired = isExpired;
 
         // 收集当前灶台已有燃料的 effectDisplayName，非空时加入食材的 fuelEffects 喵
         for (FuelEntry fe : state.fuels) {

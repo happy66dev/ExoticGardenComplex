@@ -86,7 +86,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
                 doneness,
-                weight, foodPts, sat, hint, slot.fuelEffects));
+                weight, foodPts, sat, hint, slot.fuelEffects, slot.isExpired));
         }
 
         for (SeasoningEntry se : state.seasonings) {

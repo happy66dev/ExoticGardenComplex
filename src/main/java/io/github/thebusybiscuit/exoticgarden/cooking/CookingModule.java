@@ -77,7 +77,10 @@ public class CookingModule {
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stoveInstance).runTaskTimer(plugin, 2L, 2L);
         // 传入 foodsConfig，让 FoodTagListener 从配置读取黑名单和保质期喵
-        plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients, foodsConfig), plugin);
+        FoodTagListener foodTagListener = new FoodTagListener(ingredients, foodsConfig);
+        plugin.getServer().getPluginManager().registerEvents(foodTagListener, plugin);
+        // 喵~启动200tick定时扫描，兜底覆盖所有遗漏场景喵
+        foodTagListener.startPeriodicScan(plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
 
         // 喵~注册 PluginDisableEvent：当 EG 本身禁用时（Slimefun 此时仍运行），清理全息+篝火槽位喵
