@@ -100,12 +100,8 @@ public class DishConsumptionListener implements Listener {
             long nowMs = System.currentTimeMillis();
             long diffMinutes = (nowMs - timestamp) / 60000L;
             expired = diffMinutes >= shelfLifeMinutes;
-            // 喵~调试：输出过期判断信息，确认字段存在和时间差喵
-            e.getPlayer().sendMessage("§8[debug] 时间戳=" + timestamp + " 保质期=" + shelfLifeMinutes
-                + "min 已过=" + diffMinutes + "min 过期=" + expired);
         } else {
-            // 喵~调试：输出字段缺失信息喵
-            e.getPlayer().sendMessage("§8[debug] FOOD_TIMESTAMP=" + timestamp + " DISH_SHELF_LIFE=" + shelfLifeMinutes);
+            // 无字段时视为不过期喵
         }
 
         if (expired) {
@@ -210,16 +206,25 @@ public class DishConsumptionListener implements Listener {
 
             Player player = e.getPlayer();
 
-            // 取消后物品不会被消耗，手动扣除1个喵
+            // 取消后物品不会被消耗，检查主手或副手扣除1个喵
             ItemStack mainHand = player.getInventory().getItemInMainHand();
+            ItemStack offHand = player.getInventory().getItemInOffHand();
             if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
                 int newAmount = mainHand.getAmount() - 1;
-                // 喵~先设置数量再写回背包，确保实际扣除喵
                 if (newAmount == 0) {
                     player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                 } else {
                     mainHand.setAmount(newAmount);
                     player.getInventory().setItemInMainHand(mainHand);
+                }
+            } else if (offHand.isSimilar(item) && offHand.getAmount() > 0) {
+                // 喵~副手吃东西时扣副手喵
+                int newAmount = offHand.getAmount() - 1;
+                if (newAmount == 0) {
+                    player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+                } else {
+                    offHand.setAmount(newAmount);
+                    player.getInventory().setItemInOffHand(offHand);
                 }
             }
 
@@ -271,6 +276,53 @@ public class DishConsumptionListener implements Listener {
      * @param player  受到过期效果的玩家喵
      * @param isMeal  是否为菜肴（true时额外随机移除1个正面buff）喵
      */
+    /**
+     * 静态版本的过期效果应用，供 FoodListener 等外部类调用喵~
+     */
+    public static void applyExpiredEffectsStatic(Player player, boolean isMeal) {
+        ThreadLocalRandom rng = ThreadLocalRandom.current();
+        DebuffType first = selectDebuffStatic(rng.nextInt(100));
+        DebuffType second;
+        int tryCount = 0;
+        do {
+            second = selectDebuffStatic(rng.nextInt(100));
+            tryCount++;
+        } while (second == first && tryCount < 10);
+        if (second == first) {
+            for (DebuffType t : DebuffType.values()) {
+                if (t != first) { second = t; break; }
+            }
+        }
+        applyDebuffStatic(player, first, rng);
+        applyDebuffStatic(player, second, rng);
+        if (isMeal) {
+            java.util.List<PotionEffectType> activePositive = new java.util.ArrayList<>();
+            for (PotionEffectType pt : POSITIVE_EFFECTS) {
+                if (player.hasPotionEffect(pt)) activePositive.add(pt);
+            }
+            if (!activePositive.isEmpty()) {
+                player.removePotionEffect(activePositive.get(rng.nextInt(activePositive.size())));
+            }
+        }
+    }
+
+    private static DebuffType selectDebuffStatic(int roll) {
+        if (roll < 40) return DebuffType.HUNGER;
+        else if (roll < 70) return DebuffType.NAUSEA;
+        else return DebuffType.POISON;
+    }
+
+    private static void applyDebuffStatic(Player player, DebuffType type, ThreadLocalRandom rng) {
+        switch (type) {
+            case HUNGER -> player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, (rng.nextInt(121) + 120) * 20, 0));
+            case NAUSEA -> player.addPotionEffect(new PotionEffect(VersionedPotionEffectType.CONFUSION, (rng.nextInt(41) + 80) * 20, 1));
+            case POISON -> {
+                int t = rng.nextBoolean() ? (rng.nextInt(41) + 120) * 20 : (rng.nextInt(31) + 30) * 20;
+                player.addPotionEffect(new PotionEffect(PotionEffectType.POISON, t, 0));
+            }
+        }
+    }
+
     private void applyExpiredEffects(Player player, boolean isMeal) {
         ThreadLocalRandom rng = ThreadLocalRandom.current();
 

@@ -56,15 +56,21 @@ public class FoodListener implements Listener {
                 item = SlimefunItem.getByItem(new CustomItemStack(e.getPlayer().getInventory().getItemInMainHand(), 1));
                 if (item instanceof EGPlant && ((EGPlant) item).isEdible()) {
                     ItemStack handItem = e.getPlayer().getInventory().getItemInMainHand();
-                    // 喵~防御：过期食材禁止食用，给反胃debuff提示喵
+                    // 喵~防御：过期食材：恢复减少60%饱食度+随机2种debuff喵
                     if (isExpired(handItem)) {
-                        e.getPlayer().addPotionEffect(new PotionEffect(VersionedPotionEffectType.CONFUSION, EXPIRED_NAUSEA_TICKS, 4));
-                        e.getPlayer().sendMessage("§c这食材已经过期了，吃了感觉很不舒服喵~");
-                        // 手动扣除物品（食用失败也消耗）喵
+                        // 恢复减少60%的饱食度喵
+                        double basePoints = ((EGPlant) item).getEdibleHunger();
+                        int reduced = (int) Math.max(0, Math.round(basePoints * 0.4));
+                        int newFood = Math.min(e.getPlayer().getFoodLevel() + reduced, 20);
+                        e.getPlayer().setFoodLevel(newFood);
+                        e.getPlayer().sendMessage("§c这食材已经过期了 吃了感觉很不舒服喵~");
+                        io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener.applyExpiredEffectsStatic(e.getPlayer(), false);
+                        // 扣除物品喵
                         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
                             var a = e.getPlayer().getInventory().getItemInMainHand();
                             a.setAmount(a.getAmount() - 1);
-                            e.getPlayer().getInventory().setItemInMainHand(a);
+                            e.getPlayer().getInventory().setItemInMainHand(a.getAmount() == 0
+                                ? new ItemStack(org.bukkit.Material.AIR) : a);
                         }, 0L);
                         break;
                     }
@@ -83,14 +89,19 @@ public class FoodListener implements Listener {
                 item = SlimefunItem.getByItem(new CustomItemStack(e.getPlayer().getInventory().getItemInOffHand(), 1));
                 if (item instanceof EGPlant && ((EGPlant) item).isEdible()) {
                     ItemStack offItem = e.getPlayer().getInventory().getItemInOffHand();
-                    // 喵~防御：过期食材禁止食用，给反胃debuff提示喵
+                    // 喵~防御：过期食材：恢复减少60%饱食度+随机2种debuff喵
                     if (isExpired(offItem)) {
-                        e.getPlayer().addPotionEffect(new PotionEffect(VersionedPotionEffectType.CONFUSION, EXPIRED_NAUSEA_TICKS, 4));
-                        e.getPlayer().sendMessage("§c这食材已经过期了，吃了感觉很不舒服喵~");
+                        double basePoints = ((EGPlant) item).getEdibleHunger();
+                        int reduced = (int) Math.max(0, Math.round(basePoints * 0.4));
+                        int newFood = Math.min(e.getPlayer().getFoodLevel() + reduced, 20);
+                        e.getPlayer().setFoodLevel(newFood);
+                        e.getPlayer().sendMessage("§c这食材已经过期了 吃了感觉很不舒服喵~");
+                        io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener.applyExpiredEffectsStatic(e.getPlayer(), false);
                         Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> {
                             var a = e.getPlayer().getInventory().getItemInOffHand();
                             a.setAmount(a.getAmount() - 1);
-                            e.getPlayer().getInventory().setItemInOffHand(a);
+                            e.getPlayer().getInventory().setItemInOffHand(a.getAmount() == 0
+                                ? new ItemStack(org.bukkit.Material.AIR) : a);
                         }, 0L);
                         break;
                     }

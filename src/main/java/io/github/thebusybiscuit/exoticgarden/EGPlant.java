@@ -23,6 +23,11 @@ public class EGPlant extends HandledBlock {
         return this.edible;
     }
 
+    // 喵~返回食物的饱食度恢复值，用于过期时计算减少60%喵
+    public int getEdibleHunger() {
+        return food;
+    }
+
     public void restoreHunger(Player p) {
         int level = p.getFoodLevel() + 2;
         p.setFoodLevel(Math.min(level, 20));
