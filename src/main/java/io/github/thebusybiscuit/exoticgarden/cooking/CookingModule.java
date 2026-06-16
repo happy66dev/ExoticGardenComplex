@@ -80,28 +80,28 @@ public class CookingModule {
         plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients, foodsConfig), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
 
-        // 喵~注册 PluginDisableEvent 监听：在 Slimefun 禁用前清理全息+篝火槽位，确保服务仍可用喵
+        // 喵~注册 PluginDisableEvent：当 EG 本身禁用时（Slimefun 此时仍运行），清理全息+篝火槽位喵
+        // ExoticGarden 依赖 Slimefun，所以 EG 禁用时 Slimefun 的 HologramsService 仍可用喵
         plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
             @org.bukkit.event.EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
-            public void onSlimefunDisable(org.bukkit.event.server.PluginDisableEvent e) {
-                if (e.getPlugin().getName().equals("Slimefun") && stoveInstance != null) {
-                    for (java.util.Map.Entry<org.bukkit.Location, io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState> entry
-                            : stoveInstance.activeStoves.entrySet()) {
-                        org.bukkit.Location loc = entry.getKey();
-                        if (loc.getWorld() == null) continue;
-                        // 喵~清除全息字（趁 HologramsService 还可用）喵
-                        stoveInstance.removeHologram(loc.getBlock());
-                        // 喵~清空篝火槽位（趁区块仍加载）喵
-                        if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
-                        org.bukkit.block.Block block = loc.getBlock();
-                        if (block.getState() instanceof org.bukkit.block.Campfire campfire) {
-                            for (int i = 0; i < 4; i++) campfire.setItem(i, null);
-                            campfire.update(true, false);
-                        }
+            public void onExoticGardenDisable(org.bukkit.event.server.PluginDisableEvent e) {
+                if (!e.getPlugin().getName().equals("ExoticGarden") || stoveInstance == null) return;
+                for (java.util.Map.Entry<org.bukkit.Location, io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState> entry
+                        : stoveInstance.activeStoves.entrySet()) {
+                    org.bukkit.Location loc = entry.getKey();
+                    if (loc.getWorld() == null) continue;
+                    // 喵~清除全息字（Slimefun HologramsService 仍可用）喵
+                    stoveInstance.removeHologram(loc.getBlock());
+                    // 喵~清空篝火槽位（趁区块仍加载）喵
+                    if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
+                    org.bukkit.block.Block block = loc.getBlock();
+                    if (block.getState() instanceof org.bukkit.block.Campfire campfire) {
+                        for (int i = 0; i < 4; i++) campfire.setItem(i, null);
+                        campfire.update(true, false);
                     }
-                    stoveInstance.activeStoves.clear();
-                    plugin.getLogger().info("[Cooking] 已提前清理灶台全息字和篝火槽位喵~");
                 }
+                stoveInstance.activeStoves.clear();
+                plugin.getLogger().info("[Cooking] 已提前清理灶台全息字和篝火槽位喵~");
             }
         }, plugin);
         // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
