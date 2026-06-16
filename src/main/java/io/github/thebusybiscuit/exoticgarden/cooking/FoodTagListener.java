@@ -466,9 +466,13 @@ public class FoodTagListener implements Listener {
             String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
             if (sfId != null) {
                 SlimefunItem sfItem = SlimefunItem.getById(sfId);
-                // 喵~防御：SF物品对应的原版材质可食用，视为加工食品喵
-                if (sfItem != null && sfItem.getItem().getType().isEdible()) {
-                    return GENERIC_FOOD_ID;
+                if (sfItem != null) {
+                    // 喵~原版材质可食用，或者是 EGPlant（头颅食物，不 isEdible 但可吃）喵
+                    if (sfItem.getItem().getType().isEdible()
+                            || sfItem instanceof io.github.thebusybiscuit.exoticgarden.EGPlant
+                            || sfItem instanceof io.github.thebusybiscuit.exoticgarden.items.CustomFood) {
+                        return GENERIC_FOOD_ID;
+                    }
                 }
             }
         }

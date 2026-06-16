@@ -99,8 +99,13 @@ public class DishConsumptionListener implements Listener {
         if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes > 0) {
             long nowMs = System.currentTimeMillis();
             long diffMinutes = (nowMs - timestamp) / 60000L;
-            // 经过时间超过保质期则过期喵
             expired = diffMinutes >= shelfLifeMinutes;
+            // 喵~调试：输出过期判断信息，确认字段存在和时间差喵
+            e.getPlayer().sendMessage("§8[debug] 时间戳=" + timestamp + " 保质期=" + shelfLifeMinutes
+                + "min 已过=" + diffMinutes + "min 过期=" + expired);
+        } else {
+            // 喵~调试：输出字段缺失信息喵
+            e.getPlayer().sendMessage("§8[debug] FOOD_TIMESTAMP=" + timestamp + " DISH_SHELF_LIFE=" + shelfLifeMinutes);
         }
 
         if (expired) {
