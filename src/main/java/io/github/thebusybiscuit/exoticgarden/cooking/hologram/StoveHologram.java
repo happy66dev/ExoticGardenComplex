@@ -50,10 +50,20 @@ public class StoveHologram {
         Block block = loc.getBlock();
         Location bottomFixed = block.getLocation().add(stove.getHologramOffset(block));
         String key = locKey(bottomFixed);
+        // 喵~清除 lastBaseLoc 里记录的已知全息喵
         org.bukkit.Location prev = lastBaseLoc.remove(key);
         if (prev != null) {
             Slimefun.getHologramsService().removeMultiLineHologram(prev);
         }
+        // 喵~扫描底部固定点上方最多15格内的所有可能 baseLoc，逐一清除残留全息
+        // 这里针对的是服务器重启后 lastBaseLoc 为空、但残留全息仍存在的场景喵
+        double LINE_SPACING = 0.3;
+        int MAX_LINES = 15; // 最多可能有15行全息（每行0.3格，覆盖4.5格高度）喵
+        for (int i = 0; i <= MAX_LINES; i++) {
+            Location candidate = bottomFixed.clone().add(0, i * LINE_SPACING, 0);
+            Slimefun.getHologramsService().removeMultiLineHologram(candidate);
+        }
+        // 喵~兜底：用 HologramOwner.removeHologram 清除单行全息喵
         stove.removeHologram(block);
     }
 
