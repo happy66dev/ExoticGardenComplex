@@ -169,7 +169,8 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
      * 查找优先级：
      * 1. PDC 中已有 SEASONING_ID 且在 map 中 → 直接返回
      * 2. ItemIdUtil.toKey() 生成带命名空间 key 在 map 中 → 返回
-     * 3. 药水类 Material → 返回 "_POTION_"
+     * 3. 药水类 Material（非水瓶）→ 返回 "_POTION_"
+     * 注意：水瓶 Material=POTION 但无药水效果，会在步骤2命中 minecraft:WATER_BOTTLE 喵
      */
     private String resolve(ItemStack item) {
         // 1. PDC 中的 SEASONING_ID 优先查找喵
@@ -179,11 +180,12 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             if (id != null && seasonings.containsKey(id)) return id;
         }
 
-        // 2. 用 ItemIdUtil 生成带命名空间的 key 在 map 中查找喵
+        // 2. 用 ItemIdUtil 生成带命名空间的 key 在 map 中查找（含水瓶 minecraft:POTION 等）喵
         String itemKey = ItemIdUtil.toKey(item);
         if (itemKey != null && seasonings.containsKey(itemKey)) return itemKey;
 
-        // 3. 药水类 Material 映射到虚拟标识符 _POTION_ 喵
+        // 3. 药水类 Material（POTION/SPLASH_POTION/LINGERING_POTION）且在 map 里没有精确 key
+        //    → 说明是真实药水而非水瓶，映射到虚拟标识符 _POTION_ 喵
         Material mat = item.getType();
         if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
             return "_POTION_";

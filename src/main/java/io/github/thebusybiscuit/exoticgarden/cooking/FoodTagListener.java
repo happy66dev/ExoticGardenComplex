@@ -438,17 +438,16 @@ public class FoodTagListener implements Listener {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta != null) {
             PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+            // 1. PDC 中已有 INGREDIENT_ID 且在 map 里 → 直接返回喵
             String id = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
             if (id != null && ingredients.containsKey(id)) return id;
-
-            String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
-            if (sfId != null) {
-                SlimefunItem sfItem = SlimefunItem.getById(sfId);
-                if (sfItem != null && ingredients.containsKey(sfItem.getId())) return sfItem.getId();
-            }
         }
-        String matName = item.getType().name();
-        if (ingredients.containsKey(matName)) return matName;
+
+        // 2. 用 ItemIdUtil 生成带命名空间 key 在 map 中查找：
+        //    SF 物品 → "slimefun:ID"，原版 → "minecraft:MATERIAL" 喵
+        String itemKey = io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil.toKey(item);
+        if (itemKey != null && ingredients.containsKey(itemKey)) return itemKey;
 
         // ===== fallback：食材配置里没有时，检查原版食物和药水 =====
         Material mat = item.getType();
