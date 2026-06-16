@@ -92,8 +92,9 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         }
 
         for (SeasoningEntry se : state.seasonings) {
+            // 喵~牛奶现在是辅料，应显示在调料列表中，不再跳过喵
             if ("WATER".equals(se.seasoningId) || "WATER_BUCKET".equals(se.seasoningId)
-                || "MILK_BUCKET".equals(se.seasoningId) || "OIL".equals(se.seasoningId)) continue;
+                || "OIL".equals(se.seasoningId)) continue;
             SeasoningConfig.SeasoningData sd = seasonings.get(se.seasoningId);
             String displayName = sd != null ? sd.displayName : se.seasoningId;
             totalWeight += se.weight;

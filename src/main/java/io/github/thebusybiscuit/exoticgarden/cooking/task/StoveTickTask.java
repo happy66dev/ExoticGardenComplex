@@ -93,8 +93,9 @@ public class StoveTickTask extends BukkitRunnable {
             }
         }
 
+        // 散热速度改为原来的50%喵
         double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
-        state.currentTemp = Math.max(state.currentTemp - coolRate * 0.1, 30.0);
+        state.currentTemp = Math.max(state.currentTemp - coolRate * 0.05, 30.0);
 
         if (!state.fuels.isEmpty() && state.currentTemp < maxTemp) {
             state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
@@ -141,7 +142,8 @@ public class StoveTickTask extends BukkitRunnable {
 
     private void tickEvaporation(StoveState state) {
         if (state.waterAmount > 0 && state.currentTemp > 100) {
-            double evapRate = (state.currentTemp - 100) * 0.02;
+            // 水蒸发速度改为原来的25%喵
+            double evapRate = (state.currentTemp - 100) * 0.005;
             state.waterAmount = Math.max(0, state.waterAmount - evapRate);
         }
     }

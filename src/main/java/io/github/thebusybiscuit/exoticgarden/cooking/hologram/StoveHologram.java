@@ -50,10 +50,9 @@ public class StoveHologram {
         sb.append(String.format("§6[灶台] §e温度: §a%.0f°C §7/ §f%.0f°C\n",
             state.currentTemp, maxTemp));
 
-        if (state.waterAmount > 0 || state.oilAmount > 0) {
-            sb.append(String.format("§b水量: §f%.0fml  §e油量: §f%.0fml\n",
-                state.waterAmount, state.oilAmount));
-        }
+        // 始终显示水量和油量，为0时也显示0ml喵
+        sb.append(String.format("§b水量: §f%.0fml  §e油量: §f%.0fml\n",
+            state.waterAmount, state.oilAmount));
 
         if (!state.fuels.isEmpty()) {
             for (FuelEntry fe : state.fuels) {
