@@ -21,13 +21,10 @@ public class StoveHologram {
                               StoveBlock stove) {
         Block block = loc.getBlock();
         String[] lines = buildLines(state, fuels, ingredients, seasonings).split("\\n");
-        // 最后一行固定在 getHologramOffset 位置，行数增多时向上扩展喵~
-        // SF4 setMultiLineHologram 从 baseLoc 向下排列，每行间距 LINE_SPACING=0.3
-        // 所以把 baseLoc 上移 (n-1)*0.3 使最后一行始终在原始偏移处喵~
-        double LINE_SPACING = 0.3;
+        // 喵~baseLoc 固定（方块偏移点），行从该点向下排列（SF4 每行 -0.3）
+        // 固定 baseLoc 才能保证 SF4 缓存命中，行数增减时能正确删除多余行喵
         Location baseLoc = block.getLocation()
-                .add(stove.getHologramOffset(block))
-                .add(0, (lines.length - 1) * LINE_SPACING, 0);
+                .add(stove.getHologramOffset(block));
         Slimefun.getHologramsService().setMultiLineHologram(baseLoc, lines);
     }
 
