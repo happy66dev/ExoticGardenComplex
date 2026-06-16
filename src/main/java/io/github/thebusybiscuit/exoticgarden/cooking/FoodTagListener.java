@@ -414,7 +414,13 @@ public class FoodTagListener implements Listener {
 
         private static void load() {
             loaded = true;
-            try (java.io.InputStream in = FoodTagListener.class.getResourceAsStream("/zh_cn.json")) {
+            // 喵~优先从 Slimefun4 jar 读取 zh_cn.json（EG 自身 jar 不包含此文件）喵
+            java.io.InputStream in = null;
+            try {
+                // 通过 SF4 主类加载 zh_cn.json 喵
+                in = io.github.thebusybiscuit.slimefun4.implementation.Slimefun.class.getResourceAsStream("/zh_cn.json");
+                // 喵~防御：SF4 路径失败时再尝试当前 jar 喵
+                if (in == null) in = FoodTagListener.class.getResourceAsStream("/zh_cn.json");
                 if (in == null) return;
                 com.google.gson.JsonObject root = new com.google.gson.JsonParser()
                         .parse(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
@@ -422,13 +428,15 @@ public class FoodTagListener implements Listener {
                 for (java.util.Map.Entry<String, com.google.gson.JsonElement> entry : root.entrySet()) {
                     String key = entry.getKey();
                     if (key.startsWith("item.minecraft.") || key.startsWith("block.minecraft.")) {
-                        // 将 "item.minecraft.apple" 转为 "APPLE" 枚举名喵
+                        // 将 "item.minecraft.rabbit_stew" 转为 "RABBIT_STEW" 枚举名喵
                         String matName = key.substring(key.lastIndexOf('.') + 1).toUpperCase(java.util.Locale.ENGLISH);
                         CACHE.put(matName, entry.getValue().getAsString());
                     }
                 }
             } catch (Exception ignored) {
-                // 喵~防御：zh_cn.json不存在或解析失败时静默忽略，使用兜底名称喵
+                // 喵~防御：解析失败时静默忽略，使用兜底名称喵
+            } finally {
+                if (in != null) try { in.close(); } catch (Exception ignored) {}
             }
         }
     }

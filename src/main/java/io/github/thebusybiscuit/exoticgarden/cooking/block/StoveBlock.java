@@ -49,6 +49,15 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 }
             }
 
+            // 喵~兜底：营火上物品掉落时，如果该位置是EG灶台则取消掉落（防止服务器重启/插件卸载时物品泄漏）
+            @EventHandler(ignoreCancelled = true)
+            public void onBlockDropItem(org.bukkit.event.block.BlockDropItemEvent e) {
+                if (e.getBlock().getType() != org.bukkit.Material.CAMPFIRE) return;
+                if (!activeStoves.containsKey(e.getBlock().getLocation())) return;
+                // 喵~取消篝火产生的物品掉落，防止食材因篝火机制掉落喵
+                e.setCancelled(true);
+            }
+
             @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
             public void onPlayerInteract(PlayerInteractEvent e) {
                 if (e.getHand() != org.bukkit.inventory.EquipmentSlot.HAND) return;

@@ -221,14 +221,27 @@ public class CookingModule {
     }
 
     /**
-     * 关服时清除所有已加载的灶台运行时数据（内存数据，不涉及持久化）喵~
+     * 关服时清除所有已加载的灶台运行时数据，并清空对应篝火方块槽位，防止重启时物品掉落喵~
      * 调用时机：ExoticGarden.onDisable()
      */
     public static void clearStoveData() {
         // 喵~防御：stoveInstance未初始化时跳过喵
-        if (stoveInstance != null) {
-            stoveInstance.activeStoves.clear();
+        if (stoveInstance == null) return;
+        for (java.util.Map.Entry<org.bukkit.Location, io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState> entry
+                : stoveInstance.activeStoves.entrySet()) {
+            org.bukkit.Location loc = entry.getKey();
+            // 喵~防御：区块可能已卸载，只处理已加载的区块喵
+            if (loc.getWorld() == null || !loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
+            org.bukkit.block.Block block = loc.getBlock();
+            // 喵~防御：方块必须是营火才处理，防止误清其他方块喵
+            if (!(block.getState() instanceof org.bukkit.block.Campfire campfire)) continue;
+            // 清空篝火所有槽位，防止服务器重启时物品掉落喵
+            for (int i = 0; i < 4; i++) {
+                campfire.setItem(i, null);
+            }
+            campfire.update(true, false);
         }
+        stoveInstance.activeStoves.clear();
     }
 
     // 喵~此方法已废弃，砧板数据加载逻辑已移到ExoticGarden.loadCuttingBoards()
