@@ -202,12 +202,14 @@ public class FoodTagListener implements Listener {
         final String ingredientLine; // 最终显示在lore里的类型标签行喵
 
         if (GENERIC_FOOD_ID.equals(ingId)) {
-            // 通用原版食物：lore显示"[食物]"，保质期10分钟，不显示克重（非烹饪原料）喵
-            shelfLifeMinutes = GENERIC_FOOD_SHELF_LIFE_MINUTES;
+            // 通用原版食物：lore显示"[食物]"，保质期优先读配置文件，默认10分钟喵
+            IngredientConfig.IngredientData genericFood = ingredients.get(GENERIC_FOOD_ID);
+            shelfLifeMinutes = genericFood != null ? genericFood.shelfLifeMinutes : GENERIC_FOOD_SHELF_LIFE_MINUTES;
             ingredientLine = "§7[食物]";
         } else if (GENERIC_POTION_ID.equals(ingId)) {
-            // 通用药水/水瓶：lore显示"[药水] 200ml"，保质期5分钟喵
-            shelfLifeMinutes = GENERIC_POTION_SHELF_LIFE_MINUTES;
+            // 通用药水/水瓶：lore显示"[药水] 200ml"，保质期优先读配置文件，默认5分钟喵
+            IngredientConfig.IngredientData genericPotion = ingredients.get(GENERIC_POTION_ID);
+            shelfLifeMinutes = genericPotion != null ? genericPotion.shelfLifeMinutes : GENERIC_POTION_SHELF_LIFE_MINUTES;
             ingredientLine = "§7[药水] §b200ml";
         } else {
             // 普通烹饪食材：从配置读取营养值、保质期和克重喵

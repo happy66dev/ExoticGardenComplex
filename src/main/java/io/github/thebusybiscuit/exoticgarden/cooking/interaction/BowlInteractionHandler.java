@@ -122,7 +122,8 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         int totalHungerWithWater = totalHunger;
         double totalWeightWithWater = totalWeight + state.waterAmount + state.oilAmount;
         String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos, fxList,
-            state.waterAmount, state.oilAmount, totalHungerWithWater, totalWeightWithWater, waterSrcs);
+            state.waterAmount, state.oilAmount, totalHungerWithWater, totalWeightWithWater, waterSrcs,
+            state.potionEffects);
         player.sendMessage("§6§l──── AI 提示词调试 ────");
         player.sendMessage("§b[System] §f" + prompts[0]);
         player.sendMessage("§a[User]   §f" + prompts[1]);

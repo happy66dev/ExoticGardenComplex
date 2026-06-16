@@ -65,7 +65,8 @@ public class DishGenerator {
             List<String> fuelEffects,
             double waterMl, double oilMl,
             int totalHunger, double totalWeight,
-            List<String> waterSources) {
+            List<String> waterSources,
+            List<org.bukkit.potion.PotionEffect> potionEffects) {
         Gson gson = new Gson();
         JsonObject userContent = new JsonObject();
 
@@ -112,14 +113,28 @@ public class DishGenerator {
         userContent.addProperty("totalWeight", totalWeight);
         userContent.addProperty("language", "zh-CN");
 
+        // 药水效果：显式传给AI，格式[{effect:效果名, amplifier:等级, durationSeconds:持续秒}]喵
+        if (potionEffects != null && !potionEffects.isEmpty()) {
+            JsonArray potionArr = new JsonArray();
+            for (org.bukkit.potion.PotionEffect pe : potionEffects) {
+                JsonObject obj = new JsonObject();
+                obj.addProperty("effect", pe.getType().getName());
+                obj.addProperty("amplifier", pe.getAmplifier() + 1);
+                obj.addProperty("durationSeconds", pe.getDuration() / 20);
+                potionArr.add(obj);
+            }
+            userContent.add("potionEffects", potionArr);
+        }
+
         String systemPrompt = "你是一个 Minecraft 烹饪游戏的菜肴生成器。\n\n"
             + "输入 JSON 字段说明:\n"
-            + "- ingredients: [{name:\"食材名\",state:\"完整/切片/切丁/酱汁\",doneness:熟度(可超100),charLevel:\"NONE/LIGHT/MEDIUM/HEAVY/SEVERE\",weight:\"克\"}]\n"
-            + "- seasonings: [{name:\"调料名\",progress:渗入度0-1}]\n"
+            + "- ingredients: [{name:\"食材名\",state:\"完整/切片/切丁/酱汁\",doneness:熟度百分比(100=完美,可超100),charLevel:\"NONE/LIGHT/MEDIUM/HEAVY/SEVERE\",weight:克,foodPoints:饱食度,saturation:饱和度}]\n"
+            + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美),mlAmount:液体毫升量}]\n"
             + "- fuelEffects: [\"燃料风味\"]\n"
             + "- waterMl: 当前剩余水量(已蒸发扣除), oilMl: 油量(毫升)\n"
             + "- waterSources: [\"水来源\"] 如[\"柠檬汁\",\"牛奶\",\"料酒\",\"水\"]等\n"
-            + "- totalHunger: 食材饱食度之和, totalWeight: 食材+辅料总克重\n\n"
+            + "- totalHunger: 食材饱食度之和, totalWeight: 食材+辅料总克重\n"
+            + "- potionEffects(可选): [{effect:效果名,amplifier:等级,durationSeconds:持续秒}]\n\n"
             + "烹饪方向推断(根据水量油量):\n"
             + "- 无水无油->烧烤/干烧(食材适合烤则品质不差,否则干烧品质差)\n"
             + "- 有水无油->炖/煮/蒸  有油无水->煎/炒/炸  有水有油->汤/烩/焖\n"
