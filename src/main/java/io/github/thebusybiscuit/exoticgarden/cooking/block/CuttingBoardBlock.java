@@ -74,6 +74,21 @@ public class CuttingBoardBlock extends SlimefunItem {
                     ItemStack helmet = stand.getEquipment().getHelmet();
                     if (helmet != null && !helmet.getType().isAir()) {
                         ItemStack stored = helmet.clone();
+                        // 喵~取回前刷新 lore（状态/营养值/克重），与刀具取回路径保持一致喵
+                        org.bukkit.inventory.meta.ItemMeta storedMeta = stored.getItemMeta();
+                        if (storedMeta != null) {
+                            org.bukkit.persistence.PersistentDataContainer storedPdc = storedMeta.getPersistentDataContainer();
+                            String rawState = storedPdc.get(CookingKeys.FOOD_STATE, org.bukkit.persistence.PersistentDataType.STRING);
+                            if (rawState != null) {
+                                io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState fs = io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState.WHOLE;
+                                try { fs = io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
+                                var ingredients = io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getIngredients();
+                                if (ingredients != null) {
+                                    io.github.thebusybiscuit.exoticgarden.cooking.item.KnifeItem.refreshIngredientLore(storedMeta, fs, storedPdc, ingredients);
+                                    stored.setItemMeta(storedMeta);
+                                }
+                            }
+                        }
                         Map<Integer, ItemStack> leftover = player.getInventory().addItem(stored);
                         if (!leftover.isEmpty() && loc.getWorld() != null) {
                             leftover.values().forEach(it -> loc.getWorld().dropItemNaturally(loc, it));

@@ -198,8 +198,8 @@ public class KnifeItem extends SlimefunItem {
         };
     }
 
-    // 替换lore中的[烹饪食材]行，保留其余行不变喵
-    private void refreshIngredientLore(org.bukkit.inventory.meta.ItemMeta meta, FoodState newState,
+    // 替换lore中的[烹饪食材]行，保留其余行不变喵（public static 供 CuttingBoardBlock 取回时复用）
+    public static void refreshIngredientLore(org.bukkit.inventory.meta.ItemMeta meta, FoodState newState,
                                        PersistentDataContainer pdc,
                                        Map<String, IngredientConfig.IngredientData> ingredients) {
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();

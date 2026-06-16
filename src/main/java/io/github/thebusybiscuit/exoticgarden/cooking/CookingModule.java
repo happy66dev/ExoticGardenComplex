@@ -46,10 +46,18 @@ public class CookingModule {
 
     // 保存灶台实例引用，用于关服时清除内存数据喵
     private static StoveBlock stoveInstance;
+    // 保存食材配置 map，供 CuttingBoardBlock 取回时刷新 lore 使用喵
+    private static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> ingredientsMap;
+
+    /** 获取食材配置 map，用于刷新 lore 等场景喵 */
+    public static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> getIngredients() {
+        return ingredientsMap;
+    }
 
     public static void initialize(ExoticGarden plugin) {
         Map<String, FuelConfig.FuelData> fuels = loadConfigs(plugin);
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
+        ingredientsMap = ingredients; // 保存引用供外部访问喵
         Map<String, SeasoningConfig.SeasoningData> seasonings = loadSeasonings(plugin);
         FoodsConfig foodsConfig = loadFoods(plugin);
 

@@ -1234,3 +1234,12 @@ slimefun:SWEET_POTATO:
   hint: ""
   sauce_creation:
     clicks_required: 4
+
+# ===== 通用食物/药水保质期覆盖（可选）=====
+# 取消注释并填写 shelf_life_minutes 可覆盖 foods.yml 中的默认值喵~
+# _GENERIC_FOOD_:
+#   shelf_life_minutes: 10
+#   hint: ""
+# _GENERIC_POTION_:
+#   shelf_life_minutes: 5
+#   hint: ""
