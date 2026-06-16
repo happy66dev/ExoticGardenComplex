@@ -124,7 +124,11 @@ public class StoveTickTask extends BukkitRunnable {
             CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
             double increment = calculator.calculate(ctx);
 
-            if (state.currentTemp >= data.maxTemp) {
+            // 喵~成熟系数>=2时（温度远超参考温度）开始焦化喵
+            double refTemp = data.matureRefTemp;
+            double denominator = Math.max(Math.max(refTemp, 50.0) - 30.0, 20.0);
+            double coefficient = (state.currentTemp - 30.0) / denominator;
+            if (coefficient >= 2.0) {
                 slot.charSeconds = Math.min(slot.charSeconds + 0.1, 60.0);
             }
 

@@ -129,9 +129,9 @@ public class KnifeItem extends SlimefunItem {
                     IngredientConfig.IngredientData data2 = ingId2 != null ? ingredients.get(ingId2) : null;
                     if (data2 != null && data2.sauceCreation != null) {
                         int cur = heldPdc.getOrDefault(CookingKeys.KNIFE_CLICKS, PersistentDataType.INTEGER, 0);
-                        player.sendMessage("§a研磨中: " + cur + "/" + data2.sauceCreation.clicksRequired);
+                        player.sendMessage("§a已切丁！研磨中: " + cur + "/" + data2.sauceCreation.clicksRequired);
                     } else {
-                        player.sendMessage("§c此食材已无法进一步加工（无制酱配置）");
+                        player.sendMessage("§a食材状态: 切丁（已无法进一步加工）");
                     }
                 } else {
                     player.sendMessage("§a食材状态: " + stateDisplayName(next));

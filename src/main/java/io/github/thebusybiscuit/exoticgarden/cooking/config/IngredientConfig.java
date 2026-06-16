@@ -16,10 +16,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
     }
 
     public static class IngredientData {
-        public final double minTemp;
-        public final double maxTemp;
-        public final double optimalTempMin;
-        public final double optimalTempMax;
+        // 成熟参考温度：在此温度时系数=1（成熟速度标准速度）喵
+        public final double matureRefTemp;
         public final double baseCookTimeSeconds;
         public final boolean flipRequired;
         public final List<String> states;
@@ -40,17 +38,13 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
         public final String hint;
 
-        public IngredientData(double minTemp, double maxTemp, double optimalTempMin,
-                              double optimalTempMax, double baseCookTimeSeconds,
+        public IngredientData(double matureRefTemp, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
                               double foodPoints, double saturation, int shelfLifeMinutes,
                               double waterMl, double oilMl, String hint) {
-            this.minTemp = minTemp;
-            this.maxTemp = maxTemp;
-            this.optimalTempMin = optimalTempMin;
-            this.optimalTempMax = optimalTempMax;
+            this.matureRefTemp = matureRefTemp;
             this.baseCookTimeSeconds = baseCookTimeSeconds;
             this.flipRequired = flipRequired;
             this.states = states;
@@ -78,10 +72,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             sauce = new SauceCreation(s.getInt("sauce_creation.clicks_required", 3));
         }
         return new IngredientData(
-            s.getDouble("min_temp"),
-            s.getDouble("max_temp"),
-            s.getDouble("optimal_temp_min"),
-            s.getDouble("optimal_temp_max"),
+            s.getDouble("mature_ref_temp", 150),  // 成熟参考温度，默认150°C喵
             s.getDouble("base_cook_time_seconds"),
             s.getBoolean("flip_required", false),
             s.getStringList("states"),
@@ -92,9 +83,9 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getDouble("food_points", 2),
             s.getDouble("saturation", 2),
             s.getInt("shelf_life_minutes", 10),
-            s.getDouble("water_ml", 0),   // 烹饪时释放的水量，默认0喵
-            s.getDouble("oil_ml", 0),     // 烹饪时释放的油量，默认0喵
-            s.getString("hint", "")       // 给 AI 的提示信息，默认空字符串喵
+            s.getDouble("water_ml", 0),
+            s.getDouble("oil_ml", 0),
+            s.getString("hint", "")
         );
     }
 }
