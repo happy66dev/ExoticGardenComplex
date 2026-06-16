@@ -25,6 +25,10 @@ public final class CookingKeys {
     public static final NamespacedKey KNIFE_CLICKS    = new NamespacedKey(NS, "knife_clicks");
     // 记录食材/菜肴最后一次被标记时的时间戳（毫秒），用于计算保质期显示喵
     public static final NamespacedKey FOOD_TIMESTAMP  = new NamespacedKey(NS, "food_timestamp");
+    // 菜肴保质期（分钟），AI返回值喵
+    public static final NamespacedKey DISH_SHELF_LIFE = new NamespacedKey(NS, "dish_shelf_life");
+    // 菜肴剩余可食用次数，食用一次扣1，归零时物品变碗喵
+    public static final NamespacedKey DISH_SERVINGS_REMAINING = new NamespacedKey(NS, "dish_servings_remaining");
 
     private CookingKeys() {}
 }

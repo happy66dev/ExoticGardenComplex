@@ -165,26 +165,32 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 state.spatulaBoostTicksLeft = 0;
                 io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock.syncCampfireSlots(loc2, state);
 
-                // 喵~创建菜肴物品（谜之炖菜+自定义NBT+lore）喵
-                ItemStack dish = new ItemStack(Material.SUSPICIOUS_STEW, result.servings);
+                // 喵~创建菜肴物品（谜之炖菜+自定义NBT+lore），setAmount=1用字段记录可食用次数喵
+                ItemStack dish = new ItemStack(Material.SUSPICIOUS_STEW, 1);
                 ItemMeta meta = dish.getItemMeta();
                 if (meta != null) {
                     // 显示名：菜名喵
                     meta.setDisplayName(result.name);
-                    // lore：品质行 + description 换行展开喵
+                    long nowMs = System.currentTimeMillis();
+                    // lore：品质行 + 保质期 + 生产日期 + description 换行展开喵
                     List<String> lore = new ArrayList<>();
                     lore.add("§7品质: §f" + result.quality
                         + "  §7饱食: §f" + result.hunger
-                        + "  §7饱和: §f" + String.format("%.1f", result.saturation));
+                        + "  §7饱和: §f" + String.format("%.1f", result.saturation)
+                        + "  §7份量: §f" + result.servings);
+                    lore.add("§8保质期: §f" + io.github.thebusybiscuit.exoticgarden.cooking.FoodTagListener.formatShelfLife(result.shelfLifeMinutes));
+                    lore.add("§8生产日期: §f" + io.github.thebusybiscuit.exoticgarden.cooking.FoodTagListener.formatTimestamp(nowMs));
                     lore.addAll(DishGenerator.descriptionToLore(result.description));
                     meta.setLore(lore);
                     // PDC：写入菜肴数据供 DishConsumptionListener 读取喵
                     PersistentDataContainer pdc = meta.getPersistentDataContainer();
-                    pdc.set(CookingKeys.DISH_HUNGER,     PersistentDataType.INTEGER, result.hunger);
-                    pdc.set(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE,  result.saturation);
-                    pdc.set(CookingKeys.DISH_QUALITY,    PersistentDataType.STRING,  result.quality);
-                    pdc.set(CookingKeys.DISH_DESCRIPTION,PersistentDataType.STRING,  result.description);
-                    pdc.set(CookingKeys.FOOD_TIMESTAMP,  PersistentDataType.LONG,    System.currentTimeMillis());
+                    pdc.set(CookingKeys.DISH_HUNGER,            PersistentDataType.INTEGER, result.hunger);
+                    pdc.set(CookingKeys.DISH_SATURATION,        PersistentDataType.DOUBLE,  result.saturation);
+                    pdc.set(CookingKeys.DISH_QUALITY,           PersistentDataType.STRING,  result.quality);
+                    pdc.set(CookingKeys.DISH_DESCRIPTION,       PersistentDataType.STRING,  result.description);
+                    pdc.set(CookingKeys.DISH_SHELF_LIFE,        PersistentDataType.INTEGER, result.shelfLifeMinutes);
+                    pdc.set(CookingKeys.DISH_SERVINGS_REMAINING,PersistentDataType.INTEGER, result.servings);
+                    pdc.set(CookingKeys.FOOD_TIMESTAMP,         PersistentDataType.LONG,    nowMs);
                     if (!result.effects.isEmpty()) {
                         pdc.set(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING,
                             String.join("|", result.effects));

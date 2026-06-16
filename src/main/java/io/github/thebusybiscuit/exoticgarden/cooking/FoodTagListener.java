@@ -309,7 +309,7 @@ public class FoodTagListener implements Listener {
      * 输入：timestampMs - 食材被标记时的毫秒时间戳
      * 输出：时间描述字符串，例如 "2分钟前"/"刚刚"
      */
-    static String buildTimeDesc(long timestampMs) {
+    public static String buildTimeDesc(long timestampMs) {
         // 计算距今的毫秒差值喵
         long diffMs = System.currentTimeMillis() - timestampMs;
         // 喵~防御：差值为负（时钟回拨等异常情况），视为刚刚标记喵
@@ -342,7 +342,7 @@ public class FoodTagListener implements Listener {
     /**
      * 将毫秒时间戳格式化为"xxxx年xx月xx日 xx时xx分xx秒"喵~
      */
-    static String formatTimestamp(long timestampMs) {
+    public static String formatTimestamp(long timestampMs) {
         java.time.LocalDateTime dt = java.time.LocalDateTime.ofInstant(
                 java.time.Instant.ofEpochMilli(timestampMs),
                 java.time.ZoneId.systemDefault());
@@ -355,7 +355,7 @@ public class FoodTagListener implements Listener {
      * 将保质期分钟数转换为可读单位字符串，最小单位分钟，自动升级到小时/天喵~
      * 例：10→"10分钟"，90→"1小时30分钟"，1440→"1天"，1500→"1天1小时"
      */
-    static String formatShelfLife(int totalMinutes) {
+    public static String formatShelfLife(int totalMinutes) {
         // 喵~防御：负数或0视为无效，返回0分钟喵
         if (totalMinutes <= 0) return "0分钟";
         int days    = totalMinutes / 1440; // 1天=1440分钟喵

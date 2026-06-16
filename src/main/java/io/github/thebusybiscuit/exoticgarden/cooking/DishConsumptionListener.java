@@ -59,38 +59,20 @@ public class DishConsumptionListener implements Listener {
      * 处理自定义菜肴消费：检查过期 → 过期给debuff取消恢复，不过期正常恢复喵~
      */
     private void handleDishConsume(PlayerItemConsumeEvent e, ItemStack item, ItemMeta meta, PersistentDataContainer pdc) {
-        long nowMs = System.currentTimeMillis();
+        // 喵~防御：取消原版消耗事件，手动处理喵
+        e.setCancelled(true);
+        Player player = e.getPlayer();
 
-        // 读取上次时间戳判断过期喵（菜肴使用DISH_HUNGER，保质期固定为-1=永不过期）
-        Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-        // 菜肴没有shelfLifeMinutes配置，暂时不过期（后续可扩展）喵
-        // 更新时间戳喵
-        pdc.set(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, nowMs);
+        Integer servingsLeft = pdc.get(CookingKeys.DISH_SERVINGS_REMAINING, PersistentDataType.INTEGER);
+        int remaining = servingsLeft != null ? servingsLeft : 1;
 
         Integer hungerRaw = pdc.get(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER);
         if (hungerRaw == null) return;
         int hunger = Math.max(0, Math.min(hungerRaw, 20));
-        Double saturationRaw = pdc.getOrDefault(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE, 0.8);
+        Double saturationRaw = pdc.getOrDefault(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE, 0.0);
         double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
-        // 喵~防御：取消原版消耗事件，手动处理饱食度恢复+药水效果，避免干扰第三方插件
-        e.setCancelled(true);
-        // 手动扣除物品喵
-        Player player = e.getPlayer();
-        ItemStack mainHand = player.getInventory().getItemInMainHand();
-        if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
-            mainHand.setAmount(mainHand.getAmount() - 1);
-            player.getInventory().setItemInMainHand(mainHand.getAmount() == 0
-                    ? new ItemStack(org.bukkit.Material.AIR) : mainHand);
-        }
-
-        // 更新lore中的生产日期行喵
-        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        String prodLine = "§8生产日期: " + FoodTagListener.formatTimestamp(nowMs);
-        replaceLoreLine(lore, "§8生产日期:", prodLine);
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-
+        // 恢复饱食度喵
         int newFood = Math.min(player.getFoodLevel() + hunger, 20);
         float newSat = (float) Math.min(player.getSaturation() + saturation, newFood);
         player.setFoodLevel(newFood);
@@ -109,6 +91,33 @@ public class DishConsumptionListener implements Listener {
                     player.addPotionEffect(new PotionEffect(type, duration, amplifier));
                 }
             }
+        }
+
+        // 扣减剩余次数喵
+        remaining--;
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        if (remaining <= 0) {
+            // 喵~食用完毕：物品变成空碗喵
+            ItemStack bowl = new ItemStack(org.bukkit.Material.BOWL, 1);
+            if (mainHand.isSimilar(item)) {
+                player.getInventory().setItemInMainHand(bowl);
+            }
+        } else {
+            // 喵~更新剩余次数写回 PDC 和 lore喵
+            pdc.set(CookingKeys.DISH_SERVINGS_REMAINING, PersistentDataType.INTEGER, remaining);
+            // 刷新 lore 第一行的份量显示喵
+            if (meta.hasLore()) {
+                List<String> lore = new ArrayList<>(meta.getLore());
+                for (int i = 0; i < lore.size(); i++) {
+                    if (lore.get(i).contains("§7份量:")) {
+                        lore.set(i, lore.get(i).replaceAll("§7份量: §f\\d+", "§7份量: §f" + remaining));
+                        break;
+                    }
+                }
+                meta.setLore(lore);
+            }
+            item.setItemMeta(meta);
+            // 喵~不扣物品数量（setAmount），meta 已更新喵
         }
     }
 

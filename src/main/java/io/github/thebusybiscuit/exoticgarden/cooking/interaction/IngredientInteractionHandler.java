@@ -35,8 +35,16 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
 
     @Override
     public boolean handle(Player player, ItemStack handItem, StoveState state, Location location) {
-        // 喵~防御：空气物品跳过喵
         if (handItem.getType() == Material.AIR) return false;
+        // 喵~防御：菜肴物品（有DISH_HUNGER PDC）不允许加入灶台喵
+        if (handItem.getItemMeta() != null) {
+            org.bukkit.persistence.PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
+            if (pdc.has(io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.DISH_HUNGER,
+                    org.bukkit.persistence.PersistentDataType.INTEGER)) {
+                player.sendMessage("§c菜肴不能作为食材放入灶台喵~");
+                return true;
+            }
+        }
         String ingId = resolveIngredientId(handItem);
         if (ingId == null) return false;
 

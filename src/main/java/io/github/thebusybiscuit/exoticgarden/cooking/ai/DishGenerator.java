@@ -65,10 +65,12 @@ public class DishGenerator {
         public final int hunger;
         // 菜肴饱和度，缺省0喵
         public final double saturation;
+        // 菜肴室温保质期（分钟），缺省60喵
+        public final int shelfLifeMinutes;
 
         public DishResult(String name, int servings, String quality,
                           List<String> effects, String description,
-                          int hunger, double saturation) {
+                          int hunger, double saturation, int shelfLifeMinutes) {
             this.name = name;
             this.servings = servings;
             this.quality = quality;
@@ -77,6 +79,7 @@ public class DishGenerator {
             this.description = description;
             this.hunger = hunger;
             this.saturation = saturation;
+            this.shelfLifeMinutes = shelfLifeMinutes;
         }
 
         // 将中文品质形容词转为系数，未知词汇默认1.0喵
@@ -199,6 +202,7 @@ public class DishGenerator {
             + "servings: 根据食材克重和水量油量和加工方式估算可吃次数(1-10)\n"
             + "hunger: 每次食用恢复的饱食度(整数,参考食材foodPoints之和按品质调整,缺省0)\n"
             + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
+            + "shelfLifeMinutes: 室温保质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
             + "name: 品质与菜名自然结合, 正常食材贴合菜名, 猎奇加工/食材组合(比如刻意烤焦 刻意加很多盐 食材过期等)允许猎奇名\n"
             + "description: 25-200字风味描述, 必须含§颜色符进行lore色彩搭配, 换行使用JSON标准\\n(即JSON字符串中的\\n转义符)每行不超过25字 和分割线(&7---------)\n"
             + "effects: 可选, 仅特殊食材或含药水或完美烹饪时出现, 支持多个效果, 格式[\"药水ID:等级:秒\",\"药水ID2:等级:秒\"];\n"
@@ -209,6 +213,7 @@ public class DishGenerator {
             + "\"quality\":\"品质中文形容词(缺省'普通')\","
             + "\"hunger\":饱食度整数(缺省0),"
             + "\"saturation\":饱和度浮点(缺省0.0),"
+            + "\"shelfLifeMinutes\":室温保质期整数分钟(缺省60),"
             + "\"description\":\"描述字符串（缺省用'无描述'）\"}\n"
             + "如有effects则加\"effects\":[\"SPEED:1:600\",\"REGENERATION:1:200\"], 可以多个, 无则省略该字段。\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
