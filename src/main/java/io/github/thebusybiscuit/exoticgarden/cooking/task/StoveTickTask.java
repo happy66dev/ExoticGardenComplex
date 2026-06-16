@@ -135,8 +135,10 @@ public class StoveTickTask extends BukkitRunnable {
             if (data == null || !data.hasDoneness) continue;
             if (data.baseTimeSeconds <= 0) continue;
             if (state.currentTemp < data.minTemp) continue;
-            double increment = (1.0 / data.baseTimeSeconds) * 0.1;
-            se.progress = Math.min(se.progress + increment, 1.0);
+            double boost = state.spatulaBoostTicksLeft > 0 ? 1.5 : 1.0;
+            double increment = (1.0 / data.baseTimeSeconds) * 0.1 * boost;
+            // 辅料烹饪进度最大值200%（100%为完美值）喵
+            se.progress = Math.min(se.progress + increment, 2.0);
         }
     }
 

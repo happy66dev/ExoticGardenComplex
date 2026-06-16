@@ -81,14 +81,16 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             IngredientConfig.IngredientData data = ingredients.get(slot.ingredientId);
             String displayName = data != null ? data.displayName : slot.ingredientId;
             double weight = data != null ? data.weightGrams : 100;
-            double doneness = Math.max(slot.frontDoneness, slot.backDoneness);
+            int doneness = (int) Math.round(Math.max(slot.frontDoneness, slot.backDoneness) * 100);
+            int foodPts = data != null ? (int) data.foodPoints : 0;
+            int sat = data != null ? (int) data.saturation : 0;
             totalHunger += getHungerValue(slot.ingredientId);
             totalWeight += weight;
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
                 doneness,
                 CharLevel.fromSeconds(slot.charSeconds).name(),
-                weight));
+                weight, foodPts, sat));
         }
 
         for (SeasoningEntry se : state.seasonings) {
@@ -98,9 +100,12 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             SeasoningConfig.SeasoningData sd = seasonings.get(se.seasoningId);
             String displayName = sd != null ? sd.displayName : se.seasoningId;
             totalWeight += se.weight;
+            int progress = sd != null && sd.hasDoneness ? (int) Math.round(se.progress * 100) : -1;
+            double mlAmt = sd != null ? sd.waterMl + sd.oilMl : 0;
             seaInfos.add(new DishGenerator.SeasoningInfo(
                 displayName,
-                sd != null && sd.hasDoneness ? se.progress : null));
+                sd != null && sd.hasDoneness ? progress : null,
+                mlAmt));
         }
 
         for (FuelEntry fe : state.fuels) {

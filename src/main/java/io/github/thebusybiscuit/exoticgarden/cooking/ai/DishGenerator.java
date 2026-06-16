@@ -11,27 +11,34 @@ public class DishGenerator {
     public static class IngredientInfo {
         public final String name;
         public final String state;
-        public final double doneness;
+        public final int doneness;
         public final String charLevel;
         public final double weight;
+        public final double foodPoints;
+        public final double saturation;
 
-        public IngredientInfo(String name, String state, double doneness,
-                              String charLevel, double weight) {
+        public IngredientInfo(String name, String state, int doneness,
+                              String charLevel, double weight,
+                              double foodPoints, double saturation) {
             this.name = name;
             this.state = state;
             this.doneness = doneness;
             this.charLevel = charLevel;
             this.weight = weight;
+            this.foodPoints = foodPoints;
+            this.saturation = saturation;
         }
     }
 
     public static class SeasoningInfo {
         public final String name;
-        public final Double progress;
+        public final Integer progress;
+        public final double mlAmount;
 
-        public SeasoningInfo(String name, Double progress) {
+        public SeasoningInfo(String name, Integer progress, double mlAmount) {
             this.name = name;
             this.progress = progress;
+            this.mlAmount = mlAmount;
         }
     }
 
@@ -70,6 +77,8 @@ public class DishGenerator {
             obj.addProperty("doneness", info.doneness);
             obj.addProperty("charLevel", info.charLevel);
             obj.addProperty("weight", info.weight);
+            obj.addProperty("foodPoints", info.foodPoints);
+            obj.addProperty("saturation", info.saturation);
             ingArr.add(obj);
         }
         userContent.add("ingredients", ingArr);
@@ -83,6 +92,7 @@ public class DishGenerator {
             } else {
                 obj.add("progress", com.google.gson.JsonNull.INSTANCE);
             }
+            obj.addProperty("mlAmount", si.mlAmount);
             seaArr.add(obj);
         }
         userContent.add("seasonings", seaArr);
