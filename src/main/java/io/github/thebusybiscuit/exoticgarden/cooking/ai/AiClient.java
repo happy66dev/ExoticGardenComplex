@@ -30,14 +30,18 @@ public class AiClient {
     private final String baseUrl;
     private final String model;
     private final Logger logger;
+    // 是否启用模型思考功能喵
+    private final boolean thinkingEnabled;
     private final Gson gson = new Gson();
 
-    public AiClient(String apiKey, String baseUrl, String model, Logger logger) {
+    public AiClient(String apiKey, String baseUrl, String model, Logger logger,
+                    boolean thinkingEnabled, int thinkingBudget) {
         this.apiKey = apiKey;
-        // 喵~防御：baseUrl末尾去掉斜杠，避免URL重复拼接问题喵
         this.baseUrl = baseUrl != null ? baseUrl.replaceAll("/$", "") : "https://api.openai.com/v1";
         this.model = model;
         this.logger = logger;
+        this.thinkingEnabled = thinkingEnabled;
+        // 喵~思考预算不通过API传递，由模型自行决定喵
     }
 
     /**
@@ -79,6 +83,13 @@ public class AiClient {
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("model", model);
         requestBody.addProperty("temperature", 0.8);
+
+        // 喵~如果启用思考功能，加入 thinking 参数（兼容支持该参数的模型）喵
+        if (thinkingEnabled) {
+            JsonObject thinking = new JsonObject();
+            thinking.addProperty("type", "enabled");
+            requestBody.add("thinking", thinking);
+        }
 
         JsonArray messages = new JsonArray();
         JsonObject sysMsg = new JsonObject();

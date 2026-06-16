@@ -1,6 +1,7 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
 import io.github.thebusybiscuit.exoticgarden.ExoticGarden;
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.ai.AiClient;
 import io.github.thebusybiscuit.exoticgarden.cooking.ai.DishGenerator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
@@ -12,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -42,7 +44,11 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         String apiKey = plugin != null ? plugin.getConfig().getString("cooking.ai_api_key", "") : "";
         String baseUrl = plugin != null ? plugin.getConfig().getString("cooking.ai_base_url", "https://api.openai.com/v1") : "https://api.openai.com/v1";
         String model  = plugin != null ? plugin.getConfig().getString("cooking.ai_model", "gpt-4o-mini") : "gpt-4o-mini";
-        this.aiClient = new AiClient(apiKey, baseUrl, model, plugin != null ? plugin.getLogger() : java.util.logging.Logger.getLogger("BowlHandler"));
+        boolean thinking = plugin != null && plugin.getConfig().getBoolean("cooking.ai_thinking_enabled", false);
+        int thinkingBudget = plugin != null ? plugin.getConfig().getInt("cooking.ai_thinking_budget", 16000) : 16000;
+        this.aiClient = new AiClient(apiKey, baseUrl, model,
+            plugin != null ? plugin.getLogger() : java.util.logging.Logger.getLogger("BowlHandler"),
+            thinking, thinkingBudget);
     }
 
     @Override
@@ -157,15 +163,44 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 state.waterAmount = 0;
                 state.oilAmount = 0;
                 state.spatulaBoostTicksLeft = 0;
-                // 同步清空篝火槽位显示喵
                 io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock.syncCampfireSlots(loc2, state);
-                if (p != null) {
-                    p.sendMessage("§a[AI] 菜肴生成完成: §f" + result.name);
-                    p.sendMessage("§7份量: " + result.servings + " | 品质: " + result.quality
-                        + " | 饱食: " + result.hunger + " | 饱和: " + String.format("%.1f", result.saturation));
-                    p.sendMessage("§7" + result.description);
+
+                // 喵~创建菜肴物品（谜之炖菜+自定义NBT+lore）喵
+                ItemStack dish = new ItemStack(Material.SUSPICIOUS_STEW, result.servings);
+                ItemMeta meta = dish.getItemMeta();
+                if (meta != null) {
+                    // 显示名：菜名喵
+                    meta.setDisplayName(result.name);
+                    // lore：品质行 + description 换行展开喵
+                    List<String> lore = new ArrayList<>();
+                    lore.add("§7品质: §f" + result.quality
+                        + "  §7饱食: §f" + result.hunger
+                        + "  §7饱和: §f" + String.format("%.1f", result.saturation));
+                    lore.addAll(DishGenerator.descriptionToLore(result.description));
+                    meta.setLore(lore);
+                    // PDC：写入菜肴数据供 DishConsumptionListener 读取喵
+                    PersistentDataContainer pdc = meta.getPersistentDataContainer();
+                    pdc.set(CookingKeys.DISH_HUNGER,     PersistentDataType.INTEGER, result.hunger);
+                    pdc.set(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE,  result.saturation);
+                    pdc.set(CookingKeys.DISH_QUALITY,    PersistentDataType.STRING,  result.quality);
+                    pdc.set(CookingKeys.DISH_DESCRIPTION,PersistentDataType.STRING,  result.description);
+                    pdc.set(CookingKeys.FOOD_TIMESTAMP,  PersistentDataType.LONG,    System.currentTimeMillis());
+                    if (!result.effects.isEmpty()) {
+                        pdc.set(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING,
+                            String.join("|", result.effects));
+                    }
+                    dish.setItemMeta(meta);
                 }
-                plugin.getLogger().info("[Cooking] " + pName + " 生成菜肴: " + result.name + " 品质:" + result.qualityCoefficient);
+
+                // 喵~放入玩家背包，背包满则掉落在玩家位置喵
+                if (p != null) {
+                    java.util.Map<Integer, ItemStack> leftover = p.getInventory().addItem(dish);
+                    leftover.values().forEach(it -> p.getWorld().dropItemNaturally(p.getLocation(), it));
+                    p.sendMessage("§a[AI] 菜肴生成完成: §f" + result.name);
+                } else {
+                    if (loc2.getWorld() != null) loc2.getWorld().dropItemNaturally(loc2, dish);
+                }
+                plugin.getLogger().info("[Cooking] " + pName + " 生成菜肴: " + result.name + " 品质:" + result.quality);
             });
         }).exceptionally(ex -> {
             // 喵~AI失败：保持冻结，记录原因，等待玩家右键解冻喵
