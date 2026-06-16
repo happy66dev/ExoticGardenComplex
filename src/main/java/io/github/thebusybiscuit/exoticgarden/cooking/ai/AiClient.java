@@ -114,8 +114,12 @@ public class AiClient {
         // 喵~防御：非200时从 error stream 读错误信息喵
         if (statusCode != 200) {
             String errBody = "";
-            try (Scanner sc = new Scanner(conn.getErrorStream(), StandardCharsets.UTF_8)) {
-                errBody = sc.useDelimiter("\\A").hasNext() ? sc.next() : "";
+            // 喵~防御：getErrorStream()在部分服务端提前关闭时可能为null，防NPE喵
+            java.io.InputStream es = conn.getErrorStream();
+            if (es != null) {
+                try (Scanner sc = new Scanner(es, StandardCharsets.UTF_8)) {
+                    errBody = sc.useDelimiter("\\A").hasNext() ? sc.next() : "";
+                }
             }
             throw new RuntimeException("HTTP " + statusCode + ": " + errBody);
         }

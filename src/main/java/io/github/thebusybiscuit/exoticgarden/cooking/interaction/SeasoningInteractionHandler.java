@@ -44,15 +44,15 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         state.pendingFuelClear = false;
 
-        // 水/油类不受调料槽上限限制，其余调料满10种后拒绝喵
-        boolean isWaterOrOil = data != null && ("water".equals(data.category) || "oil".equals(data.category));
-        if (!isWaterOrOil && state.seasonings.size() >= 10) {
+        // 按 category 分支处理（data=null时_POTION_走potion分支，不走seasoning默认）喵
+        String category = data != null ? data.category : ("_POTION_".equals(seasoningId) ? "potion" : "seasoning");
+
+        // 水/油/药水类不受调料槽上限限制，其余调料满10种后拒绝喵
+        boolean isExempt = "water".equals(category) || "oil".equals(category) || "potion".equals(category);
+        if (!isExempt && state.seasonings.size() >= 10) {
             player.sendMessage("§c调料槽已满（最多10种）");
             return true;
         }
-
-        // 按 category 分支处理喵
-        String category = data != null ? data.category : "seasoning";
 
         switch (category) {
             case "water"  -> handleWater(player, handItem, state, data);

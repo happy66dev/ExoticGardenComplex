@@ -56,7 +56,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             s.getDouble("optimal_temp", 100),
             s.getDouble("base_time_seconds", 30),
             s.getDouble("weight_grams", 1),
-            s.getDouble("water_ml", 200),  // 默认出水量200ml喵
+            s.getDouble("water_ml", 0),   // 默认出水量0ml，每个调料需显式配置喵
             s.getDouble("oil_ml", 0),      // 默认出油量0ml喵
             s.getString("category", "seasoning"),       // 默认为普通调料喵
             s.getString("container_return", "none"),    // 默认不返还容器喵

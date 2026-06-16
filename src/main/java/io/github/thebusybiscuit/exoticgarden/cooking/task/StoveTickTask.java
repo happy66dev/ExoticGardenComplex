@@ -45,6 +45,13 @@ public class StoveTickTask extends BukkitRunnable {
         for (Map.Entry<Location, StoveState> entry : stove.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
+            // 喵~AI生成期间冻结灶台，温度/食材/调料状态不变，跳过所有 tick 逻辑喵
+            if (state.frozen) {
+                if (hologramCounter == 0) {
+                    StoveHologram.update(loc, state, fuels, ingredients, seasonings, stove);
+                }
+                continue;
+            }
             tickFuels(state, loc);
             tickTemperature(state);
             tickEvaporation(state);
