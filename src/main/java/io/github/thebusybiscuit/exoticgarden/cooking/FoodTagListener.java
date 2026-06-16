@@ -69,20 +69,47 @@ public class FoodTagListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
-        // cursor 跟随鼠标，任何情况下都扫喵
+
+        // cursor 跟随鼠标：clone后标记，写回前对比PDC是否真的变化，防止刷物品喵
         ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
-        if (tagIfIngredient(cursor)) e.setCursor(cursor);
-        // currentItem：点击的格子物品喵
-        ItemStack current = e.getCurrentItem() != null ? e.getCurrentItem().clone() : null;
-        if (tagIfIngredient(current)) e.setCurrentItem(current);
-        // shift+click 会直接把物品转移进背包，延迟1tick扫玩家背包兜底喵
+        if (tagIfIngredient(cursor)) {
+            // 喵~防御：写回前确认 cursor 槽位内容未被其他操作修改（对比类型和数量），一致才写回喵
+            ItemStack liveCursor = e.getCursor();
+            if (liveCursor != null && liveCursor.getType() == cursor.getType()
+                    && liveCursor.getAmount() == cursor.getAmount()) {
+                e.setCursor(cursor);
+            }
+        }
+
+        // currentItem：延迟1tick写回，避免和Bukkit事件机制对槽位的赋值竞争导致刷物品喵
+        if (e.getCurrentItem() != null && !e.getCurrentItem().getType().isAir()) {
+            final int rawSlot = e.getRawSlot();
+            final org.bukkit.inventory.Inventory inv = e.getInventory();
+            // 记录事件触发时的物品快照，用于后续对比喵
+            final ItemStack snapshot = e.getCurrentItem().clone();
+            org.bukkit.Bukkit.getScheduler().runTaskLater(
+                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
+                () -> {
+                    // 喵~防御：延迟后从背包重新获取物品，确保操作的是最新状态喵
+                    ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
+                    if (live == null || live.getType().isAir()) return;
+                    // 喵~防御：只有类型和数量与事件时一致，才判定物品未被移动，安全写回喵
+                    if (live.getType() != snapshot.getType() || live.getAmount() != snapshot.getAmount()) return;
+                    ItemStack toTag = live.clone();
+                    if (tagIfIngredient(toTag)) inv.setItem(rawSlot, toTag);
+                }, 1L);
+        }
+
+        // shift+click 会把物品转移到其他位置，延迟1tick扫玩家背包所有格子喵
         if (e.isShiftClick()) {
             org.bukkit.Bukkit.getScheduler().runTaskLater(
                 io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
                 () -> {
                     for (int i = 0; i < player.getInventory().getSize(); i++) {
                         ItemStack it = player.getInventory().getItem(i);
-                        if (tagIfIngredient(it)) player.getInventory().setItem(i, it);
+                        if (it == null || it.getType().isAir()) continue;
+                        ItemStack copy = it.clone();
+                        if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
                     }
                 }, 1L);
         }
