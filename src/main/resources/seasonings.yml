@@ -82,12 +82,12 @@ slimefun:BUTTER:
   container_return: none
   hint: ""
 slimefun:HEAVY_CREAM:
-  display_name: "浓奶油"
+  display_name: "淡奶油"
   has_doneness: false
   weight_grams: 20
   water_ml: 50
-  oil_ml: 100
-  category: oil
+  oil_ml: 50
+  category: seasoning
   container_return: none
   hint: ""
 slimefun:VEGETABLE_OIL:

@@ -93,9 +93,14 @@ public class StoveHologram {
             } else if (slot.state == FoodState.WHOLE) {
                 int front = (int) (slot.frontDoneness * 100);
                 int back = (int) (slot.backDoneness * 100);
-                String frontDisplay = slot.currentFace == ActiveFace.FRONT ? "§l正面" + front + "%" + "§r" : "正面" + front + "%";
-                String backDisplay = slot.currentFace == ActiveFace.BACK ? "§l背面" + back + "%" + "§r" : "背面" + back + "%";
-                sb.append(String.format("§e主菜%d: §a%s[完整] §6%s §7%s\n",
+                // 喵~当前烹饪面用亮色§6，另一面用灰色§7，让玩家直观看到当前哪面在受热喵
+                String frontDisplay = slot.currentFace == ActiveFace.FRONT
+                    ? "§6§l正面" + front + "%§r"
+                    : "§7正面" + front + "%";
+                String backDisplay = slot.currentFace == ActiveFace.BACK
+                    ? "§6§l背面" + back + "%§r"
+                    : "§7背面" + back + "%";
+                sb.append(String.format("§e主菜%d: §a%s[完整] %s %s\n",
                     i + 1, ingName, frontDisplay, backDisplay));
             } else {
                 int pct = (int) (slot.frontDoneness * 100);
