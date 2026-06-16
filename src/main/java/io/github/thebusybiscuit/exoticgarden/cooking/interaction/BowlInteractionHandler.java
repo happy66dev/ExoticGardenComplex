@@ -63,7 +63,6 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
 
         List<DishGenerator.IngredientInfo> ingInfos = new ArrayList<>();
         List<DishGenerator.SeasoningInfo> seaInfos = new ArrayList<>();
-        List<String> fxList = new ArrayList<>();
         double totalWeight = 0;
 
         for (IngredientSlot slot : state.slots) {
@@ -101,10 +100,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 mlAmt, hint));
         }
 
-        for (FuelEntry fe : state.fuels) {
-            FuelConfig.FuelData fd = fuels.get(fe.fuelId);
-            if (fd != null && fd.effect != null && !fd.effect.isEmpty()) fxList.add(fd.effect);
-        }
+        // 喵~fuelEffects 已绑定到各食材 slot.fuelEffects，不需要全局 fxList 喵
 
         if (ingInfos.isEmpty()) {
             player.sendMessage("§c灶台上没有食材");
@@ -113,8 +109,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
 
         List<String> waterSrcs = new ArrayList<>(state.waterSources);
         double totalWeightWithWater = totalWeight + state.waterAmount + state.oilAmount;
-        // 删除 totalHunger 参数，不再传给 buildPrompt 喵
-        String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos, fxList,
+        String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos,
             state.waterAmount, state.oilAmount, totalWeightWithWater, waterSrcs,
             state.potionEffects);
 

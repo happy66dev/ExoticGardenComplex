@@ -98,7 +98,6 @@ public class DishGenerator {
     public static String[] buildPrompt(
             List<IngredientInfo> ingredientInfos,
             List<SeasoningInfo> seasoningInfos,
-            List<String> fuelEffects,
             double waterMl, double oilMl,
             double totalWeight,
             List<String> waterSources,
@@ -147,9 +146,7 @@ public class DishGenerator {
         }
         userContent.add("seasonings", seaArr);
 
-        JsonArray fxArr = new JsonArray();
-        for (String fx : fuelEffects) fxArr.add(fx);
-        userContent.add("fuelEffects", fxArr);
+        // 喵~fuelEffects 已绑定到各食材的 JSON 对象里，不需要全局字段重复传递喵
 
         userContent.addProperty("waterMl", waterMl);
         userContent.addProperty("oilMl", oilMl);
@@ -191,6 +188,9 @@ public class DishGenerator {
             + "- totalWeight: 食材+辅料总克重\n"
             + "- potionEffects(可选): [{effect:效果名,amplifier:等级,durationSeconds:持续秒}]\n"
             + "- 如有hint字段则表示该食材/调料的特殊属性或用途，应影响菜肴命名和描述\n"
+            + "- 食材的fuelEffects字段说明: 该食材烹饪期间经历的燃料风味列表;\n"
+            + "  数量1~2=少量风味 适当, 3=较多 品质略降, 3+超量则考虑降低品质;\n"
+            + "  负面风味(如'岩浆淬炼'用于不适合高温的食材)越多品质越低\n"
             + "烹饪方向推断(根据水量油量):\n"
             + "- 无水无油->烧烤/干烧(食材适合烤则品质不差,否则干烧品质差)\n"
             + "- 有水无油->炖/煮/蒸  有油无水->煎/炒/炸  有水有油->汤/烩/焖\n"
@@ -210,6 +210,7 @@ public class DishGenerator {
             + "\"saturation\":饱和度浮点(缺省0.0),"
             + "\"description\":\"描述字符串（缺省用'无描述'）\"}\n"
             + "如有effects则加\"effects\":[\"SPEED:1:600\",\"REGENERATION:1:200\"], 可以多个, 无则省略该字段。\n"
+            + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
             + "生成的菜肴参数准则:\n"
             + "1.品质系数需要严格判断\n"
             + "2.必须参考user发送的食材饱食度和饱和度 成品的饱食度饱和度参考:如果品质在普通偏差时可食用次数*饱和度/饱食度=总饱和度/饱食度 四舍五入 如果品质好则适当增加 差则减少 药水时间也这样考虑 等级的话只看食用次数和投料数量 比如投料多但是使用次数少=浓缩 等级提升\n"
