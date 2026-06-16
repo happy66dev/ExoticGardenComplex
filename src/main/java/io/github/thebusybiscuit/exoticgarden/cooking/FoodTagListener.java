@@ -112,28 +112,29 @@ public class FoodTagListener implements Listener {
             }
         }
 
-        // currentItem：仅对未打标签的物品打标签，已有标签的不在InventoryClick里写回
-        // 原因：延迟写回会干扰玩家背包移动操作（服务器写入导致客户端鼠标虚空物品）喵
+        // currentItem：延迟写回打标签，避免干扰客户端背包移动操作喵
+        // 未标记物品：延迟1tick写回（首次标记）
+        // 已标记物品（如需更新过期lore）：延迟5tick写回，让客户端背包操作先完成
         if (e.getCurrentItem() != null && !e.getCurrentItem().getType().isAir()) {
             ItemStack cur = e.getCurrentItem();
             ItemMeta curMeta = cur.getItemMeta();
             boolean alreadyTagged = curMeta != null && curMeta.getPersistentDataContainer()
                     .has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-            // 喵~只对未标记的物品写回，避免干扰已有物品的背包移动操作喵
-            if (!alreadyTagged) {
-                final int rawSlot = e.getRawSlot();
-                final org.bukkit.inventory.Inventory inv = e.getInventory();
-                final ItemStack snapshot = cur.clone();
-                org.bukkit.Bukkit.getScheduler().runTaskLater(
-                    io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-                    () -> {
-                        ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
-                        if (live == null || live.getType().isAir()) return;
-                        if (live.getType() != snapshot.getType() || live.getAmount() != snapshot.getAmount()) return;
-                        ItemStack toTag = live.clone();
-                        if (tagIfIngredient(toTag)) inv.setItem(rawSlot, toTag);
-                    }, 1L);
-            }
+            final int rawSlot = e.getRawSlot();
+            final org.bukkit.inventory.Inventory inv = e.getInventory();
+            final ItemStack snapshot = cur.clone();
+            // 喵~已标记物品延迟更长，让客户端背包交互完成后再写回喵
+            long delay = alreadyTagged ? 5L : 1L;
+            org.bukkit.Bukkit.getScheduler().runTaskLater(
+                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
+                () -> {
+                    ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
+                    if (live == null || live.getType().isAir()) return;
+                    // 喵~防御：类型和数量一致才写回，防止刷物品喵
+                    if (live.getType() != snapshot.getType() || live.getAmount() != snapshot.getAmount()) return;
+                    ItemStack toTag = live.clone();
+                    if (tagIfIngredient(toTag)) inv.setItem(rawSlot, toTag);
+                }, delay);
         }
 
         // shift+click 会把物品转移到其他位置，延迟1tick扫玩家背包所有格子喵
