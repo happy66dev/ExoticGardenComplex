@@ -23,6 +23,8 @@ public class StoveState {
     public boolean frozen;
     // 最近AI失败时的错误信息，解冻提示时显示喵
     public String frozenReason;
+    // 首次tick标志：第一次被tick时清除可能残留的旧全息喵
+    public boolean firstTick;
 
     public StoveState() {
         this.currentTemp = 30.0;
@@ -39,5 +41,6 @@ public class StoveState {
         this.oilAmount = 0;
         this.frozen = false;
         this.frozenReason = null;
+        this.firstTick = true;
     }
 }

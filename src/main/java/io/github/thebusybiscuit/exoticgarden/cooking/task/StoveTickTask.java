@@ -45,6 +45,11 @@ public class StoveTickTask extends BukkitRunnable {
         for (Map.Entry<Location, StoveState> entry : stove.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
+            // 喵~首次tick：清除可能残留的旧全息（上次服务器未正常关闭留下的多行全息）喵
+            if (state.firstTick) {
+                state.firstTick = false;
+                StoveHologram.removeAndClean(loc, stove);
+            }
             // 喵~AI生成期间冻结灶台，温度/食材/调料状态不变，跳过所有 tick 逻辑喵
             if (state.frozen) {
                 if (hologramCounter == 0) {
