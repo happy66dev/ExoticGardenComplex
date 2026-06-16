@@ -2,9 +2,11 @@ package io.github.thebusybiscuit.exoticgarden.cooking.interaction;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
+import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.ActiveFace;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState;
+import io.github.thebusybiscuit.exoticgarden.cooking.state.FuelEntry;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
 import io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil;
@@ -21,9 +23,14 @@ import java.util.Map;
 public class IngredientInteractionHandler implements StoveInteractionHandler {
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
+    // 燃料配置 map，用于入槽时收集当前燃料的 effectDisplayName 喵
+    private final Map<String, FuelConfig.FuelData> fuels;
 
-    public IngredientInteractionHandler(Map<String, IngredientConfig.IngredientData> ingredients) {
+    public IngredientInteractionHandler(Map<String, IngredientConfig.IngredientData> ingredients,
+                                        Map<String, FuelConfig.FuelData> fuels) {
         this.ingredients = ingredients;
+        // 喵~防御：fuels 不应为 null，外部传入喵
+        this.fuels = fuels;
     }
 
     @Override
@@ -54,7 +61,21 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
         }
 
         // 将食材放入空槽，并同步灶台物理槽位显示喵
-        state.slots[emptySlot] = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
+        IngredientSlot slot = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
+
+        // 收集当前灶台已有燃料的 effectDisplayName，非空时加入食材的 fuelEffects 喵
+        for (FuelEntry fe : state.fuels) {
+            FuelConfig.FuelData fd = fuels.get(fe.fuelId);
+            // 喵~防御：fd 为 null 时跳过，effectDisplayName 为空时也跳过喵
+            if (fd == null) continue;
+            String displayName = fd.effectDisplayName;
+            if (displayName != null && !displayName.isEmpty() && !slot.fuelEffects.contains(displayName)) {
+                // 避免重复添加同一种风味喵
+                slot.fuelEffects.add(displayName);
+            }
+        }
+
+        state.slots[emptySlot] = slot;
         handItem.setAmount(handItem.getAmount() - 1);
         StoveBlock.syncCampfireSlots(location, state);
         return true;

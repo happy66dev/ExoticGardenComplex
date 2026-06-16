@@ -7,7 +7,6 @@ import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.*;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,26 +24,6 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
 
     private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
-
-    private static final Map<Material, Integer> VANILLA_HUNGER = Map.ofEntries(
-        Map.entry(Material.APPLE, 4), Map.entry(Material.BAKED_POTATO, 5),
-        Map.entry(Material.BEETROOT, 1), Map.entry(Material.BEETROOT_SOUP, 6),
-        Map.entry(Material.BREAD, 5), Map.entry(Material.CARROT, 3),
-        Map.entry(Material.COOKED_BEEF, 8), Map.entry(Material.COOKED_CHICKEN, 6),
-        Map.entry(Material.COOKED_COD, 5), Map.entry(Material.COOKED_MUTTON, 6),
-        Map.entry(Material.COOKED_PORKCHOP, 8), Map.entry(Material.COOKED_RABBIT, 5),
-        Map.entry(Material.COOKED_SALMON, 6), Map.entry(Material.COOKIE, 2),
-        Map.entry(Material.GOLDEN_APPLE, 4), Map.entry(Material.GOLDEN_CARROT, 6),
-        Map.entry(Material.MELON_SLICE, 2), Map.entry(Material.MUSHROOM_STEW, 6),
-        Map.entry(Material.PUMPKIN_PIE, 8), Map.entry(Material.BEEF, 3),
-        Map.entry(Material.CHICKEN, 2), Map.entry(Material.COD, 2),
-        Map.entry(Material.MUTTON, 2), Map.entry(Material.PORKCHOP, 3),
-        Map.entry(Material.RABBIT, 3), Map.entry(Material.SALMON, 2),
-        Map.entry(Material.POTATO, 1), Map.entry(Material.POISONOUS_POTATO, 2),
-        Map.entry(Material.SWEET_BERRIES, 2), Map.entry(Material.GLOW_BERRIES, 2),
-        Map.entry(Material.DRIED_KELP, 1), Map.entry(Material.COCOA_BEANS, 0),
-        Map.entry(Material.EGG, 0)
-    );
 
     private final Map<String, FuelConfig.FuelData> fuels;
     private final Map<String, IngredientConfig.IngredientData> ingredients;
@@ -85,7 +64,6 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         List<DishGenerator.IngredientInfo> ingInfos = new ArrayList<>();
         List<DishGenerator.SeasoningInfo> seaInfos = new ArrayList<>();
         List<String> fxList = new ArrayList<>();
-        int totalHunger = 0;
         double totalWeight = 0;
 
         for (IngredientSlot slot : state.slots) {
@@ -98,12 +76,12 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             int sat = data != null ? (int) data.saturation : 0;
             // 读取 hint，data 为 null 时用空字符串喵
             String hint = data != null ? data.hint : "";
-            totalHunger += getHungerValue(slot.ingredientId);
             totalWeight += weight;
+            // 传入该食材绑定的 fuelEffects（烹饪期间经历的燃料风味）喵
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
                 doneness,
-                weight, foodPts, sat, hint));
+                weight, foodPts, sat, hint, slot.fuelEffects));
         }
 
         for (SeasoningEntry se : state.seasonings) {
@@ -134,10 +112,10 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         }
 
         List<String> waterSrcs = new ArrayList<>(state.waterSources);
-        int totalHungerWithWater = totalHunger;
         double totalWeightWithWater = totalWeight + state.waterAmount + state.oilAmount;
+        // 删除 totalHunger 参数，不再传给 buildPrompt 喵
         String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos, fxList,
-            state.waterAmount, state.oilAmount, totalHungerWithWater, totalWeightWithWater, waterSrcs,
+            state.waterAmount, state.oilAmount, totalWeightWithWater, waterSrcs,
             state.potionEffects);
 
         // 喵~检查 AI 是否启用，未启用时发送调试提示词，启用时调用 AI 喵
@@ -212,18 +190,6 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         });
 
         return true;
-    }
-
-    private int getHungerValue(String ingredientId) {
-        Material mat = Material.getMaterial(ingredientId);
-        if (mat != null && VANILLA_HUNGER.containsKey(mat)) {
-            return VANILLA_HUNGER.get(mat);
-        }
-        SlimefunItem sfItem = SlimefunItem.getById(ingredientId);
-        if (sfItem instanceof io.github.thebusybiscuit.exoticgarden.items.CustomFood) {
-            return ((io.github.thebusybiscuit.exoticgarden.items.CustomFood) sfItem).getFoodValue();
-        }
-        return 0;
     }
 
     private String foodStateDisplay(FoodState state) {

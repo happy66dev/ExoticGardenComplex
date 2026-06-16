@@ -6,6 +6,7 @@ minecraft:OAK_LOG:
   duration_seconds: 80
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "橡木烟熏"
   byproduct: CHARCOAL
 minecraft:BIRCH_LOG:
   display_name: 桦木原木
@@ -13,6 +14,7 @@ minecraft:BIRCH_LOG:
   duration_seconds: 75
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "桦木烟熏"
   byproduct: CHARCOAL
 minecraft:SPRUCE_LOG:
   display_name: 云杉原木
@@ -20,6 +22,7 @@ minecraft:SPRUCE_LOG:
   duration_seconds: 78
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "云杉烟熏"
   byproduct: CHARCOAL
 minecraft:JUNGLE_LOG:
   display_name: 丛林原木
@@ -27,6 +30,7 @@ minecraft:JUNGLE_LOG:
   duration_seconds: 82
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "丛林木烟熏"
   byproduct: CHARCOAL
 minecraft:ACACIA_LOG:
   display_name: 金合欢原木
@@ -34,6 +38,7 @@ minecraft:ACACIA_LOG:
   duration_seconds: 72
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "金合欢烟熏"
   byproduct: CHARCOAL
 minecraft:DARK_OAK_LOG:
   display_name: 深色橡木原木
@@ -41,6 +46,7 @@ minecraft:DARK_OAK_LOG:
   duration_seconds: 85
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "深色橡木烟熏"
   byproduct: CHARCOAL
 minecraft:MANGROVE_LOG:
   display_name: 红树原木
@@ -48,6 +54,7 @@ minecraft:MANGROVE_LOG:
   duration_seconds: 78
   heat_rate: 6
   effect: WOOD_SMOKE
+  effect_display_name: "红树烟熏"
   byproduct: CHARCOAL
 minecraft:CHERRY_LOG:
   display_name: 樱花原木
@@ -55,6 +62,7 @@ minecraft:CHERRY_LOG:
   duration_seconds: 80
   heat_rate: 7
   effect: FRUIT_WOOD
+  effect_display_name: "樱花果木香"
   byproduct: CHARCOAL
 
 # ===== 炭类 - 高热, 长燃烧 =====
@@ -64,6 +72,7 @@ minecraft:CHARCOAL:
   duration_seconds: 180
   heat_rate: 4
   effect: SMOKY
+  effect_display_name: "木炭温火"
   byproduct: null
 minecraft:COAL:
   display_name: 煤炭
@@ -71,6 +80,7 @@ minecraft:COAL:
   duration_seconds: 240
   heat_rate: 5
   effect: SMOKY
+  effect_display_name: "煤炭炭火"
   byproduct: null
 minecraft:COAL_BLOCK:
   display_name: 煤炭块
@@ -78,6 +88,7 @@ minecraft:COAL_BLOCK:
   duration_seconds: 900
   heat_rate: 8
   effect: INTENSE_SMOKE
+  effect_display_name: "煤炭块浓烟"
   byproduct: null
 
 # ===== 高效燃料 - 超高温 =====
@@ -87,6 +98,7 @@ minecraft:BLAZE_ROD:
   duration_seconds: 120
   heat_rate: 12
   effect: BLAZING
+  effect_display_name: "烈焰灼烧"
   byproduct: null
 minecraft:BLAZE_POWDER:
   display_name: 烈焰粉
@@ -94,6 +106,7 @@ minecraft:BLAZE_POWDER:
   duration_seconds: 60
   heat_rate: 15
   effect: BLAZING
+  effect_display_name: "烈焰灼烧"
   byproduct: null
 minecraft:LAVA_BUCKET:
   display_name: 岩浆桶
@@ -101,6 +114,7 @@ minecraft:LAVA_BUCKET:
   duration_seconds: 600
   heat_rate: 20
   effect: LAVA_INFUSED
+  effect_display_name: "岩浆淬炼"
   byproduct: null
 minecraft:MAGMA_BLOCK:
   display_name: 岩浆块
@@ -108,6 +122,7 @@ minecraft:MAGMA_BLOCK:
   duration_seconds: 300
   heat_rate: 7
   effect: MAGMATIC
+  effect_display_name: "岩浆块烘烤"
   byproduct: null
 
 # ===== 速燃类 - 低热, 短燃烧 =====
@@ -117,6 +132,7 @@ minecraft:STICK:
   duration_seconds: 10
   heat_rate: 4
   effect: LIGHT_SMOKE
+  effect_display_name: "木棍轻烟"
   byproduct: null
 minecraft:BAMBOO:
   display_name: 竹子
@@ -124,6 +140,7 @@ minecraft:BAMBOO:
   duration_seconds: 15
   heat_rate: 5
   effect: LIGHT_SMOKE
+  effect_display_name: "竹香"
   byproduct: null
 
 # ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
@@ -133,6 +150,7 @@ minecraft:WHEAT:
   duration_seconds: 6
   heat_rate: 8
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:WHEAT_SEEDS:
   display_name: 小麦种子
@@ -140,6 +158,7 @@ minecraft:WHEAT_SEEDS:
   duration_seconds: 4
   heat_rate: 6
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:SHORT_GRASS:
   display_name: 矮草
@@ -147,6 +166,7 @@ minecraft:SHORT_GRASS:
   duration_seconds: 3
   heat_rate: 5
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:TALL_GRASS:
   display_name: 高草
@@ -154,6 +174,7 @@ minecraft:TALL_GRASS:
   duration_seconds: 5
   heat_rate: 7
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:FERN:
   display_name: 蕨
@@ -161,6 +182,7 @@ minecraft:FERN:
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
+  effect_display_name: "蕨草烟熏"
   byproduct: null
 minecraft:LARGE_FERN:
   display_name: 大型蕨
@@ -168,6 +190,7 @@ minecraft:LARGE_FERN:
   duration_seconds: 8
   heat_rate: 7
   effect: GRASS_SMOKE
+  effect_display_name: "蕨草烟熏"
   byproduct: null
 minecraft:DEAD_BUSH:
   display_name: 枯萎的灌木
@@ -175,6 +198,7 @@ minecraft:DEAD_BUSH:
   duration_seconds: 6
   heat_rate: 8
   effect: GRASS_SMOKE
+  effect_display_name: "枯木烟熏"
   byproduct: null
 minecraft:SUGAR_CANE:
   display_name: 甘蔗
@@ -182,6 +206,7 @@ minecraft:SUGAR_CANE:
   duration_seconds: 6
   heat_rate: 6
   effect: SWEET_SMOKE
+  effect_display_name: "甘蔗甜烟"
   byproduct: null
 minecraft:VINE:
   display_name: 藤蔓
@@ -189,6 +214,7 @@ minecraft:VINE:
   duration_seconds: 4
   heat_rate: 5
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:TWISTING_VINES:
   display_name: 扭曲藤蔓
@@ -196,6 +222,7 @@ minecraft:TWISTING_VINES:
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:WEEPING_VINES:
   display_name: 垂泪藤蔓
@@ -203,6 +230,7 @@ minecraft:WEEPING_VINES:
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
+  effect_display_name: "草香烟熏"
   byproduct: null
 minecraft:MOSS_BLOCK:
   display_name: 苔藓块
@@ -210,6 +238,7 @@ minecraft:MOSS_BLOCK:
   duration_seconds: 12
   heat_rate: 5
   effect: MOSSY_SMOKE
+  effect_display_name: "苔藓烟熏"
   byproduct: null
 minecraft:HAY_BLOCK:
   display_name: 干草块
@@ -217,6 +246,7 @@ minecraft:HAY_BLOCK:
   duration_seconds: 25
   heat_rate: 10
   effect: GRASS_SMOKE
+  effect_display_name: "干草烟熏"
   byproduct: null
 
 # ===== 海藻类 =====
@@ -226,6 +256,7 @@ minecraft:DRIED_KELP_BLOCK:
   duration_seconds: 200
   heat_rate: 5
   effect: KELP_SMOKE
+  effect_display_name: "海草鲜香"
   byproduct: null
 
 # ===== 降温类 =====
@@ -235,6 +266,7 @@ minecraft:ICE:
   duration_seconds: 6
   heat_rate: -40
   effect: FREEZING
+  effect_display_name: "冰雪慢炖"
   byproduct: null
 minecraft:SNOW_BLOCK:
   display_name: 雪块
@@ -242,6 +274,7 @@ minecraft:SNOW_BLOCK:
   duration_seconds: 4
   heat_rate: -30
   effect: FREEZING
+  effect_display_name: "冰雪慢炖"
   byproduct: null
 minecraft:POWDER_SNOW_BUCKET:
   display_name: 细雪桶
@@ -249,6 +282,7 @@ minecraft:POWDER_SNOW_BUCKET:
   duration_seconds: 8
   heat_rate: -50
   effect: DEEP_FREEZE
+  effect_display_name: "冰雪慢炖"
   byproduct: null
 minecraft:BLUE_ICE:
   display_name: 蓝冰
@@ -256,4 +290,5 @@ minecraft:BLUE_ICE:
   duration_seconds: 10
   heat_rate: -60
   effect: DEEP_FREEZE
+  effect_display_name: "极寒冰封"
   byproduct: null

@@ -156,7 +156,7 @@ public class CookingModule {
             new BowlInteractionHandler(fuels, ingredients, seasonings),
             new FuelInteractionHandler(fuels),
             new SeasoningInteractionHandler(seasonings),
-            new IngredientInteractionHandler(ingredients),
+            new IngredientInteractionHandler(ingredients, fuels),
             new ClearFuelInteractionHandler()
         );
     }

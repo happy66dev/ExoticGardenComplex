@@ -717,3 +717,30 @@ slimefun:MUSTARD:
   category: seasoning
   container_return: none
   hint: ""
+
+# ===== 新增调料 =====
+
+# 味精：无需渗入，直接增鲜，weight_grams 极小喵
+slimefun:MSG:
+  display_name: "味精"
+  has_doneness: false
+  weight_grams: 1
+  water_ml: 0
+  oil_ml: 0
+  category: seasoning
+  container_return: none
+  hint: ""
+
+# 醋：酸性调料，需要热渗入，含少量水分，min_temp 较低喵
+slimefun:VINEGAR:
+  display_name: "醋"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 70
+  base_time_seconds: 15
+  weight_grams: 1
+  water_ml: 100
+  oil_ml: 0
+  category: seasoning
+  container_return: none
+  hint: ""

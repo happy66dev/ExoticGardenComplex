@@ -1,5 +1,8 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.state;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IngredientSlot {
     public String ingredientId;
     public FoodState state;
@@ -10,6 +13,8 @@ public class IngredientSlot {
     // 已向灶台释放的水/油累计量，防止重复释放喵
     public double releasedWaterMl;
     public double releasedOilMl;
+    // 该食材烹饪期间经历的燃料风味效果列表（中文显示名），可配置喵
+    public List<String> fuelEffects;
 
     public IngredientSlot(String ingredientId, FoodState state, double frontDoneness,
                           double backDoneness, ActiveFace currentFace, double charSeconds) {
@@ -21,5 +26,7 @@ public class IngredientSlot {
         this.charSeconds = charSeconds;
         this.releasedWaterMl = 0;
         this.releasedOilMl = 0;
+        // 喵~防御：初始化为空列表，避免 NPE 喵
+        this.fuelEffects = new ArrayList<>();
     }
 }

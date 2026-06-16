@@ -290,6 +290,26 @@ public final class FoodRegistry {
         new Juice(drinks, new SlimefunItemStack("ICE_COLA", new CustomPotion("&c冰可乐", Color.fromRGB(37, 30, 15), new PotionEffect(PotionEffectType.SPEED, 1200, 0), "", "&7+ 速度加成", "", "&7&o上面贴着&c&o可口可乐&7&o的字样", "&7&o撕开后发现是&9&o百事", "&7&o这到底是什么可乐呢...")), RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{null, getItem("ICE_CUBE"), null, new ItemStack(Material.SUGAR), new ItemStack(Material.COCOA_BEANS), new ItemStack(Material.SUGAR), null, getItem("ICE_CUBE"), null
                 }).register(plugin);
+
+        // ===== 新增调料物品 =====
+
+        // 料酒：以榨汁机配方从葡萄酿制，黄色文字，seasonings.yml 已配置为 has_doneness:true 的调料喵
+        new SlimefunItem(misc, new SlimefunItemStack("RICE_WINE", Material.POTION, "&e料酒"),
+                RecipeType.JUICER,
+                new ItemStack[]{getItem("GRAPE"), null, null, null, null, null, null, null, null})
+                .register(plugin);
+
+        // 味精：增鲜调料，以鱼类（COD）为原料在工作台合成，has_doneness:false 不需要渗入时间喵
+        new SlimefunItem(misc, new SlimefunItemStack("MSG", Material.SUGAR, "&f味精"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{new ItemStack(Material.COD), null, null, null, null, null, null, null, null})
+                .register(plugin);
+
+        // 醋：酸性调料，以柠檬+水瓶合成，has_doneness:true 需要热渗入喵
+        new SlimefunItem(misc, new SlimefunItemStack("VINEGAR", Material.GLASS_BOTTLE, "&a醋"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{getItem("LEMON"), waterbottle, null, null, null, null, null, null, null})
+                .register(plugin);
     }
 
     @Nullable
