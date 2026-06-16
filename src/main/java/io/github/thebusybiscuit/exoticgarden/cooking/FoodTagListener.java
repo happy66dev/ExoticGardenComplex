@@ -2,6 +2,7 @@ package io.github.thebusybiscuit.exoticgarden.cooking;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -15,13 +16,51 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FoodTagListener implements Listener {
 
     private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
+
+    /**
+     * 不加保质期的黑名单食物列表：
+     * - 金苹果/附魔金苹果（特殊效果物品，不易腐坏喵）
+     * - 蛋糕（放置型方块食物，逻辑特殊喵）
+     * - 腐肉/蜘蛛眼/发酵蜘蛛眼/毒土豆（本身就是"有问题"的食物喵）
+     * - 闪烁的瓜片（合成材料，通常不直接吃喵）
+     */
+    private static final Set<Material> BLACKLIST = EnumSet.of(
+        Material.GOLDEN_APPLE,          // 金苹果喵
+        Material.ENCHANTED_GOLDEN_APPLE, // 附魔金苹果喵
+        Material.CAKE,                  // 蛋糕（放置型）喵
+        Material.ROTTEN_FLESH,          // 腐肉喵
+        Material.SPIDER_EYE,            // 蜘蛛眼喵
+        Material.FERMENTED_SPIDER_EYE,  // 发酵蜘蛛眼喵
+        Material.POISONOUS_POTATO,      // 毒土豆喵
+        Material.GLISTERING_MELON_SLICE // 闪烁的瓜片（即GOLDEN_MELON_SLICE）喵
+    );
+
+    /**
+     * 通用食物标识符，用于原版可食用物品（不在黑名单中）的 fallback 保质期标签喵~
+     * 保质期默认 10 分钟
+     */
+    private static final String GENERIC_FOOD_ID = "_GENERIC_FOOD_";
+
+    /**
+     * 通用药水标识符，用于药水类物品的 fallback 保质期标签喵~
+     * 保质期默认 5 分钟（药水效果随时间减弱）
+     */
+    private static final String GENERIC_POTION_ID = "_GENERIC_POTION_";
+
+    /** 通用食物默认保质期：10分钟喵 */
+    private static final int GENERIC_FOOD_SHELF_LIFE_MINUTES = 10;
+
+    /** 通用药水默认保质期：5分钟喵 */
+    private static final int GENERIC_POTION_SHELF_LIFE_MINUTES = 5;
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
 
@@ -137,13 +176,14 @@ public class FoodTagListener implements Listener {
         if (meta == null) return false;
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
-        // 首次标记时写入食材状态"WHOLE"和食材ID喵
-        if (!pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
-            // 首次打标签，设置整块状态喵
+        // 首次标记时写入食材状态和食材ID：通用食物/药水不写FOOD_STATE（它们不参与烹饪状态机）喵
+        boolean isGeneric = GENERIC_FOOD_ID.equals(ingId) || GENERIC_POTION_ID.equals(ingId);
+        if (!isGeneric && !pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
+            // 首次打标签，设置整块状态（仅烹饪食材需要）喵
             pdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, "WHOLE");
         }
         if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
-            // 首次打标签，写入食材ID喵
+            // 首次打标签，写入食材ID（通用标识也写入，用于后续识别）喵
             pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, ingId);
         }
 
@@ -157,30 +197,46 @@ public class FoodTagListener implements Listener {
         // 构建lore列表，已有lore则复制一份可修改的副本喵
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
-        // 从食材配置读取饱食度+饱和度+保质期，未配置时为默认值喵
-        // 可变标签：营养值随配置变化，每次刷新喵
-        IngredientConfig.IngredientData data = ingredients.get(ingId);
-        double nutrition = data != null ? data.foodPoints + data.saturation : 0;
-        int shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 保质期分钟数，默认10喵
-        String nutritionStr = nutrition > 0
-                ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
-                : "";
-        // 不可变标签：读取实际 FOOD_STATE，而非硬编码"WHOLE"喵
-        String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
-        String ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr;
+        // 判断是通用食物、通用药水还是普通食材配置，分别取保质期和标签行喵
+        final int shelfLifeMinutes; // 最终使用的保质期（分钟）喵
+        final String ingredientLine; // 最终显示在lore里的类型标签行喵
 
-        // 检查lore中是否已有烹饪食材行，有则替换，没有则追加喵
+        if (GENERIC_FOOD_ID.equals(ingId)) {
+            // 通用原版食物：lore显示"[食物]"，保质期10分钟喵
+            shelfLifeMinutes = GENERIC_FOOD_SHELF_LIFE_MINUTES;
+            ingredientLine = "§7[食物]";
+        } else if (GENERIC_POTION_ID.equals(ingId)) {
+            // 通用药水：lore显示"[药水]"，保质期5分钟喵
+            shelfLifeMinutes = GENERIC_POTION_SHELF_LIFE_MINUTES;
+            ingredientLine = "§7[药水]";
+        } else {
+            // 普通烹饪食材：从配置读取营养值和保质期喵
+            // 可变标签：营养值随配置变化，每次刷新喵
+            IngredientConfig.IngredientData data = ingredients.get(ingId);
+            double nutrition = data != null ? data.foodPoints + data.saturation : 0;
+            shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 保质期分钟数，默认10喵
+            String nutritionStr = nutrition > 0
+                    ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
+                    : "";
+            // 不可变标签：读取实际 FOOD_STATE，而非硬编码"WHOLE"喵
+            String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
+            ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr;
+        }
+
+        // 检查lore中是否已有对应类型行，有则替换，没有则追加喵
         boolean hasIngredientLine = false; // 标记是否已找到并替换了食材行喵
         for (int loreIdx = 0; loreIdx < lore.size(); loreIdx++) {
-            if (lore.get(loreIdx).startsWith("§7[烹饪食材]")) {
-                // 找到旧的食材行，替换为新内容喵
+            String loreLine = lore.get(loreIdx);
+            // 匹配"§7[烹饪食材]"、"§7[食物]"或"§7[药水]"开头的行喵
+            if (loreLine.startsWith("§7[烹饪食材]") || loreLine.startsWith("§7[食物]") || loreLine.startsWith("§7[药水]")) {
+                // 找到旧的类型行，替换为新内容喵
                 lore.set(loreIdx, ingredientLine);
                 hasIngredientLine = true;
                 break;
             }
         }
         if (!hasIngredientLine) {
-            // 没有找到旧食材行，直接追加喵
+            // 没有找到旧类型行，直接追加喵
             lore.add(ingredientLine);
         }
 
@@ -396,6 +452,24 @@ public class FoodTagListener implements Listener {
         }
         String matName = item.getType().name();
         if (ingredients.containsKey(matName)) return matName;
+
+        // ===== fallback：食材配置里没有时，检查原版食物和药水 =====
+        Material mat = item.getType();
+
+        // 喵~防御：检查是否是药水类型（不受黑名单约束，药水不在黑名单中）喵
+        if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
+            // 药水类物品返回通用药水标识符，保质期默认5分钟喵
+            return GENERIC_POTION_ID;
+        }
+
+        // 检查是否是可食用原版物品，且不在黑名单内喵
+        // 喵~防御：isEdible()返回true才进一步判断，避免对非食物打标签喵
+        if (mat.isEdible() && !BLACKLIST.contains(mat)) {
+            // 原版可食用物品（排除黑名单）返回通用食物标识符，保质期默认10分钟喵
+            return GENERIC_FOOD_ID;
+        }
+
+        // 既不是配置食材、也不是药水、也不是可食用原版物品，返回null跳过喵
         return null;
     }
 }
