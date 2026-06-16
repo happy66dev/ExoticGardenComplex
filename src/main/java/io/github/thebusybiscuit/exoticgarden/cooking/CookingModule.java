@@ -79,6 +79,31 @@ public class CookingModule {
         // 传入 foodsConfig，让 FoodTagListener 从配置读取黑名单和保质期喵
         plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients, foodsConfig), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
+
+        // 喵~注册 PluginDisableEvent 监听：在 Slimefun 禁用前清理全息+篝火槽位，确保服务仍可用喵
+        plugin.getServer().getPluginManager().registerEvents(new org.bukkit.event.Listener() {
+            @org.bukkit.event.EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+            public void onSlimefunDisable(org.bukkit.event.server.PluginDisableEvent e) {
+                if (e.getPlugin().getName().equals("Slimefun") && stoveInstance != null) {
+                    for (java.util.Map.Entry<org.bukkit.Location, io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState> entry
+                            : stoveInstance.activeStoves.entrySet()) {
+                        org.bukkit.Location loc = entry.getKey();
+                        if (loc.getWorld() == null) continue;
+                        // 喵~清除全息字（趁 HologramsService 还可用）喵
+                        stoveInstance.removeHologram(loc.getBlock());
+                        // 喵~清空篝火槽位（趁区块仍加载）喵
+                        if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
+                        org.bukkit.block.Block block = loc.getBlock();
+                        if (block.getState() instanceof org.bukkit.block.Campfire campfire) {
+                            for (int i = 0; i < 4; i++) campfire.setItem(i, null);
+                            campfire.update(true, false);
+                        }
+                    }
+                    stoveInstance.activeStoves.clear();
+                    plugin.getLogger().info("[Cooking] 已提前清理灶台全息字和篝火槽位喵~");
+                }
+            }
+        }, plugin);
         // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
         // Temporarily disable dish consumption custom logic.
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(ingredients), plugin);

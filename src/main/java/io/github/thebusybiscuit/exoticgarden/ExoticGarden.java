@@ -1440,6 +1440,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
     }
 
     private void saveDatas() {
+        // 喵~防御：yamlStorge未初始化时（启动失败）跳过保存，避免NPE喵
+        if (this.yamlStorge == null) return;
         try {
             for (Map.Entry<String, PlayerAlcohol> o : drunkPlayers.entrySet()) {
                 String player = "Players." + o.getKey();
