@@ -166,7 +166,8 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock.syncCampfireSlots(loc2, state);
                 if (p != null) {
                     p.sendMessage("§a[AI] 菜肴生成完成: §f" + result.name);
-                    p.sendMessage("§7份量: " + result.servings + " | 品质: " + String.format("%.2f", result.qualityCoefficient));
+                    p.sendMessage("§7份量: " + result.servings + " | 品质: " + result.quality
+                        + " | 饱食: " + result.hunger + " | 饱和: " + String.format("%.1f", result.saturation));
                     p.sendMessage("§7" + result.description);
                 }
                 plugin.getLogger().info("[Cooking] " + pName + " 生成菜肴: " + result.name + " 品质:" + result.qualityCoefficient);

@@ -56,17 +56,42 @@ public class DishGenerator {
     public static class DishResult {
         public final String name;
         public final int servings;
+        // 品质中文形容词，如"良好"/"优秀"，通过 qualityToCoefficient 转为系数喵
+        public final String quality;
         public final double qualityCoefficient;
         public final List<String> effects;
         public final String description;
+        // 菜肴饱食度（hunger points），缺省0喵
+        public final int hunger;
+        // 菜肴饱和度，缺省0喵
+        public final double saturation;
 
-        public DishResult(String name, int servings, double qualityCoefficient,
-                          List<String> effects, String description) {
+        public DishResult(String name, int servings, String quality,
+                          List<String> effects, String description,
+                          int hunger, double saturation) {
             this.name = name;
             this.servings = servings;
-            this.qualityCoefficient = qualityCoefficient;
+            this.quality = quality;
+            this.qualityCoefficient = qualityToCoefficient(quality);
             this.effects = effects;
             this.description = description;
+            this.hunger = hunger;
+            this.saturation = saturation;
+        }
+
+        // 将中文品质形容词转为系数，未知词汇默认1.0喵
+        public static double qualityToCoefficient(String quality) {
+            if (quality == null) return 1.0;
+            return switch (quality) {
+                case "彻底失败" -> 0.2;
+                case "很差"    -> 0.5;
+                case "差"      -> 0.8;
+                case "普通"    -> 1.0;
+                case "良好"    -> 1.25;
+                case "优秀"    -> 1.6;
+                case "完美"    -> 2.0;
+                default        -> 1.0;
+            };
         }
     }
 
@@ -169,20 +194,24 @@ public class DishGenerator {
             + "烹饪方向推断(根据水量油量):\n"
             + "- 无水无油->烧烤/干烧(食材适合烤则品质不差,否则干烧品质差)\n"
             + "- 有水无油->炖/煮/蒸  有油无水->煎/炒/炸  有水有油->汤/烩/焖\n"
-            + "- 水或油过多(判断按照正常思维来)->降低品质系数\n"
-            + "品质系数: 0.2=彻底失败, 1.0=偏差, 1.25=正常, 2.0=完美\n"
+            + "- 水或油过多(判断按照正常思维来)->影响品质判断\n"
+            + "品质: 彻底失败/很差/差/普通/良好/优秀/完美\n"
             + "servings: 根据食材克重和水量油量和加工方式估算可吃次数(1-10)\n"
+            + "hunger: 每次食用恢复的饱食度(整数,参考食材foodPoints之和按品质调整,缺省0)\n"
+            + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
             + "name: 品质与菜名自然结合, 正常食材贴合菜名, 猎奇加工/食材组合(比如刻意烤焦 刻意加很多盐 食材过期等)允许猎奇名\n"
             + "description: 25-200字风味描述, 必须含§颜色符进行lore色彩搭配, 可用\\n换行(每行不超过25字)和分割线(&7---------)\n"
             + "effects: 可选, 仅特殊食材或含药水或完美烹饪时出现, 支持多个效果, 格式[\"药水ID:等级:秒\",\"药水ID2:等级:秒\"]\n\n"
             + "必须返回纯JSON，必须包含以下所有字段（无论如何不能省略）：\n"
             + "{\"name\":\"菜名（缺省用'未知菜肴'）\","
             + "\"servings\":份数整数(缺省1),"
-            + "\"qualityCoefficient\":品质系数浮点(缺省1.0),"
+            + "\"quality\":\"品质中文形容词(缺省'普通')\","
+            + "\"hunger\":饱食度整数(缺省0),"
+            + "\"saturation\":饱和度浮点(缺省0.0),"
             + "\"description\":\"描述字符串（缺省用'无描述'）\"}\n"
             + "如有effects则加\"effects\":[\"SPEED:1:600\",\"REGENERATION:1:200\"], 可以多个, 无则省略该字段。\n"
             + "生成的菜肴参数准则:\n"
-            + "1.判断严格\n"
+            + "1.品质系数需要严格判断\n"
             + "2.必须参考user发送的食材饱食度和饱和度 成品的饱食度饱和度参考:如果品质在普通偏差时可食用次数*饱和度/饱食度=总饱和度/饱食度 四舍五入 如果品质好则适当增加 差则减少 药水时间也这样考虑 等级的话只看食用次数和投料数量 比如投料多但是使用次数少=浓缩 等级提升\n"
             + "3.品质过差可以适当增加debuff效果";
 

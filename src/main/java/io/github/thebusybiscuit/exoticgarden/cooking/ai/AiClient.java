@@ -168,15 +168,31 @@ public class AiClient {
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
             String name = obj.has("name") ? obj.get("name").getAsString() : "未知菜肴";
             int servings = obj.has("servings") ? obj.get("servings").getAsInt() : 1;
-            double quality = obj.has("qualityCoefficient") ? obj.get("qualityCoefficient").getAsDouble() : 1.0;
-            String description = obj.has("description") ? obj.get("description").getAsString() : "";
+            // quality 为中文形容词，兼容旧格式 qualityCoefficient 数字喵
+            String quality = "普通";
+            if (obj.has("quality")) {
+                quality = obj.get("quality").getAsString();
+            } else if (obj.has("qualityCoefficient")) {
+                // 喵~兼容：旧版数字系数转中文喵
+                double coeff = obj.get("qualityCoefficient").getAsDouble();
+                if (coeff <= 0.3) quality = "彻底失败";
+                else if (coeff <= 0.65) quality = "很差";
+                else if (coeff <= 0.9) quality = "差";
+                else if (coeff <= 1.1) quality = "普通";
+                else if (coeff <= 1.4) quality = "良好";
+                else if (coeff <= 1.8) quality = "优秀";
+                else quality = "完美";
+            }
+            String description = obj.has("description") ? obj.get("description").getAsString() : "无描述";
+            int hunger = obj.has("hunger") ? obj.get("hunger").getAsInt() : 0;
+            double saturation = obj.has("saturation") ? obj.get("saturation").getAsDouble() : 0.0;
             java.util.List<String> effects = new java.util.ArrayList<>();
             if (obj.has("effects") && obj.get("effects").isJsonArray()) {
                 for (JsonElement el : obj.getAsJsonArray("effects")) {
                     effects.add(el.getAsString());
                 }
             }
-            return new DishGenerator.DishResult(name, servings, quality, effects, description);
+            return new DishGenerator.DishResult(name, servings, quality, effects, description, hunger, saturation);
         } catch (Exception e) {
             throw new RuntimeException("JSON解析失败，原始内容: " + content, e);
         }
