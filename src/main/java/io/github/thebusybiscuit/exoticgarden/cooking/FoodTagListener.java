@@ -112,42 +112,12 @@ public class FoodTagListener implements Listener {
             }
         }
 
-        // currentItem：延迟写回打标签，避免干扰客户端背包移动操作喵
-        // 未标记物品：延迟1tick写回（首次标记）
-        // 已标记物品（如需更新过期lore）：延迟5tick写回，让客户端背包操作先完成
+        // currentItem：在事件处理期间同步用 setCurrentItem 写回（不用延迟任务），避免虚空物品喵
         if (e.getCurrentItem() != null && !e.getCurrentItem().getType().isAir()) {
-            ItemStack cur = e.getCurrentItem();
-            ItemMeta curMeta = cur.getItemMeta();
-            boolean alreadyTagged = curMeta != null && curMeta.getPersistentDataContainer()
-                    .has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-            final int rawSlot = e.getRawSlot();
-            final org.bukkit.inventory.Inventory inv = e.getInventory();
-            final ItemStack snapshot = cur.clone();
-            // 喵~已标记物品延迟更长，让客户端背包交互完成后再写回喵
-            long delay = alreadyTagged ? 5L : 1L;
-            final long snapshotTimestamp;
-            {
-                // 喵~记录快照时的时间戳，用于延迟写回时比对物品一致性喵
-                ItemMeta sm = snapshot.getItemMeta();
-                Long ts = sm != null ? sm.getPersistentDataContainer().get(
-                        CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG) : null;
-                snapshotTimestamp = ts != null ? ts : -1L;
+            ItemStack cur = e.getCurrentItem().clone();
+            if (tagIfIngredient(cur)) {
+                e.setCurrentItem(cur);
             }
-            org.bukkit.Bukkit.getScheduler().runTaskLater(
-                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-                () -> {
-                    ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
-                    if (live == null || live.getType().isAir()) return;
-                    // 喵~防御：类型和数量一致才写回，防止刷物品喵
-                    if (live.getType() != snapshot.getType() || live.getAmount() != snapshot.getAmount()) return;
-                    // 喵~防御：PDC时间戳一致才写回，防止操作到移动后的不同物品喵
-                    ItemMeta lm = live.getItemMeta();
-                    long liveTimestamp = lm != null ? (lm.getPersistentDataContainer()
-                            .getOrDefault(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, -2L)) : -3L;
-                    if (snapshotTimestamp != liveTimestamp) return;
-                    ItemStack toTag = live.clone();
-                    if (tagIfIngredient(toTag)) inv.setItem(rawSlot, toTag);
-                }, delay);
         }
 
         // shift+click 会把物品转移到其他位置，延迟1tick扫玩家背包所有格子喵
