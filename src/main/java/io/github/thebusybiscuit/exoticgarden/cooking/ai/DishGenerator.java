@@ -64,7 +64,7 @@ public class DishGenerator {
         public final int hunger;
         // 菜肴饱和度，缺省0喵
         public final double saturation;
-        // 菜肴室温保质期（分钟），缺省60喵
+        // 菜肴常温变质期（分钟），缺省60喵
         public final int shelfLifeMinutes;
 
         public DishResult(String name, int servings, String quality,
@@ -209,7 +209,7 @@ public class DishGenerator {
             + "servings: 根据食材克重和水量油量和加工方式估算可吃次数(1-10)\n"
             + "hunger: 每次食用恢复的饱食度(整数,参考食材foodPoints之和按品质调整,缺省0)\n"
             + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
-            + "shelfLifeMinutes: 室温保质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
+            + "shelfLifeMinutes: 常温变质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
             + "name: 菜名必须包含§颜色符（如§6金苹果炖菜）品质与菜名自然结合 正常食材贴合菜名 猎奇加工/食材组合允许猎奇名\n"
             + "description: 风味描述, 颜色符必须使用§前缀(不用&前缀), 每行都必须包含颜色符(不支持跨行颜色继承), "
             + "换行使用JSON标准\\n(即JSON字符串中的\\n转义符) 每行严格控制在12字以内(含颜色符不算字数) 总行数3~7行 "
@@ -222,7 +222,7 @@ public class DishGenerator {
             + "\"quality\":\"品质中文形容词(缺省'普通')\","
             + "\"hunger\":饱食度整数(缺省0),"
             + "\"saturation\":饱和度浮点(缺省0.0),"
-            + "\"shelfLifeMinutes\":室温保质期整数分钟(缺省60),"
+            + "\"shelfLifeMinutes\":常温变质期整数分钟(缺省60),"
             + "\"description\":\"描述字符串（缺省用'无描述'）\"}\n"
             + "如有effects则加\"effects\":[\"SPEED:1:600\",\"REGENERATION:1:200\"], 可以多个, 无则省略该字段。\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
