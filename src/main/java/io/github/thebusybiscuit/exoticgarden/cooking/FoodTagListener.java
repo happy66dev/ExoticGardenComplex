@@ -465,14 +465,25 @@ public class FoodTagListener implements Listener {
             return GENERIC_POTION_ID;
         }
 
-        // 检查是否是可食用原版物品，且不在黑名单内喵
-        // 喵~防御：isEdible()返回true才进一步判断，避免对非食物打标签喵
+        // 检查是否是可食用原版物品或SF食品，且不在黑名单内喵
         if (mat.isEdible() && !BLACKLIST.contains(mat)) {
-            // 原版可食用物品（排除黑名单）返回通用食物标识符，保质期默认10分钟喵
             return GENERIC_FOOD_ID;
         }
 
-        // 既不是配置食材、也不是药水、也不是可食用原版物品，返回null跳过喵
+        // SF加工食品：有PDC SLIMEFUN_ITEM标记的可食用物品（如汉堡、派等）也加保质期喵
+        if (itemMeta != null) {
+            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+            String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
+            if (sfId != null) {
+                SlimefunItem sfItem = SlimefunItem.getById(sfId);
+                // 喵~防御：SF物品对应的原版材质可食用，视为加工食品喵
+                if (sfItem != null && sfItem.getItem().getType().isEdible()) {
+                    return GENERIC_FOOD_ID;
+                }
+            }
+        }
+
+        // 既不是配置食材、也不是药水、也不是可食用物品，返回null跳过喵
         return null;
     }
 }
