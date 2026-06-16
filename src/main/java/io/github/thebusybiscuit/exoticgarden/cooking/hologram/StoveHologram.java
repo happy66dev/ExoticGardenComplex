@@ -100,8 +100,9 @@ public class StoveHologram {
                 sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fuelName, secs));
             }
             sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
-            double coolRate = Math.max(state.currentTemp - 30.0, 0) * 0.05;
-            sb.append(String.format("§3散热: -%.1f°C/s\n", coolRate));
+            // 散热每秒 = (temp-30)*0.05*0.05*10 (每tick降coolRate*0.05，每秒10次tick)喵
+            double coolRatePerSec = Math.max(state.currentTemp - 30.0, 0) * 0.025;
+            sb.append(String.format("§3散热: -%.2f°C/s\n", coolRatePerSec));
         } else {
             sb.append("§7无燃料\n");
         }
@@ -114,9 +115,7 @@ public class StoveHologram {
             }
             CharLevel charLevel = CharLevel.fromSeconds(slot.charSeconds);
             String ingName = getIngredientName(slot.ingredientId, ingredients);
-            if (charLevel == CharLevel.SEVERE || charLevel == CharLevel.HEAVY || charLevel == CharLevel.MEDIUM) {
-                sb.append(String.format("§e主菜%d: §c%s §c⚠烧焦\n", i + 1, ingName));
-            } else if (slot.state == FoodState.WHOLE) {
+            if (slot.state == FoodState.WHOLE) {
                 int front = (int) (slot.frontDoneness * 100);
                 int back = (int) (slot.backDoneness * 100);
                 // 喵~当前烹饪面用亮色§6，另一面用灰色§7，让玩家直观看到当前哪面在受热喵

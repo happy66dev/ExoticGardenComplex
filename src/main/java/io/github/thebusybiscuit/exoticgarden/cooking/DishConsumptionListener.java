@@ -156,7 +156,6 @@ public class DishConsumptionListener implements Listener {
                 List<String> lore = new ArrayList<>(meta.getLore());
                 for (int i = 0; i < lore.size(); i++) {
                     if (lore.get(i).contains("§7份量:")) {
-                        // 用正则替换份量数字喵
                         lore.set(i, lore.get(i).replaceAll("§7份量: §f\\d+", "§7份量: §f" + remaining));
                         break;
                     }
@@ -164,7 +163,12 @@ public class DishConsumptionListener implements Listener {
                 meta.setLore(lore);
             }
             item.setItemMeta(meta);
-            // 喵~不扣物品数量（setAmount），meta 已更新喵
+            // 喵~同步更新背包里的实际物品喵
+            ItemStack mainHandUpdate = player.getInventory().getItemInMainHand();
+            if (mainHandUpdate.isSimilar(item) || mainHandUpdate.getType() == item.getType()) {
+                mainHandUpdate.setItemMeta(meta);
+                player.getInventory().setItemInMainHand(mainHandUpdate);
+            }
         }
     }
 
