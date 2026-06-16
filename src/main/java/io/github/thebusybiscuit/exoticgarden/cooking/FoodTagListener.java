@@ -67,19 +67,18 @@ public class FoodTagListener implements Listener {
         tagIfIngredient(item);
     }
 
-    // 创造模式取物走 InventoryCreativeEvent，InventoryClickEvent 不覆盖它喵
+    // 创造模式取物：延迟扫描背包（不在事件里写回，避免虚空物品）喵
     @EventHandler(ignoreCancelled = true)
     public void onCreativeClick(InventoryCreativeEvent e) {
         if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
-        ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
-        if (tagIfIngredient(cursor)) e.setCursor(cursor);
-        // 延迟1tick扫描背包，覆盖创造模式直接放入背包的物品喵
         org.bukkit.Bukkit.getScheduler().runTaskLater(
             io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
             () -> {
                 for (int i = 0; i < player.getInventory().getSize(); i++) {
                     ItemStack it = player.getInventory().getItem(i);
-                    if (tagIfIngredient(it)) player.getInventory().setItem(i, it);
+                    if (it == null || it.getType().isAir()) continue;
+                    ItemStack copy = it.clone();
+                    if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
                 }
             }, 1L);
     }
@@ -101,26 +100,10 @@ public class FoodTagListener implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
 
-        // cursor 跟随鼠标：clone后标记，写回前对比PDC是否真的变化，防止刷物品喵
-        ItemStack cursor = e.getCursor() != null ? e.getCursor().clone() : null;
-        if (tagIfIngredient(cursor)) {
-            // 喵~防御：写回前确认 cursor 槽位内容未被其他操作修改（对比类型和数量），一致才写回喵
-            ItemStack liveCursor = e.getCursor();
-            if (liveCursor != null && liveCursor.getType() == cursor.getType()
-                    && liveCursor.getAmount() == cursor.getAmount()) {
-                e.setCursor(cursor);
-            }
-        }
+        // 喵~不在 InventoryClick 里写回物品，避免虚空物品问题
+        // 标签在 onPickup / onHeldItemChange / onInventoryOpen 时打喵
 
-        // currentItem：在事件处理期间同步用 setCurrentItem 写回（不用延迟任务），避免虚空物品喵
-        if (e.getCurrentItem() != null && !e.getCurrentItem().getType().isAir()) {
-            ItemStack cur = e.getCurrentItem().clone();
-            if (tagIfIngredient(cur)) {
-                e.setCurrentItem(cur);
-            }
-        }
-
-        // shift+click 会把物品转移到其他位置，延迟1tick扫玩家背包所有格子喵
+        // shift+click：物品已经转移，延迟1tick扫背包（首次标记新物品）喵
         if (e.isShiftClick()) {
             org.bukkit.Bukkit.getScheduler().runTaskLater(
                 io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
@@ -133,6 +116,23 @@ public class FoodTagListener implements Listener {
                     }
                 }, 1L);
         }
+    }
+
+    // 喵~玩家打开背包时扫描所有格子，更新保质期lore喵
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryOpen(org.bukkit.event.inventory.InventoryOpenEvent e) {
+        if (!(e.getPlayer() instanceof org.bukkit.entity.Player player)) return;
+        // 喵~延迟1tick让背包完全打开后再扫描喵
+        org.bukkit.Bukkit.getScheduler().runTaskLater(
+            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
+            () -> {
+                for (int i = 0; i < player.getInventory().getSize(); i++) {
+                    ItemStack it = player.getInventory().getItem(i);
+                    if (it == null || it.getType().isAir()) continue;
+                    ItemStack copy = it.clone();
+                    if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
+                }
+            }, 1L);
     }
 
     /**
