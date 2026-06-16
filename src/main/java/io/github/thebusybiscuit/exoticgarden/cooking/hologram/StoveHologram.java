@@ -14,6 +14,15 @@ import java.util.StringJoiner;
 
 public class StoveHologram {
 
+    // 喵~用 Location 的 world+xyz 作为 key，记录每个灶台上一次的 baseLoc 用于清除旧全息喵
+    private static final java.util.concurrent.ConcurrentHashMap<String, org.bukkit.Location> lastBaseLoc
+        = new java.util.concurrent.ConcurrentHashMap<>();
+
+    // 喵~将 Location 转为稳定的 key 字符串（world+block坐标）喵
+    private static String locKey(Location loc) {
+        return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
+    }
+
     public static void update(Location loc, StoveState state,
                               Map<String, FuelConfig.FuelData> fuels,
                               Map<String, IngredientConfig.IngredientData> ingredients,
@@ -21,11 +30,31 @@ public class StoveHologram {
                               StoveBlock stove) {
         Block block = loc.getBlock();
         String[] lines = buildLines(state, fuels, ingredients, seasonings).split("\\n");
-        // 喵~baseLoc 固定（方块偏移点），行从该点向下排列（SF4 每行 -0.3）
-        // 固定 baseLoc 才能保证 SF4 缓存命中，行数增减时能正确删除多余行喵
-        Location baseLoc = block.getLocation()
-                .add(stove.getHologramOffset(block));
+        double LINE_SPACING = 0.3;
+        // 喵~baseLoc = 最顶行位置，行从上往下排，最底行位置固定喵
+        // 底部固定点 = getHologramOffset，baseLoc 上移 (n-1)*LINE_SPACING 使顶行在最上方喵
+        Location bottomFixed = block.getLocation().add(stove.getHologramOffset(block));
+        Location baseLoc = bottomFixed.clone().add(0, (lines.length - 1) * LINE_SPACING, 0);
+
+        String key = locKey(bottomFixed);
+        // 喵~如果 baseLoc 变了（行数变了），先删旧全息再设新全息，防止旧实体残留喵
+        org.bukkit.Location prev = lastBaseLoc.get(key);
+        if (prev != null && Math.abs(prev.getY() - baseLoc.getY()) > 0.01) {
+            Slimefun.getHologramsService().removeMultiLineHologram(prev);
+        }
+        lastBaseLoc.put(key, baseLoc.clone());
         Slimefun.getHologramsService().setMultiLineHologram(baseLoc, lines);
+    }
+
+    public static void removeAndClean(Location loc, StoveBlock stove) {
+        Block block = loc.getBlock();
+        Location bottomFixed = block.getLocation().add(stove.getHologramOffset(block));
+        String key = locKey(bottomFixed);
+        org.bukkit.Location prev = lastBaseLoc.remove(key);
+        if (prev != null) {
+            Slimefun.getHologramsService().removeMultiLineHologram(prev);
+        }
+        stove.removeHologram(block);
     }
 
     public static String buildLines(StoveState state,
