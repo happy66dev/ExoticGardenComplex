@@ -1,0 +1,200 @@
+package io.github.thebusybiscuit.exoticgarden.cooking.ai;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Logger;
+
+/**
+ * AI 菜肴生成客户端，异步调用 OpenAI 兼容 API 生成菜肴数据喵~
+ * 整体思路：异步线程发 HTTP POST，最多重试2次（共3次），超时180s，返回 CompletableFuture。
+ * 思考字段（reasoning_content/thinking）不计入结果，只取 content 字段解析 JSON。
+ */
+public class AiClient {
+
+    // 最大重试次数（不含首次），总共最多3次尝试喵
+    private static final int MAX_RETRIES = 2;
+    // 单次请求超时时间（毫秒），180秒喵
+    private static final int TIMEOUT_MS = 180_000;
+
+    private final String apiKey;
+    private final String baseUrl;
+    private final String model;
+    private final Logger logger;
+    private final Gson gson = new Gson();
+
+    public AiClient(String apiKey, String baseUrl, String model, Logger logger) {
+        this.apiKey = apiKey;
+        // 喵~防御：baseUrl末尾去掉斜杠，避免URL重复拼接问题喵
+        this.baseUrl = baseUrl != null ? baseUrl.replaceAll("/$", "") : "https://api.openai.com/v1";
+        this.model = model;
+        this.logger = logger;
+    }
+
+    /**
+     * 异步调用 AI 生成菜肴结果喵~
+     * 输入：systemPrompt系统提示词，userPrompt用户内容JSON。
+     * 输出：CompletableFuture<DishGenerator.DishResult>，失败时 completeExceptionally。
+     */
+    public CompletableFuture<DishGenerator.DishResult> generateDish(String systemPrompt, String userPrompt) {
+        CompletableFuture<DishGenerator.DishResult> future = new CompletableFuture<>();
+        // 喵~在异步线程执行，不阻塞主线程喵
+        CompletableFuture.runAsync(() -> {
+            Exception lastException = null;
+            // 喵~总共最多 MAX_RETRIES+1 次尝试喵
+            for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+                try {
+                    String result = callApi(systemPrompt, userPrompt);
+                    DishGenerator.DishResult dish = parseResult(result);
+                    future.complete(dish);
+                    return;
+                } catch (Exception e) {
+                    lastException = e;
+                    // 喵~防御：记录每次失败日志，便于排查喵
+                    logger.warning("[AiClient] 第 " + (attempt + 1) + " 次尝试失败: " + e.getMessage());
+                }
+            }
+            // 喵~所有重试均失败，将最后一次异常传出喵
+            future.completeExceptionally(lastException);
+        });
+        return future;
+    }
+
+    /**
+     * 发送单次 HTTP POST 请求到 AI API喵~
+     * 输入：系统提示词、用户提示词。
+     * 输出：API 返回的 content 文本（已过滤思考字段）。
+     */
+    private String callApi(String systemPrompt, String userPrompt) throws Exception {
+        // 构建 OpenAI 兼容的请求体喵
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", model);
+        requestBody.addProperty("temperature", 0.8);
+
+        JsonArray messages = new JsonArray();
+        JsonObject sysMsg = new JsonObject();
+        sysMsg.addProperty("role", "system");
+        sysMsg.addProperty("content", systemPrompt);
+        messages.add(sysMsg);
+        JsonObject userMsg = new JsonObject();
+        userMsg.addProperty("role", "user");
+        userMsg.addProperty("content", userPrompt);
+        messages.add(userMsg);
+        requestBody.add("messages", messages);
+
+        String requestJson = gson.toJson(requestBody);
+        byte[] requestBytes = requestJson.getBytes(StandardCharsets.UTF_8);
+
+        // 建立 HTTP 连接喵
+        URL url = new URL(baseUrl + "/chat/completions");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+        conn.setConnectTimeout(TIMEOUT_MS);
+        conn.setReadTimeout(TIMEOUT_MS);
+        conn.setDoOutput(true);
+
+        // 发送请求体喵
+        try (OutputStream os = conn.getOutputStream()) {
+            os.write(requestBytes);
+        }
+
+        // 读取响应喵
+        int statusCode = conn.getResponseCode();
+        // 喵~防御：非200时从 error stream 读错误信息喵
+        if (statusCode != 200) {
+            String errBody = "";
+            try (Scanner sc = new Scanner(conn.getErrorStream(), StandardCharsets.UTF_8)) {
+                errBody = sc.useDelimiter("\\A").hasNext() ? sc.next() : "";
+            }
+            throw new RuntimeException("HTTP " + statusCode + ": " + errBody);
+        }
+
+        String responseBody;
+        try (Scanner sc = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8)) {
+            responseBody = sc.useDelimiter("\\A").hasNext() ? sc.next() : "";
+        }
+
+        // 解析响应，提取 content 字段（忽略 thinking/reasoning_content 等思考字段）喵
+        return extractContent(responseBody);
+    }
+
+    /**
+     * 从 API 响应 JSON 中提取 content 字段，过滤掉思考字段喵~
+     * 思考字段：reasoning_content、thinking（部分模型返回）不参与结果解析。
+     * 输入：API 返回的完整 JSON 字符串。
+     * 输出：choices[0].message.content 的文本内容。
+     */
+    private String extractContent(String responseBody) {
+        JsonObject root = JsonParser.parseString(responseBody).getAsJsonObject();
+        // 喵~防御：choices 不存在或为空时抛异常喵
+        JsonArray choices = root.getAsJsonArray("choices");
+        if (choices == null || choices.size() == 0) {
+            throw new RuntimeException("API 返回 choices 为空: " + responseBody);
+        }
+        JsonObject message = choices.get(0).getAsJsonObject().getAsJsonObject("message");
+        // 喵~防御：content 字段不存在时抛异常喵
+        JsonElement contentEl = message.get("content");
+        if (contentEl == null || contentEl.isJsonNull()) {
+            throw new RuntimeException("API 返回 content 为 null，可能只有思考字段: " + responseBody);
+        }
+        return contentEl.getAsString().trim();
+    }
+
+    /**
+     * 将 AI 返回的文本解析为 DishResult 对象喵~
+     * 整体思路：先尝试直接解析，失败则从文本中提取 JSON 块（```json...```）后再解析。
+     * 输入：AI 返回的 content 文本。
+     * 输出：解析成功的 DishResult。
+     */
+    private DishGenerator.DishResult parseResult(String content) {
+        // 喵~防御：去掉可能包裹的 markdown 代码块喵
+        String json = extractJson(content);
+        try {
+            JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
+            String name = obj.has("name") ? obj.get("name").getAsString() : "未知菜肴";
+            int servings = obj.has("servings") ? obj.get("servings").getAsInt() : 1;
+            double quality = obj.has("qualityCoefficient") ? obj.get("qualityCoefficient").getAsDouble() : 1.0;
+            String description = obj.has("description") ? obj.get("description").getAsString() : "";
+            java.util.List<String> effects = new java.util.ArrayList<>();
+            if (obj.has("effects") && obj.get("effects").isJsonArray()) {
+                for (JsonElement el : obj.getAsJsonArray("effects")) {
+                    effects.add(el.getAsString());
+                }
+            }
+            return new DishGenerator.DishResult(name, servings, quality, effects, description);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON解析失败，原始内容: " + content, e);
+        }
+    }
+
+    /**
+     * 从文本中提取 JSON 块：先找 ```json...``` 格式，找不到则取第一个 { 到最后一个 } 之间的内容喵~
+     */
+    private String extractJson(String text) {
+        // 喵~防御：null或空时返回空对象喵
+        if (text == null || text.isEmpty()) return "{}";
+        // 优先匹配 ```json...``` 格式喵
+        int jsonStart = text.indexOf("```json");
+        if (jsonStart >= 0) {
+            int start = text.indexOf('{', jsonStart);
+            int end = text.lastIndexOf('}');
+            if (start >= 0 && end > start) return text.substring(start, end + 1);
+        }
+        // 回退：取第一个{到最后一个}之间喵
+        int start = text.indexOf('{');
+        int end = text.lastIndexOf('}');
+        if (start >= 0 && end > start) return text.substring(start, end + 1);
+        return text;
+    }
+}

@@ -1,466 +1,719 @@
-# config_version: 2
+# config_version: 3
 # ===== 基础调料 (has_doneness: false) =====
-SALT:
+slimefun:SALT:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "盐"
   has_doneness: false
-SUGAR:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:SUGAR:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "白糖"
   has_doneness: false
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 料酒 (has_doneness: true, 热渗入) =====
-RICE_WINE:
+slimefun:RICE_WINE:
   weight_grams: 1
   water_ml: 100
+  oil_ml: 0
   display_name: "料酒"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
+  category: seasoning
+  container_return: none
+  hint: ""
 
-# ===== 水/油 (特殊处理, 不计入调料槽) =====
-WATER:
+# ===== 水类 (不计入调料槽) =====
+minecraft:WATER_BOTTLE:
   display_name: "水"
   has_doneness: false
   weight_grams: 0
   water_ml: 250
-WATER_BUCKET:
+  oil_ml: 0
+  category: water
+  container_return: GLASS_BOTTLE
+  hint: ""
+minecraft:WATER_BUCKET:
   display_name: "水(桶)"
   has_doneness: false
   weight_grams: 0
   water_ml: 1000
-MILK_BUCKET:
+  oil_ml: 0
+  category: water
+  container_return: BUCKET
+  hint: ""
+minecraft:MILK_BUCKET:
   display_name: "牛奶(桶)"
   has_doneness: false
-  weight_grams: 0
+  weight_grams: 250
   water_ml: 250
-OIL:
-  display_name: "油"
+  oil_ml: 0
+  category: seasoning
+  container_return: BUCKET
+  hint: ""
+minecraft:HONEY_BOTTLE:
+  display_name: "蜂蜜"
   has_doneness: false
-  weight_grams: 0
-  water_ml: 0
-  oil_ml: 100
-BUTTER:
+  weight_grams: 20
+  water_ml: 25
+  oil_ml: 0
+  category: seasoning
+  container_return: GLASS_BOTTLE
+  hint: ""
+
+# ===== 油类 (不计入调料槽) =====
+slimefun:BUTTER:
   display_name: "黄油"
   has_doneness: false
   weight_grams: 20
   water_ml: 0
   oil_ml: 100
-HEAVY_CREAM:
+  category: oil
+  container_return: none
+  hint: ""
+slimefun:HEAVY_CREAM:
   display_name: "浓奶油"
   has_doneness: false
   weight_grams: 20
   water_ml: 50
   oil_ml: 100
-VEGETABLE_OIL:
+  category: oil
+  container_return: none
+  hint: ""
+slimefun:VEGETABLE_OIL:
   display_name: "植物油"
   has_doneness: false
   weight_grams: 0
   water_ml: 0
   oil_ml: 100
-HONEY_BOTTLE:
-  display_name: "蜂蜜"
-  has_doneness: false
-  weight_grams: 20
-  water_ml: 25
+  category: oil
+  container_return: none
+  hint: ""
 
 # ===== 原版药水 (has_doneness: true, 通用渗入) =====
 _POTION_:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "药水"
   has_doneness: true
   min_temp: 40
   optimal_temp: 60
   base_time_seconds: 18
+  category: potion
+  container_return: GLASS_BOTTLE
+  hint: ""
 
 # ===== 香料/装饰 (has_doneness: false, 纯增味) =====
-CILANTRO:
+slimefun:CILANTRO:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "香菜碎"
   has_doneness: false
-CURRY_LEAF:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CURRY_LEAF:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "咖喱叶"
   has_doneness: false
-TEA_LEAF:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:TEA_LEAF:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "茶叶"
   has_doneness: false
-BLACK_PEPPER:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BLACK_PEPPER:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "黑胡椒碎"
   has_doneness: false
-LEEK:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:LEEK:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "葱花"
   has_doneness: false
-PEANUT:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:PEANUT:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "花生碎"
   has_doneness: false
-DEVIL_MELON:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:DEVIL_MELON:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "恶魔瓜丁"
   has_doneness: false
-INFERNOFRUIT:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:INFERNOFRUIT:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "地狱果片"
   has_doneness: false
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 柑橘类果汁 (has_doneness: true, 酸性强-快速渗入) =====
-LEMON_JUICE:
+slimefun:LEMON_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "柠檬汁"
   has_doneness: true
   min_temp: 40
   optimal_temp: 60
   base_time_seconds: 12
-LIME_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:LIME_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "酸橙汁"
   has_doneness: true
   min_temp: 40
   optimal_temp: 60
   base_time_seconds: 12
-ORANGE_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:ORANGE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "橙汁"
   has_doneness: true
   min_temp: 40
   optimal_temp: 60
   base_time_seconds: 12
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 浆果类果汁 (has_doneness: true, 中快速渗入) =====
-APPLE_JUICE:
+slimefun:APPLE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "苹果汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-MELON_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:MELON_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "西瓜汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-SWEET_BERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:SWEET_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "甜浆果汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-GLOW_BERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:GLOW_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "发光浆果汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-GRAPE_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:GRAPE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "葡萄汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-BLUEBERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BLUEBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "蓝莓汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-RASPBERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:RASPBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "树莓汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-BLACKBERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BLACKBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "黑莓汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-CRANBERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CRANBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "蔓越莓汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
-STRAWBERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:STRAWBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "草莓汁"
   has_doneness: true
   min_temp: 45
   optimal_temp: 70
   base_time_seconds: 16
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 核果类果汁 (has_doneness: true, 中速渗入) =====
-PEACH_JUICE:
+slimefun:PEACH_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "桃子汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-PLUM_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:PLUM_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "梅子汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-PEAR_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:PEAR_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "梨汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-CHERRY_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CHERRY_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "樱桃汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-POMEGRANATE_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:POMEGRANATE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "石榴汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-DRAGON_FRUIT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:DRAGON_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "火龙果汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-OAK_APPLE_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:OAK_APPLE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "橡树苹果汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 浓郁类果汁 (has_doneness: true, 慢渗入) =====
-COCONUT_MILK:
+slimefun:COCONUT_MILK:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "椰奶"
   has_doneness: true
   min_temp: 55
   optimal_temp: 90
   base_time_seconds: 25
-PINEAPPLE_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:PINEAPPLE_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "菠萝汁"
   has_doneness: true
   min_temp: 55
   optimal_temp: 90
   base_time_seconds: 25
-TOMATO_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:TOMATO_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "番茄汁"
   has_doneness: true
   min_temp: 55
   optimal_temp: 90
   base_time_seconds: 25
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 根茎/大果类果汁 (has_doneness: true, 最慢渗入) =====
-PUMPKIN_JUICE:
+slimefun:PUMPKIN_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "南瓜汁"
   has_doneness: true
   min_temp: 60
   optimal_temp: 100
   base_time_seconds: 30
-CARROT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "胡萝卜汁"
   has_doneness: true
   min_temp: 60
   optimal_temp: 100
   base_time_seconds: 30
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 异域特调果汁 (has_doneness: true, 中速渗入) =====
-BREADFRUIT_JUICE:
+slimefun:BREADFRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "面包果汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-ALIEN_FRUIT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:ALIEN_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "外星果汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-PUNCH_FRUIT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:PUNCH_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "潘趣果汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-JACKFRUIT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:JACKFRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "菠萝蜜汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-BIG_CARROT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BIG_CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "大萝卜汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-BIG_WHEAT_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BIG_WHEAT_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "大麦汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-AMARANTH_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:AMARANTH_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "苋菜汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-DEVIL_MELON_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:DEVIL_MELON_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "恶魔瓜汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
-ACORN_SQUASH_JUICE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:ACORN_SQUASH_JUICE:
   weight_grams: 1
   water_ml: 200
+  oil_ml: 0
   display_name: "橡子南瓜汁"
   has_doneness: true
   min_temp: 50
   optimal_temp: 80
   base_time_seconds: 20
+  category: seasoning
+  container_return: none
+  hint: ""
 
 # ===== 烹饪成品辅料 (has_doneness: false, 纯topping) =====
-BACON:
+slimefun:BACON:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "培根碎"
   has_doneness: false
-CHEESE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CHEESE:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "芝士碎"
   has_doneness: false
-FRIED_CHICKEN:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:FRIED_CHICKEN:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "炸鸡碎"
   has_doneness: false
-FRIES:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:FRIES:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "薯条碎"
   has_doneness: false
-HASHBROWN:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:HASHBROWN:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "土豆饼碎"
   has_doneness: false
-ONION_RINGS:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:ONION_RINGS:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "洋葱圈碎"
   has_doneness: false
-CHICKEN_NUGGETS:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:CHICKEN_NUGGETS:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "鸡块碎"
   has_doneness: false
-BROWN_SUGAR:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BROWN_SUGAR:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "红糖"
   has_doneness: false
-COUNTRY_GRAVY:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:COUNTRY_GRAVY:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "肉汁"
   has_doneness: false
-MAYO:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:MAYO:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "蛋黄酱"
   has_doneness: false
-BBQ_SAUCE:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:BBQ_SAUCE:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "烤肉酱"
   has_doneness: false
-MUSTARD:
+  category: seasoning
+  container_return: none
+  hint: ""
+slimefun:MUSTARD:
   weight_grams: 1
   water_ml: 0
+  oil_ml: 0
   display_name: "芥末"
   has_doneness: false
+  category: seasoning
+  container_return: none
+  hint: ""

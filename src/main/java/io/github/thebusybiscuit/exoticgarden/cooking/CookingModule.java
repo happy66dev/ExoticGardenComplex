@@ -12,6 +12,7 @@ import io.github.thebusybiscuit.exoticgarden.cooking.interaction.SeasoningIntera
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.DonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.calculator.StandardDonenessCalculator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
+import io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.StoveInteractionHandler;
@@ -34,8 +35,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.Scanner;
 
@@ -48,6 +51,12 @@ public class CookingModule {
         Map<String, FuelConfig.FuelData> fuels = loadConfigs(plugin);
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
         Map<String, SeasoningConfig.SeasoningData> seasonings = loadSeasonings(plugin);
+        FoodsConfig foodsConfig = loadFoods(plugin);
+
+        // 加载三个 map 后做交叉 key 冲突检测，发现冲突立即报错喵
+        checkDuplicate(plugin, fuels, seasonings, "fuels.yml", "seasonings.yml");
+        checkDuplicate(plugin, fuels, ingredients, "fuels.yml", "ingredients.yml");
+        checkDuplicate(plugin, seasonings, ingredients, "seasonings.yml", "ingredients.yml");
 
         ItemGroup cookingGroup = buildItemGroup(plugin);
         Map<String, DonenessCalculator> calculators = buildCalculators();
@@ -59,7 +68,8 @@ public class CookingModule {
         registerSpatula(plugin, cookingGroup, ingredients);
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stoveInstance).runTaskTimer(plugin, 2L, 2L);
-        plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients), plugin);
+        // 传入 foodsConfig，让 FoodTagListener 从配置读取黑名单和保质期喵
+        plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients, foodsConfig), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
         // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
         // Temporarily disable dish consumption custom logic.
@@ -84,6 +94,37 @@ public class CookingModule {
         Logger logger = plugin.getLogger();
         saveResourceIfMissing(plugin, "seasonings.yml");
         return new SeasoningConfig(logger).loadAll(new File(plugin.getDataFolder(), "seasonings.yml"), "");
+    }
+
+    /**
+     * 加载 foods.yml 配置文件喵~
+     * 输入：plugin 实例，用于获取数据目录和日志器
+     * 输出：FoodsConfig 对象，包含黑名单和通用保质期配置
+     */
+    private static FoodsConfig loadFoods(ExoticGarden plugin) {
+        // 复制默认 foods.yml 到插件数据目录（如不存在）喵
+        saveResourceIfMissing(plugin, "foods.yml");
+        // 创建 FoodsConfig，从文件读取黑名单和保质期喵
+        return new FoodsConfig(new File(plugin.getDataFolder(), "foods.yml"), plugin.getLogger());
+    }
+
+    /**
+     * 交叉 key 冲突检测：同一个 key 不能同时出现在两个配置 map 中喵~
+     * 输入：plugin-插件实例, a-第一个配置 map, b-第二个配置 map,
+     *       fileA-a 对应的文件名, fileB-b 对应的文件名
+     * 边界：a 或 b 为空 map 时必然无冲突喵
+     * 异常：发现冲突时 SEVERE 日志并抛出 IllegalStateException 喵
+     */
+    private static void checkDuplicate(ExoticGarden plugin, Map<String, ?> a, Map<String, ?> b,
+                                       String fileA, String fileB) {
+        // 用交集找出同时存在于两个 map 的 key 喵
+        Set<String> overlap = new HashSet<>(a.keySet());
+        overlap.retainAll(b.keySet());
+        // 喵~防御：有交集时报 SEVERE 并抛出，避免运行时混淆喵
+        if (!overlap.isEmpty()) {
+            plugin.getLogger().severe("[Cooking] 配置冲突！以下物品同时在 " + fileA + " 和 " + fileB + ": " + overlap);
+            throw new IllegalStateException("烹饪系统配置冲突，请检查 " + fileA + " 和 " + fileB);
+        }
     }
 
     private static ItemGroup buildItemGroup(ExoticGarden plugin) {

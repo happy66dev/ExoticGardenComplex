@@ -19,6 +19,10 @@ public class StoveState {
     public List<String> waterSources;
     // 药水调料添加的效果列表，食用菜肴时应用给玩家喵
     public List<PotionEffect> potionEffects;
+    // AI请求期间冻结灶台（不允许交互，温度/食材状态不变），失败后保持冻结直到玩家右键解冻喵
+    public boolean frozen;
+    // 最近AI失败时的错误信息，解冻提示时显示喵
+    public String frozenReason;
 
     public StoveState() {
         this.currentTemp = 30.0;
@@ -33,5 +37,7 @@ public class StoveState {
         this.cookingInProgress = false;
         this.waterAmount = 0;
         this.oilAmount = 0;
+        this.frozen = false;
+        this.frozenReason = null;
     }
 }

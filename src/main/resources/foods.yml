@@ -1,0 +1,18 @@
+# config_version: 1
+defaults:
+  generic_food_shelf_life: 10
+  generic_potion_shelf_life: 5
+
+blacklist:
+  - minecraft:GOLDEN_APPLE
+  - minecraft:ENCHANTED_GOLDEN_APPLE
+  - minecraft:CAKE
+  - minecraft:ROTTEN_FLESH
+  - minecraft:SPIDER_EYE
+  - minecraft:FERMENTED_SPIDER_EYE
+  - minecraft:POISONOUS_POTATO
+  - minecraft:GLISTERING_MELON_SLICE
+
+# overrides:
+#   minecraft:COOKIE:
+#     shelf_life_minutes: 20

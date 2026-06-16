@@ -33,13 +33,16 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final double saturation;
         // 保质期，单位：分钟，未配置时默认10分钟喵
         public final int shelfLifeMinutes;
+        // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
+        public final String hint;
 
         public IngredientData(double minTemp, double maxTemp, double optimalTempMin,
                               double optimalTempMax, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
-                              double foodPoints, double saturation, int shelfLifeMinutes) {
+                              double foodPoints, double saturation, int shelfLifeMinutes,
+                              String hint) {
             this.minTemp = minTemp;
             this.maxTemp = maxTemp;
             this.optimalTempMin = optimalTempMin;
@@ -54,6 +57,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.foodPoints = foodPoints;
             this.saturation = saturation;
             this.shelfLifeMinutes = shelfLifeMinutes;
+            this.hint = hint;
         }
     }
 
@@ -81,7 +85,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getDouble("weight_grams", 100),
             s.getDouble("food_points", 2),
             s.getDouble("saturation", 2),
-            s.getInt("shelf_life_minutes", 10)
+            s.getInt("shelf_life_minutes", 10),
+            s.getString("hint", "")   // 给 AI 的提示信息，默认空字符串喵
         );
     }
 }

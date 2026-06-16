@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Material;
@@ -8,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,7 +16,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,24 +24,6 @@ public class FoodTagListener implements Listener {
 
     private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
-
-    /**
-     * 不加保质期的黑名单食物列表：
-     * - 金苹果/附魔金苹果（特殊效果物品，不易腐坏喵）
-     * - 蛋糕（放置型方块食物，逻辑特殊喵）
-     * - 腐肉/蜘蛛眼/发酵蜘蛛眼/毒土豆（本身就是"有问题"的食物喵）
-     * - 闪烁的瓜片（合成材料，通常不直接吃喵）
-     */
-    private static final Set<Material> BLACKLIST = EnumSet.of(
-        Material.GOLDEN_APPLE,          // 金苹果喵
-        Material.ENCHANTED_GOLDEN_APPLE, // 附魔金苹果喵
-        Material.CAKE,                  // 蛋糕（放置型）喵
-        Material.ROTTEN_FLESH,          // 腐肉喵
-        Material.SPIDER_EYE,            // 蜘蛛眼喵
-        Material.FERMENTED_SPIDER_EYE,  // 发酵蜘蛛眼喵
-        Material.POISONOUS_POTATO,      // 毒土豆喵
-        Material.GLISTERING_MELON_SLICE // 闪烁的瓜片（即GOLDEN_MELON_SLICE）喵
-    );
 
     /**
      * 通用食物标识符，用于原版可食用物品（不在黑名单中）的 fallback 保质期标签喵~
@@ -56,16 +37,27 @@ public class FoodTagListener implements Listener {
      */
     private static final String GENERIC_POTION_ID = "_GENERIC_POTION_";
 
-    /** 通用食物默认保质期：10分钟喵 */
-    private static final int GENERIC_FOOD_SHELF_LIFE_MINUTES = 10;
+    // 从 FoodsConfig 读取的黑名单，不再硬编码喵
+    private final Set<Material> blacklist;
 
-    /** 通用药水默认保质期：5分钟喵 */
-    private static final int GENERIC_POTION_SHELF_LIFE_MINUTES = 5;
+    // 从 FoodsConfig 读取的通用食物保质期喵
+    private final int genericFoodShelfLifeMinutes;
+
+    // 从 FoodsConfig 读取的通用药水保质期喵
+    private final int genericPotionShelfLifeMinutes;
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
 
-    public FoodTagListener(Map<String, IngredientConfig.IngredientData> ingredients) {
+    /**
+     * 构造函数，接收 FoodsConfig 以替代硬编码常量喵~
+     */
+    public FoodTagListener(Map<String, IngredientConfig.IngredientData> ingredients,
+                           FoodsConfig foodsConfig) {
         this.ingredients = ingredients;
+        // 从 foodsConfig 读取配置，不再硬编码喵
+        this.blacklist = foodsConfig.getBlacklist();
+        this.genericFoodShelfLifeMinutes = foodsConfig.getGenericFoodShelfLife();
+        this.genericPotionShelfLifeMinutes = foodsConfig.getGenericPotionShelfLife();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -202,14 +194,14 @@ public class FoodTagListener implements Listener {
         final String ingredientLine; // 最终显示在lore里的类型标签行喵
 
         if (GENERIC_FOOD_ID.equals(ingId)) {
-            // 通用原版食物：lore显示"[食物]"，保质期优先读配置文件，默认10分钟喵
+            // 通用原版食物：lore显示"[食物]"，保质期优先读配置文件，默认用 foodsConfig 值喵
             IngredientConfig.IngredientData genericFood = ingredients.get(GENERIC_FOOD_ID);
-            shelfLifeMinutes = genericFood != null ? genericFood.shelfLifeMinutes : GENERIC_FOOD_SHELF_LIFE_MINUTES;
+            shelfLifeMinutes = genericFood != null ? genericFood.shelfLifeMinutes : genericFoodShelfLifeMinutes;
             ingredientLine = "§7[食物]";
         } else if (GENERIC_POTION_ID.equals(ingId)) {
-            // 通用药水/水瓶：lore显示"[药水] 200ml"，保质期优先读配置文件，默认5分钟喵
+            // 通用药水/水瓶：lore显示"[药水] 200ml"，保质期优先读配置文件，默认用 foodsConfig 值喵
             IngredientConfig.IngredientData genericPotion = ingredients.get(GENERIC_POTION_ID);
-            shelfLifeMinutes = genericPotion != null ? genericPotion.shelfLifeMinutes : GENERIC_POTION_SHELF_LIFE_MINUTES;
+            shelfLifeMinutes = genericPotion != null ? genericPotion.shelfLifeMinutes : genericPotionShelfLifeMinutes;
             ingredientLine = "§7[药水] §b200ml";
         } else {
             // 普通烹饪食材：从配置读取营养值、保质期和克重喵
@@ -467,8 +459,8 @@ public class FoodTagListener implements Listener {
             return GENERIC_POTION_ID;
         }
 
-        // 检查是否是可食用原版物品或SF食品，且不在黑名单内喵
-        if (mat.isEdible() && !BLACKLIST.contains(mat)) {
+        // 检查是否是可食用原版物品或SF食品，且不在黑名单内喵（blacklist 来自 foodsConfig）
+        if (mat.isEdible() && !blacklist.contains(mat)) {
             return GENERIC_FOOD_ID;
         }
 

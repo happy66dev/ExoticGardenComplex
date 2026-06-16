@@ -58,10 +58,19 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 if (!activeStoves.containsKey(loc)) return;
                 ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
                 if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
-                    // 碗/食材/牛奶桶/任何物品：统一走handler链路，取消原版交互喵
-                    // 不再依赖BlockUseHandler，确保灶台行为优先级最高喵
                     e.setCancelled(true);
                     StoveState state = activeStoves.get(loc);
+                    // 喵~AI失败冻结状态：右键解冻并提示，不执行其他交互
+                    if (state.frozen) {
+                        state.frozen = false;
+                        if (state.frozenReason != null) {
+                            e.getPlayer().sendMessage("§c[AI] 上次生成失败: " + state.frozenReason);
+                        }
+                        e.getPlayer().sendMessage("§a灶台已解冻，可以继续交互喵~");
+                        state.frozenReason = null;
+                        return;
+                    }
+                    // 碗/食材/牛奶桶/任何物品：统一走handler链路喵
                     for (StoveInteractionHandler handler : handlers) {
                         if (handler.handle(e.getPlayer(), hand, state, loc)) break;
                     }
@@ -76,9 +85,10 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             if (e.getClickedBlock().isEmpty()) return;
             Player player = e.getPlayer();
             Location loc = e.getClickedBlock().get().getLocation().clone();
-            // 喵~防御：只对EG灶台营火创建StoveState，原版营火不处理（防止内存泄漏+原版烤肉失效）
             ItemStack hand = player.getInventory().getItemInMainHand();
             StoveState state = activeStoves.computeIfAbsent(loc, k -> new StoveState());
+            // 喵~AI冻结期间BlockUseHandler也不处理（onPlayerInteract已拦截，这里兜底）
+            if (state.frozen) return;
 
             boolean handled = false;
             for (StoveInteractionHandler handler : handlers) {
