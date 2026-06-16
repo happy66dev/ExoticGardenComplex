@@ -95,7 +95,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             return true;
         }
 
-        // 药水调料：读取PotionMeta中的所有药水效果并存入state，食用菜肴时应用喵
+        // 药水调料：读取PotionMeta中的所有药水效果，加入调料槽，食用时应用效果喵
         if ("_POTION_".equals(seasoningId)) {
             if (!(handItem.getItemMeta() instanceof PotionMeta potionMeta)) return true;
             List<PotionEffect> effects = potionMeta.getCustomEffects();
@@ -103,14 +103,24 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             if (effects.isEmpty() && potionMeta.getBasePotionType() != null) {
                 effects = potionMeta.getBasePotionType().getPotionEffects();
             }
-            if (effects.isEmpty()) {
-                player.sendMessage("§c此药水没有可添加的效果");
-                return true;
+            // 无论有无效果，药水都加200ml水并作为辅料记录喵
+            state.waterAmount += 200;
+            if (!state.waterSources.contains("药水")) state.waterSources.add("药水");
+            // 有效果时记录到state.potionEffects喵
+            if (!effects.isEmpty()) {
+                state.potionEffects.addAll(effects);
             }
-            state.potionEffects.addAll(effects);
+            // 加入调料槽，让药水在全息和AI中可见喵
+            SeasoningConfig.SeasoningData potionData = seasonings.get(seasoningId);
+            double potionWeight = potionData != null ? potionData.weightGrams : 1;
+            state.seasonings.add(new SeasoningEntry(seasoningId, 0, potionWeight));
             handItem.setAmount(handItem.getAmount() - 1);
             returnBackItem(player, new ItemStack(Material.GLASS_BOTTLE));
-            player.sendMessage("§a药水效果已加入灶台（共 " + state.potionEffects.size() + " 个效果）");
+            if (!effects.isEmpty()) {
+                player.sendMessage("§a药水已加入灶台（" + effects.size() + " 个效果，+200ml水）");
+            } else {
+                player.sendMessage("§7水瓶已加入灶台（+200ml水）");
+            }
             return true;
         }
 

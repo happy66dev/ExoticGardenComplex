@@ -203,14 +203,16 @@ public class KnifeItem extends SlimefunItem {
                                        PersistentDataContainer pdc,
                                        Map<String, IngredientConfig.IngredientData> ingredients) {
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        // 计算营养度显示喵
+        // 计算营养度和克重显示喵
         String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
         IngredientConfig.IngredientData data = ingId != null ? ingredients.get(ingId) : null;
         double nutrition = data != null ? data.foodPoints + data.saturation : 0;
         String nutritionStr = nutrition > 0
                 ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
                 : "";
-        String newLine = "§7[烹饪食材] §f" + translateState(newState.name()) + nutritionStr;
+        double weightGrams = data != null ? data.weightGrams : 100;
+        String weightStr = weightGrams > 0 ? " §7(" + (int) weightGrams + "g)" : "";
+        String newLine = "§7[烹饪食材] §f" + translateState(newState.name()) + nutritionStr + weightStr;
         // 找到旧[烹饪食材]行替换，找不到则追加喵
         boolean replaced = false;
         for (int i = 0; i < lore.size(); i++) {

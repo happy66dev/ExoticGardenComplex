@@ -41,6 +41,9 @@ import java.util.Scanner;
 
 public class CookingModule {
 
+    // 保存灶台实例引用，用于关服时清除内存数据喵
+    private static StoveBlock stoveInstance;
+
     public static void initialize(ExoticGarden plugin) {
         Map<String, FuelConfig.FuelData> fuels = loadConfigs(plugin);
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
@@ -50,12 +53,12 @@ public class CookingModule {
         Map<String, DonenessCalculator> calculators = buildCalculators();
         List<StoveInteractionHandler> stoveHandlers = buildHandlers(fuels, ingredients, seasonings);
 
-        StoveBlock stove = registerStove(plugin, cookingGroup, stoveHandlers);
+        stoveInstance = registerStove(plugin, cookingGroup, stoveHandlers);
         registerBoard(plugin, cookingGroup);
         registerKnife(plugin, cookingGroup, ingredients);
         registerSpatula(plugin, cookingGroup, ingredients);
 
-        new StoveTickTask(fuels, ingredients, seasonings, calculators, stove).runTaskTimer(plugin, 2L, 2L);
+        new StoveTickTask(fuels, ingredients, seasonings, calculators, stoveInstance).runTaskTimer(plugin, 2L, 2L);
         plugin.getServer().getPluginManager().registerEvents(new FoodTagListener(ingredients), plugin);
         plugin.getLogger().info("[Cooking] StoveTickTask 已启动");
         // 喵~砧板数据已在ExoticGarden.loadCuttingBoards()中加载，这里不需要再重建了
@@ -166,6 +169,17 @@ public class CookingModule {
                 null, new ItemStack(Material.IRON_INGOT), null,
                 null, new ItemStack(Material.STICK),      null
             }, plugin, ingredients).register(plugin);
+    }
+
+    /**
+     * 关服时清除所有已加载的灶台运行时数据（内存数据，不涉及持久化）喵~
+     * 调用时机：ExoticGarden.onDisable()
+     */
+    public static void clearStoveData() {
+        // 喵~防御：stoveInstance未初始化时跳过喵
+        if (stoveInstance != null) {
+            stoveInstance.activeStoves.clear();
+        }
     }
 
     // 喵~此方法已废弃，砧板数据加载逻辑已移到ExoticGarden.loadCuttingBoards()

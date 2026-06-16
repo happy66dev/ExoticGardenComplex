@@ -1274,6 +1274,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onDisable() {
+        // 喵~关服时清除灶台运行时数据，防止脏数据残留喵
+        io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.clearStoveData();
         SlimefunItemUtil.unregisterAllItems();
         SlimefunItemUtil.unregisterItemGroups();
         saveDatas();
