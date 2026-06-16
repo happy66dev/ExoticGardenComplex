@@ -37,6 +37,18 @@ public class StoveHologram {
                                     Map<String, SeasoningConfig.SeasoningData> seasonings) {
         StringBuilder sb = new StringBuilder();
 
+        // 喵~冻结时显示 AI 状态而非常规数据喵
+        if (state.frozen) {
+            if (state.frozenReason != null) {
+                sb.append("§c[AI失败] 右键解冻\n");
+                sb.append("§7" + state.frozenReason);
+            } else {
+                sb.append("§6[AI生成中] 请稍候...\n");
+                sb.append("§7温度/食材状态已冻结");
+            }
+            return sb.toString().trim();
+        }
+
         double maxTemp = 30;
         double totalHeatRate = 0;
         for (FuelEntry fe : state.fuels) {

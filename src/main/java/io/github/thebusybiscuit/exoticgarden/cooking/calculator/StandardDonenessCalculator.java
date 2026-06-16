@@ -9,7 +9,15 @@ public class StandardDonenessCalculator implements DonenessCalculator {
         IngredientConfig.IngredientData config = ctx.config;
         double currentTemp = ctx.currentTemp;
         if (currentTemp < config.minTemp) return 0;
-        if (currentTemp >= config.maxTemp) return 0;
+        // 喵~超过maxTemp时成熟系数随温度升高而加速（越热越快熟/焦）：(temp-maxTemp)/(maxTemp-30)喵
+        if (currentTemp >= config.maxTemp) {
+            if (config.baseCookTimeSeconds <= 0) return 0;
+            double range = config.maxTemp - 30.0;
+            if (range <= 0) range = 1.0;
+            double coefficient = (currentTemp - config.maxTemp) / range;
+            double boost = ctx.hasSpatulaBoost ? 2.0 : 1.0;
+            return (1.0 / config.baseCookTimeSeconds) * ctx.deltaTime * coefficient * boost;
+        }
         if (config.baseCookTimeSeconds <= 0) return 0;
 
         double coefficient;

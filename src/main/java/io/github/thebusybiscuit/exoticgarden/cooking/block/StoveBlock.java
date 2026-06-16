@@ -69,14 +69,18 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 if (e.getAction() == org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
                     e.setCancelled(true);
                     StoveState state = activeStoves.get(loc);
-                    // 喵~AI失败冻结状态：右键解冻并提示，不执行其他交互
+                    // 喵~冻结状态处理：AI进行中不允许解冻，AI失败才允许右键解冻喵
                     if (state.frozen) {
-                        state.frozen = false;
                         if (state.frozenReason != null) {
+                            // AI失败：允许解冻喵
+                            state.frozen = false;
                             e.getPlayer().sendMessage("§c[AI] 上次生成失败: " + state.frozenReason);
+                            e.getPlayer().sendMessage("§a灶台已解冻，可以继续交互喵~");
+                            state.frozenReason = null;
+                        } else {
+                            // AI进行中：提示不可操作喵
+                            e.getPlayer().sendMessage("§e[AI] 正在生成菜肴，请稍候...");
                         }
-                        e.getPlayer().sendMessage("§a灶台已解冻，可以继续交互喵~");
-                        state.frozenReason = null;
                         return;
                     }
                     // 碗/食材/牛奶桶/任何物品：统一走handler链路喵
@@ -132,9 +136,13 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
     }
 
     private static ItemStack reconstructItem(String id) {
-        SlimefunItem sfItem = SlimefunItem.getById(id);
+        // 喵~SF物品先查（去掉命名空间前缀）喵
+        String sfId = id.startsWith("slimefun:") ? id.substring("slimefun:".length()) : id;
+        SlimefunItem sfItem = SlimefunItem.getById(sfId);
         if (sfItem != null) return sfItem.getItem().clone();
-        Material mat = Material.getMaterial(id);
+        // 喵~原版物品：去掉 minecraft: 前缀后查 Material喵
+        String matName = id.contains(":") ? id.substring(id.indexOf(':') + 1) : id;
+        Material mat = Material.getMaterial(matName);
         if (mat != null && mat != Material.AIR) return new ItemStack(mat, 1);
         return null;
     }

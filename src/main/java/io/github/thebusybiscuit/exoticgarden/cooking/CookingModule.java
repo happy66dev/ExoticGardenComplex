@@ -233,6 +233,8 @@ public class CookingModule {
             // 喵~防御：区块可能已卸载，只处理已加载的区块喵
             if (loc.getWorld() == null || !loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
             org.bukkit.block.Block block = loc.getBlock();
+            // 移除全息字喵
+            stoveInstance.removeHologram(block);
             // 喵~防御：方块必须是营火才处理，防止误清其他方块喵
             if (!(block.getState() instanceof org.bukkit.block.Campfire campfire)) continue;
             // 清空篝火所有槽位，防止服务器重启时物品掉落喵

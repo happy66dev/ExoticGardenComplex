@@ -48,8 +48,8 @@ public class DishConsumptionListener implements Listener {
             return;
         }
 
-        // ===== 分支2：已标记烹饪食材（有FOOD_STATE标记）=====
-        if (pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
+        // ===== 分支2：有保质期标记的食物（有FOOD_TIMESTAMP标记，包含原版食物/药水/烹饪食材）=====
+        if (pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
             handleIngredientConsume(e, item, meta, pdc);
         }
         // 其他物品不处理喵

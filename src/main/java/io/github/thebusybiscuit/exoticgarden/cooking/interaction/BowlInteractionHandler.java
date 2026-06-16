@@ -141,6 +141,20 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             state.waterAmount, state.oilAmount, totalHungerWithWater, totalWeightWithWater, waterSrcs,
             state.potionEffects);
 
+        // 喵~检查 AI 是否启用，未启用时发送调试提示词，启用时调用 AI 喵
+        ExoticGarden pluginInst = ExoticGarden.getInstance();
+        boolean aiEnabled = pluginInst != null && pluginInst.getConfig().getBoolean("cooking.ai_enabled", false);
+
+        if (!aiEnabled) {
+            // debug 模式：展示提示词供调试喵
+            player.sendMessage("§6§l──── AI 提示词调试 ────");
+            player.sendMessage("§b[System] §f" + prompts[0]);
+            player.sendMessage("§a[User]   §f" + prompts[1]);
+            player.sendMessage("§6§l──────────────────────");
+            player.sendMessage("§7[debug] ai_enabled=false，未调用 AI 喵~");
+            return true;
+        }
+
         // 喵~冻结灶台，不允许任何交互（温度/食材状态不变）喵
         state.frozen = true;
         state.frozenReason = null;
