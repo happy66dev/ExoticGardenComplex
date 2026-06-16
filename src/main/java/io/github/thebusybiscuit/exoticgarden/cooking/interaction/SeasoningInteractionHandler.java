@@ -47,8 +47,8 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         // 按 category 分支处理（data=null时_POTION_走potion分支，不走seasoning默认）喵
         String category = data != null ? data.category : ("_POTION_".equals(seasoningId) ? "potion" : "seasoning");
 
-        // 水/油/药水类不受调料槽上限限制，其余调料满10种后拒绝喵
-        boolean isExempt = "water".equals(category) || "oil".equals(category) || "potion".equals(category);
+        // 水/油类不受调料槽上限限制，药水和普通调料满10种后拒绝喵
+        boolean isExempt = "water".equals(category) || "oil".equals(category);
         if (!isExempt && state.seasonings.size() >= 10) {
             player.sendMessage("§c调料槽已满（最多10种）");
             return true;
