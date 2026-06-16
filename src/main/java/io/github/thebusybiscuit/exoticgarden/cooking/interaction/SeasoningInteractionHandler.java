@@ -122,6 +122,11 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             if (!state.waterSources.contains(src)) state.waterSources.add(src);
         }
 
+        // 出油量处理：如果配置了 oil_ml > 0，则往灶台加油喵
+        if (data != null && data.oilMl > 0) {
+            state.oilAmount += data.oilMl;
+        }
+
         double w = data != null ? data.weightGrams : 1;
         state.seasonings.add(new SeasoningEntry(seasoningId, 0, w));
         handItem.setAmount(handItem.getAmount() - 1);
@@ -136,6 +141,10 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
             String sfId = pdc.get(KEY_SF_ITEM, PersistentDataType.STRING);
             if (sfId != null) {
+                // 喵~防御：优先检查 SF 原版/EG 油类物品（BUTTER/HEAVY_CREAM/VEGETABLE_OIL），直接返回 OIL 喵
+                if ("BUTTER".equals(sfId) || "HEAVY_CREAM".equals(sfId) || "VEGETABLE_OIL".equals(sfId)) {
+                    return "OIL";
+                }
                 SlimefunItem sfItem = SlimefunItem.getById(sfId);
                 if (sfItem != null && seasonings.containsKey(sfItem.getId())) return sfItem.getId();
             }

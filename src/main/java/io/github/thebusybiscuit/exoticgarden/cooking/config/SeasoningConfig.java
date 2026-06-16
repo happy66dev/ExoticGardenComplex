@@ -14,10 +14,11 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
         public final double baseTimeSeconds;
         public final double weightGrams;
         public final double waterMl;
+        public final double oilMl; // 出油量（毫升），默认0喵
 
         public SeasoningData(String displayName, boolean hasDoneness, double minTemp,
                              double optimalTemp, double baseTimeSeconds,
-                             double weightGrams, double waterMl) {
+                             double weightGrams, double waterMl, double oilMl) {
             this.displayName = displayName;
             this.hasDoneness = hasDoneness;
             this.minTemp = minTemp;
@@ -25,6 +26,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             this.baseTimeSeconds = baseTimeSeconds;
             this.weightGrams = weightGrams;
             this.waterMl = waterMl;
+            this.oilMl = oilMl;
         }
     }
 
@@ -41,7 +43,8 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             s.getDouble("optimal_temp", 100),
             s.getDouble("base_time_seconds", 30),
             s.getDouble("weight_grams", 1),
-            s.getDouble("water_ml", 0)
+            s.getDouble("water_ml", 0),
+            s.getDouble("oil_ml", 0) // 出油量，默认0喵
         );
     }
 }

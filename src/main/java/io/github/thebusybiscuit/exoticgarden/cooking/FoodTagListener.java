@@ -202,25 +202,28 @@ public class FoodTagListener implements Listener {
         final String ingredientLine; // 最终显示在lore里的类型标签行喵
 
         if (GENERIC_FOOD_ID.equals(ingId)) {
-            // 通用原版食物：lore显示"[食物]"，保质期10分钟喵
+            // 通用原版食物：lore显示"[食物]"，保质期10分钟，默认克重100g喵
             shelfLifeMinutes = GENERIC_FOOD_SHELF_LIFE_MINUTES;
-            ingredientLine = "§7[食物]";
+            ingredientLine = "§7[食物] §e营养度: 0 §7(100g)";
         } else if (GENERIC_POTION_ID.equals(ingId)) {
-            // 通用药水：lore显示"[药水]"，保质期5分钟喵
+            // 通用药水：lore显示"[药水]"，保质期5分钟，默认克重0g喵
             shelfLifeMinutes = GENERIC_POTION_SHELF_LIFE_MINUTES;
-            ingredientLine = "§7[药水]";
+            ingredientLine = "§7[药水] §7(0g)";
         } else {
-            // 普通烹饪食材：从配置读取营养值和保质期喵
+            // 普通烹饪食材：从配置读取营养值、保质期和克重喵
             // 可变标签：营养值随配置变化，每次刷新喵
             IngredientConfig.IngredientData data = ingredients.get(ingId);
             double nutrition = data != null ? data.foodPoints + data.saturation : 0;
             shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 保质期分钟数，默认10喵
+            double weightGrams = data != null ? data.weightGrams : 100; // 克重，默认100g喵
             String nutritionStr = nutrition > 0
                     ? " §e营养度: " + (Math.round(nutrition * 10.0) / 10.0)
                     : "";
+            // 喵~防御：克重为0时不显示(0g)，只在克重>0时显示喵
+            String weightStr = weightGrams > 0 ? " §7(" + (int) weightGrams + "g)" : "";
             // 不可变标签：读取实际 FOOD_STATE，而非硬编码"WHOLE"喵
             String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
-            ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr;
+            ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr + weightStr;
         }
 
         // 检查lore中是否已有对应类型行，有则替换，没有则追加喵

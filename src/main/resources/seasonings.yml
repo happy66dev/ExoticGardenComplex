@@ -42,6 +42,25 @@ OIL:
   has_doneness: false
   weight_grams: 0
   water_ml: 0
+  oil_ml: 100
+BUTTER:
+  display_name: "黄油"
+  has_doneness: false
+  weight_grams: 20
+  water_ml: 0
+  oil_ml: 100
+HEAVY_CREAM:
+  display_name: "浓奶油"
+  has_doneness: false
+  weight_grams: 20
+  water_ml: 50
+  oil_ml: 100
+VEGETABLE_OIL:
+  display_name: "植物油"
+  has_doneness: false
+  weight_grams: 0
+  water_ml: 0
+  oil_ml: 100
 HONEY_BOTTLE:
   display_name: "蜂蜜"
   has_doneness: false
@@ -419,16 +438,6 @@ CHICKEN_NUGGETS:
   weight_grams: 1
   water_ml: 0
   display_name: "鸡块碎"
-  has_doneness: false
-BUTTER:
-  weight_grams: 1
-  water_ml: 0
-  display_name: "黄油"
-  has_doneness: false
-HEAVY_CREAM:
-  weight_grams: 1
-  water_ml: 0
-  display_name: "奶油"
   has_doneness: false
 BROWN_SUGAR:
   weight_grams: 1
