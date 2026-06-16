@@ -177,6 +177,8 @@ public class DishGenerator {
         }
 
         String systemPrompt = "你是一个 Minecraft 烹饪游戏的菜肴生成器。\n"
+            + "Minecraft颜色代码(§前缀): §0黑 §1深蓝 §2深绿 §3深青 §4深红 §5深紫 §6金黄 §7灰 "
+            + "§8深灰 §9蓝 §a绿 §b青 §c红 §d浅紫 §e黄 §f白 ; 格式化:§l粗体 §o斜体 §n下划线 §r重置\n"
             + "输入 JSON 字段说明:\n"
             + "- ingredients: [{name:\"食材名\",state:\"完整/切片/切丁/酱汁\","
             + "doneness:熟度百分比(不同食材种类不同 参考值:非牛肉类:0~60生 60~90未熟透 90~125成熟 125~180老了 180+焦了 "
