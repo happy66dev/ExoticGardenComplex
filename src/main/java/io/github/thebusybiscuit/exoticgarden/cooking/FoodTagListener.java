@@ -118,21 +118,32 @@ public class FoodTagListener implements Listener {
         }
     }
 
-    // 喵~玩家打开背包时扫描所有格子，更新保质期lore喵
+    // 喵~玩家与物品交互时扫背包（包括E键开包、右键等），比InventoryOpen更可靠喵
     @EventHandler(ignoreCancelled = true)
     public void onInventoryOpen(org.bukkit.event.inventory.InventoryOpenEvent e) {
         if (!(e.getPlayer() instanceof org.bukkit.entity.Player player)) return;
-        // 喵~延迟1tick让背包完全打开后再扫描喵
+        // 喵~延迟2tick让背包完全渲染后再扫描喵
         org.bukkit.Bukkit.getScheduler().runTaskLater(
             io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-            () -> {
-                for (int i = 0; i < player.getInventory().getSize(); i++) {
-                    ItemStack it = player.getInventory().getItem(i);
-                    if (it == null || it.getType().isAir()) continue;
-                    ItemStack copy = it.clone();
-                    if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
-                }
-            }, 1L);
+            () -> scanPlayerInventory(player), 2L);
+    }
+
+    // 喵~玩家关闭背包时也扫一次（有可能是从箱子往背包移动了物品）喵
+    @EventHandler(ignoreCancelled = false)
+    public void onInventoryClose(org.bukkit.event.inventory.InventoryCloseEvent e) {
+        if (!(e.getPlayer() instanceof org.bukkit.entity.Player player)) return;
+        org.bukkit.Bukkit.getScheduler().runTaskLater(
+            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
+            () -> scanPlayerInventory(player), 1L);
+    }
+
+    private void scanPlayerInventory(org.bukkit.entity.Player player) {
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
+            ItemStack it = player.getInventory().getItem(i);
+            if (it == null || it.getType().isAir()) continue;
+            ItemStack copy = it.clone();
+            if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
+        }
     }
 
     /**
