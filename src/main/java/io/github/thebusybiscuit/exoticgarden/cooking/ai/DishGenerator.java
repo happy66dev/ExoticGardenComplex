@@ -12,7 +12,6 @@ public class DishGenerator {
         public final String name;
         public final String state;
         public final int doneness;
-        public final String charLevel;
         public final double weight;
         public final double foodPoints;
         public final double saturation;
@@ -20,12 +19,11 @@ public class DishGenerator {
         public final String hint;
 
         public IngredientInfo(String name, String state, int doneness,
-                              String charLevel, double weight,
+                              double weight,
                               double foodPoints, double saturation, String hint) {
             this.name = name;
             this.state = state;
             this.doneness = doneness;
-            this.charLevel = charLevel;
             this.weight = weight;
             this.foodPoints = foodPoints;
             this.saturation = saturation;
@@ -84,7 +82,6 @@ public class DishGenerator {
             obj.addProperty("name", info.name);
             obj.addProperty("state", info.state);
             obj.addProperty("doneness", info.doneness);
-            obj.addProperty("charLevel", info.charLevel);
             obj.addProperty("weight", info.weight);
             obj.addProperty("foodPoints", info.foodPoints);
             obj.addProperty("saturation", info.saturation);

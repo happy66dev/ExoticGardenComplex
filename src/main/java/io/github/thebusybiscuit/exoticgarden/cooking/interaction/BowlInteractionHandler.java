@@ -103,7 +103,6 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
                 doneness,
-                CharLevel.fromSeconds(slot.charSeconds).name(),
                 weight, foodPts, sat, hint));
         }
 
