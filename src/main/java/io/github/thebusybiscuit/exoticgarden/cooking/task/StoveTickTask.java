@@ -133,6 +133,28 @@ public class StoveTickTask extends BukkitRunnable {
             } else {
                 slot.frontDoneness += increment;
             }
+
+            // 在0-50%熟度阶段，按比例缓慢释放食材的出水/出油量喵
+            // 当前最高熟度（正反面取最大值）喵
+            if (data.waterMl > 0 || data.oilMl > 0) {
+                double maxDoneness = Math.max(slot.frontDoneness, slot.backDoneness);
+                // 喵~防御：熟度钳制在0-0.5区间内计算释放比例，超过0.5后不再释放喵
+                double releaseRatio = Math.min(maxDoneness / 0.5, 1.0);
+                // 本tick应累计到的总释放量 = 总量 * 比例喵
+                double targetWater = data.waterMl * releaseRatio;
+                double targetOil   = data.oilMl   * releaseRatio;
+                // 本tick实际释放增量（目标值 - 已释放量），不倒流喵
+                double deltaWater = Math.max(0, targetWater - slot.releasedWaterMl);
+                double deltaOil   = Math.max(0, targetOil   - slot.releasedOilMl);
+                if (deltaWater > 0) {
+                    state.waterAmount += deltaWater;
+                    slot.releasedWaterMl += deltaWater;
+                }
+                if (deltaOil > 0) {
+                    state.oilAmount += deltaOil;
+                    slot.releasedOilMl += deltaOil;
+                }
+            }
         }
     }
 

@@ -33,6 +33,10 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final double saturation;
         // 保质期，单位：分钟，未配置时默认10分钟喵
         public final int shelfLifeMinutes;
+        // 烹饪时向灶台释放的水量（ml），0-50%熟度阶段缓慢释放喵
+        public final double waterMl;
+        // 烹饪时向灶台释放的油量（ml），0-50%熟度阶段缓慢释放喵
+        public final double oilMl;
         // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
         public final String hint;
 
@@ -42,7 +46,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
                               double foodPoints, double saturation, int shelfLifeMinutes,
-                              String hint) {
+                              double waterMl, double oilMl, String hint) {
             this.minTemp = minTemp;
             this.maxTemp = maxTemp;
             this.optimalTempMin = optimalTempMin;
@@ -57,6 +61,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.foodPoints = foodPoints;
             this.saturation = saturation;
             this.shelfLifeMinutes = shelfLifeMinutes;
+            this.waterMl = waterMl;
+            this.oilMl = oilMl;
             this.hint = hint;
         }
     }
@@ -86,7 +92,9 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getDouble("food_points", 2),
             s.getDouble("saturation", 2),
             s.getInt("shelf_life_minutes", 10),
-            s.getString("hint", "")   // 给 AI 的提示信息，默认空字符串喵
+            s.getDouble("water_ml", 0),   // 烹饪时释放的水量，默认0喵
+            s.getDouble("oil_ml", 0),     // 烹饪时释放的油量，默认0喵
+            s.getString("hint", "")       // 给 AI 的提示信息，默认空字符串喵
         );
     }
 }

@@ -7,6 +7,9 @@ public class IngredientSlot {
     public double backDoneness;
     public ActiveFace currentFace;
     public double charSeconds;
+    // 已向灶台释放的水/油累计量，防止重复释放喵
+    public double releasedWaterMl;
+    public double releasedOilMl;
 
     public IngredientSlot(String ingredientId, FoodState state, double frontDoneness,
                           double backDoneness, ActiveFace currentFace, double charSeconds) {
@@ -16,5 +19,7 @@ public class IngredientSlot {
         this.backDoneness = backDoneness;
         this.currentFace = currentFace;
         this.charSeconds = charSeconds;
+        this.releasedWaterMl = 0;
+        this.releasedOilMl = 0;
     }
 }
