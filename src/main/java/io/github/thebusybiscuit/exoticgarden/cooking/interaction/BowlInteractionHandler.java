@@ -77,15 +77,15 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             String displayName = data != null ? data.displayName : slot.ingredientId;
             double weight = data != null ? data.weightGrams : 100;
             int doneness = (int) Math.round(Math.max(slot.frontDoneness, slot.backDoneness) * 100);
+            int frontDoneness = (int) Math.round(slot.frontDoneness * 100);
+            int backDoneness  = (int) Math.round(slot.backDoneness * 100);
             int foodPts = data != null ? (int) data.foodPoints : 0;
             int sat = data != null ? (int) data.saturation : 0;
-            // 读取 hint，data 为 null 时用空字符串喵
             String hint = data != null ? data.hint : "";
             totalWeight += weight;
-            // 传入该食材绑定的 fuelEffects（烹饪期间经历的燃料风味）喵
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
-                doneness,
+                doneness, frontDoneness, backDoneness,
                 weight, foodPts, sat, hint, slot.fuelEffects, slot.isExpired));
         }
 
@@ -165,8 +165,10 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 state.spatulaBoostTicksLeft = 0;
                 io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock.syncCampfireSlots(loc2, state);
 
-                // 喵~创建菜肴物品（谜之炖菜+自定义NBT+lore），setAmount=1用字段记录可食用次数喵
-                ItemStack dish = new ItemStack(Material.SUSPICIOUS_STEW, 1);
+                // 喵~用 AI 返回的 icon 字段决定物品材质，缺省谜之炖菜喵
+                Material iconMat = Material.getMaterial(result.icon.toUpperCase());
+                if (iconMat == null || iconMat.isAir()) iconMat = Material.SUSPICIOUS_STEW;
+                ItemStack dish = new ItemStack(iconMat, 1);
                 ItemMeta meta = dish.getItemMeta();
                 if (meta != null) {
                     // 显示名：菜名喵
@@ -174,7 +176,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                     long nowMs = System.currentTimeMillis();
                     // lore：品质行 + 保质期 + 生产日期 + description 换行展开喵
                     List<String> lore = new ArrayList<>();
-                    lore.add("§7品质: §f" + result.quality
+                    lore.add("§7品质: " + result.quality
                         + "  §7饱食: §f" + result.hunger
                         + "  §7饱和: §f" + String.format("%.1f", result.saturation)
                         + "  §7份量: §f" + result.servings);

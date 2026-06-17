@@ -12,21 +12,26 @@ public class DishGenerator {
         public final String name;
         public final String state;
         public final int doneness;
+        // WHOLE 状态的正面/背面熟度，其他状态为-1喵
+        public final int frontDoneness;
+        public final int backDoneness;
         public final double weight;
         public final double foodPoints;
         public final double saturation;
         public final String hint;
         public final List<String> fuelEffects;
-        // 食材放入灶台时是否已过期喵
         public final boolean isExpired;
 
         public IngredientInfo(String name, String state, int doneness,
+                              int frontDoneness, int backDoneness,
                               double weight,
                               double foodPoints, double saturation, String hint,
                               List<String> fuelEffects, boolean isExpired) {
             this.name = name;
             this.state = state;
             this.doneness = doneness;
+            this.frontDoneness = frontDoneness;
+            this.backDoneness = backDoneness;
             this.weight = weight;
             this.foodPoints = foodPoints;
             this.saturation = saturation;
@@ -55,23 +60,20 @@ public class DishGenerator {
     public static class DishResult {
         public final String name;
         public final int servings;
-        // 品质中文形容词，如"良好"/"优秀"喵
         public final String quality;
         public final double qualityCoefficient;
-        // 细化品质分数，10~100，AI自由判断喵
         public final int qualityScore;
         public final List<String> effects;
         public final String description;
-        // 菜肴饱食度（hunger points），缺省0喵
         public final int hunger;
-        // 菜肴饱和度，缺省0喵
         public final double saturation;
-        // 菜肴常温变质期（分钟），缺省60喵
         public final int shelfLifeMinutes;
+        // 菜肴图标，原版 Material 名（如 COOKED_BEEF），缺省 SUSPICIOUS_STEW喵
+        public final String icon;
 
         public DishResult(String name, int servings, String quality, int qualityScore,
                           List<String> effects, String description,
-                          int hunger, double saturation, int shelfLifeMinutes) {
+                          int hunger, double saturation, int shelfLifeMinutes, String icon) {
             this.name = name;
             this.servings = servings;
             this.quality = quality;
@@ -82,6 +84,7 @@ public class DishGenerator {
             this.hunger = hunger;
             this.saturation = saturation;
             this.shelfLifeMinutes = shelfLifeMinutes;
+            this.icon = icon != null ? icon : "SUSPICIOUS_STEW";
         }
 
         // 将中文品质形容词转为系数，未知词汇默认1.0喵
@@ -115,7 +118,13 @@ public class DishGenerator {
             JsonObject obj = new JsonObject();
             obj.addProperty("name", info.name);
             obj.addProperty("state", info.state);
-            obj.addProperty("doneness", info.doneness);
+            // WHOLE状态传双面熟度，其他状态传单一doneness喵
+            if ("完整".equals(info.state) && info.frontDoneness >= 0 && info.backDoneness >= 0) {
+                obj.addProperty("frontDoneness", info.frontDoneness);
+                obj.addProperty("backDoneness", info.backDoneness);
+            } else {
+                obj.addProperty("doneness", info.doneness);
+            }
             obj.addProperty("weight", info.weight);
             obj.addProperty("foodPoints", info.foodPoints);
             obj.addProperty("saturation", info.saturation);
@@ -184,7 +193,9 @@ public class DishGenerator {
             + "§8深灰 §9蓝 §a绿 §b青 §c红 §d浅紫 §e黄 §f白 ; 格式化:§l粗体 §o斜体 §n下划线 §r重置\n"
             + "输入 JSON 字段说明:\n"
             + "- ingredients: [{name:\"食材名\",state:\"完整/切片/切丁/酱汁\","
-            + "doneness:熟度百分比(不同食材种类不同 参考值:非牛肉类:0~60生 60~90未熟透 90~125成熟 125~180老了 180+焦了 "
+            + "注意: state为\"完整\"(未切割)时 字段为 frontDoneness(正面熟度%) 和 backDoneness(背面熟度%) 两面分别表示; "
+            + "state非\"完整\"(已切割加工)时 字段为 doneness(整体熟度%) 单值; "
+            + "熟度百分比参考值:非牛肉类:0~60生 60~90未熟透 90~125成熟 125~180老了 180+焦了 "
             + "牛肉类:0%~10%不熟 10%~25%三分熟 25%~50%五分 50%~75%七分 75~115%全熟 115%~150%老了 150%+焦了 "
             + "菜类(可能有些菜可以生吃 你根据现实知识自行辨别):0%~70%生 70%~90%嫩 90%~110%熟 110%~140%老 140%+糊 "
             + "果类0~50%可以 50~100%熟了 100%~150%烂了 150%+焦了),"
@@ -218,7 +229,7 @@ public class DishGenerator {
             + "servings: 根据食材克重和水量油量和加工方式估算可吃次数(1-10)\n"
             + "hunger: 每次食用恢复的饱食度(整数,参考食材foodPoints之和按品质调整,缺省0)\n"
             + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
-            + "shelfLifeMinutes: 常温变质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
+            + "shelfLifeMinutes: 常温变质期(整数 单位:分钟 参考现实食物常温变质时间 缺省60)\n"
             + "name: 菜名必须包含§颜色符（如§6金苹果炖菜）品质与菜名自然结合 正常食材贴合菜名 猎奇加工/食材组合允许猎奇名\n"
             + "description: 风味描述, 颜色符必须使用§前缀(不用&前缀), 每行都必须包含颜色符(不支持跨行颜色继承), "
             + "换行使用JSON标准\\n(即JSON字符串中的\\n转义符) 每行严格控制在24字以内(含颜色符不算字数) 总行数3~7行 "
