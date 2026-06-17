@@ -1,193 +1,75 @@
-# ExoticGardenComplex 复合花园 [魔改版]
+# ExoticGardenComplex 复合花园 [happy66dev 魔改版]
 
-这是一个缝合了众多异域花园附属及其本体的附属
-包括以下仓库:
-- [ExoticGarden](https://github.com/SlimefunGuguProject/ExoticGarden/tree/master)
-- [ExoticGarden-Nar](https://github.com/SlimeAddonCollection1-12/ExoticGarden-Nar)
-- [BEPlugin](https://github.com/wdog5/BEPlugin)
-- [ExoticGarden-Changed](https://github.com/SlimefunGuguProject/ExoticGarden-changed)
-- [ExoticGarden-for-Watering-System](https://github.com/NCBPFluffyBear/ExoticGarden-for-Watering-System)
-- [ExoticGarden-it-dainb](https://github.com/it-dainb/ExoticGarden)
+这是一个缝合了众多异域花园附属及其本体的 Slimefun 附属，并在原版基础上新增了完整的**烹饪系统**。
 
-遵循 [GPL 3.0 License](/licenses/GPL-3.0-LICENSE) 及 [AGPL 3.0 License](/licenses/AGPL-3.0-LICENSE)，详见[Licenses](/licenses)
+本项目遵循 [GPL 3.0 License](LICENSE)。本项目基于以下上游项目二次开发，修改部分同样遵循 GPL-3.0 协议并已在各文件头部保留原始版权声明：
+- [ExoticGarden](https://github.com/SlimefunGuguProject/ExoticGarden)（GPL-3.0）
+- [ExoticGarden-Nar](https://github.com/SlimeAddonCollection1-12/ExoticGarden-Nar)（GPL-3.0）
+- [BEPlugin](https://github.com/wdog5/BEPlugin)（GPL-3.0）
+- [ExoticGarden-Changed](https://github.com/SlimefunGuguProject/ExoticGarden-changed)（GPL-3.0）
+- [ExoticGarden-for-Watering-System](https://github.com/NCBPFluffyBear/ExoticGarden-for-Watering-System)（MIT）
+- [ExoticGarden-it-dainb](https://github.com/it-dainb/ExoticGarden)（GPL-3.0）
 
-使用本附属时，在高版本时可能会出现部分冲突，建议安装[JustEnoughGuide](https://github.com/balugaq/JustEnoughGuide)以解决部分冲突。
+---
 
-===以下是 ExoticGarden README 原文===
+## 烹饪系统
 
-# ExoticGarden 异域花园
+本魔改版核心新增功能，提供完整的游戏内烹饪体验。
 
-ExoticGarden 是一个 [Slimefun 4](https://github.com/TheBusyBiscuit/Slimefun4) 附属插件，向 Slimefun 添加了各种植物、水果、蔬菜与食物。
+### 设备
 
-## Wiki
+| 物品 | 功能 |
+|---|---|
+| **烹饪灶台** | 篝火改造，燃料供热，放置食材烹饪 |
+| **砧板** | 使用烹饪刀对食材进行切割/研磨加工 |
+| **烹饪刀** | 配合砧板，将食材从整块→切片→切丁→酱料 |
+| **烹饪锅铲** | 给灶台食材翻面，加速烹饪，搅拌制酱 |
 
-异域花园非官方中文 Wiki: https://slimefun-addons-wiki.guizhanss.cn/exotic-garden/
+### 烹饪流程
 
-## 下载 ExoticGarden
+1. 燃料放入灶台点火（木材/煤炭等，温度影响成熟速度）
+2. 食材/调料放入灶台（可翻面，调料随时间渗入）
+3. 使用碗触发 AI 生成菜肴（需配置 API Key）
 
-<p align="center">
-  <a href="https://builds.guizhanss.com/SlimefunGuguProject/ExoticGarden/master">
-    <img src="https://builds.guizhanss.com/f/SlimefunGuguProject/ExoticGarden/master/badge.svg" alt="Build status"/>
-  </a>
-</p>
+### AI 菜肴生成
 
-## 贡献
+- 支持 OpenAI 兼容 API（在 `config.yml` 中配置 `cooking.ai_api_key`、`cooking.ai_base_url`、`cooking.ai_model`）
+- 设置 `cooking.ai_enabled: true` 启用；默认 `false` 为 debug 模式（显示提示词，不调用 AI）
+- 支持模型思考参数：`cooking.ai_thinking_enabled: true`
 
-你可以通过向ExoticGarden的仓库提交pull request来做出贡献，我们允许并鼓励这样做。
+### 食材与调料
 
-这些 pull requests 可以是修复、改动或新特性，这取决于你。
+- 所有原版可食用物品自动获得保质期
+- 食材可通过砧板加工（整块→切片→切丁→酱料）
+- 调料支持渗入度（0~200%，100%为完美）
+- 水/油类（水桶、植物油、黄油等）影响烹饪方向
 
-查看我们的[开源许可证](/LICENSE)来了解更多。
+### 保质期与过期
 
-===以下是 ExoticGarden-Nar README 原文===
+- 食材/菜肴有变质期（常温），超过后变质
+- 过期食用：恢复量减少 60%，随机施加饥饿/反胃/中毒效果
+- 菜肴过期额外随机移除1个正面 buff
 
-1.12异域
+---
 
-===以下是 BEPlugin README 原文===
+## 构建
 
-# BEPlugin
-BEPlugin，an addon of ExoticGarden CN
+```bash
+# 依赖 Slimefun4 (happy66dev fork)
+cd Slimefun4-master && mvn clean package -DskipTests
+cd ExoticGardenComplex && mvn clean package -DskipTests
+```
 
-===以下是 ExoticGarden-Changed README 原文===
+---
 
-# ExoticGarden 异域花园 魔改版
+## 许可证
 
-ExoticGarden 是一个 [Slimefun 4](https://github.com/TheBusyBiscuit/Slimefun4) 附属插件，向 Slimefun 添加了各种植物、水果、蔬菜与食物。  
-魔改版增加了额外的植物。
+GNU General Public License v3.0 — 详见 [LICENSE](LICENSE)
 
-## Wiki
+Copyright (C) 2025 happy (k666kkk666k@163.com)
 
-异域花园非官方中文 Wiki: https://slimefun-addons-wiki.guizhanss.cn/exotic-garden/
+本项目在 GPL-3.0 许可下对上游作者的原始代码进行了修改和扩展。所有新增代码同样以 GPL-3.0 协议发布，修改后的文件均保留了原始版权声明。
 
-## 下载 ExoticGarden
-你可以在这里下载 ExoticGarden: [点此下载](https://builds.guizhanss.net/SlimefunGuguProject/ExoticGarden-changed/master)
-
-<p align="center">
-  <a href="https://builds.guizhanss.net/SlimefunGuguProject/ExoticGarden-changed/master">
-    <img src="https://builds.guizhanss.net/f/SlimefunGuguProject/ExoticGarden-changed/master/badge.svg" alt="Build status"/>
-  </a>
-</p>
-
-## 贡献
-
-你可以通过向ExoticGarden的仓库提交pull request来做出贡献，我们允许并鼓励这样做。
-
-这些 pull requests 可以是修复、改动或新特性，这取决于你。
-
-查看我们的[开源许可证](/LICENSE)来了解更多。
-
-===以下是 ExoticGarden-for-Watering-System README 原文===
-
-# TwerkingGarden
-
-TwerkingGarden is a custom addon for Void Realms which allows players to twerk (sneak) on ExoticGarden plants to make them grow.
-
-## About ExoticGarden
-
-ExoticGarden is a big addon to [Slimefun 4](https://github.com/TheBusyBiscuit/Slimefun4) which brings various new Plants, fruits, vegetables and food items to the game.
-
-You can find more Information on the **outdated** BukkitDev page:
-https://dev.bukkit.org/projects/exotic-garden
-
-ExoticGarden is licensed under
-[MIT License](https://github.com/TheBusyBiscuit/ExoticGarden/blob/master/LICENSE)
-
-## Download ExoticGarden
-Click on the badge below to go to our "development" build page, where you can download the latest versions before they are released to the public.
-But keep in mind: These builds are still in development and not guaranteed to work or to be stable.
-
-<p align="center">
-  <a href="https://thebusybiscuit.github.io/builds/TheBusyBiscuit/ExoticGarden/master/">
-    <img src="https://thebusybiscuit.github.io/builds/TheBusyBiscuit/ExoticGarden/master/badge.svg" alt="Build Server"/>
-  </a>
-</p>
-
-## Contributions
-
-You are allowed, even encouraged, to contribute to ExoticGarden by making Pull Requests.
-These Pull Requests can be Fixes, Changes or even Additions, it is your choice.
-
-Check the license for more Info on redistributing and modifying ExoticGarden.
-
-## ⭐ Star History
+---
 
 [![Star History Chart](https://api.star-history.com/svg?repos=happy66dev/ExoticGardenComplex&type=Date)](https://star-history.com/#happy66dev/ExoticGardenComplex&Date)
-
-===以上是 ExoticGarden-it-dainb README 原文===
-# This Fork
-
-Additional Plants:
-+ Magnesium
-+ Zinc
-+ Blaze
-+ Sulfate
-+ Uranium
-+ Amethyst
-
-Plants Textures Changes:
-+ Coal
-+ Iron
-+ Gold
-+ Copper
-+ Aluminium
-+ Tin
-+ Silver
-+ Lead
-+ Redstone
-+ Lapis
-+ Diamond
-+ Emerald
-+ Netherite
-+ Glowstone
-
-Plants Recipes Changes:
-+ Copper (use coal plant instead of gold plant)
-+ Netherite (1 netherite block replace to nether star)
-
-Essence Buffs:
-+ Dirt (2 -> 16)
-+ Coal (2 -> 8)
-+ Iron (1 -> 8)
-+ Gold (Gold 4k -> 4 gold dust)
-
-Essence Nerfs:
-+ Aluminium (8 -> 4)
-+ Lead (8 -> 4)
-+ Silver (8 -> 4)
-+ Tin (8 -> 4)
-+ Ender ( 4 -> 2)
-+ Quartz (8 -> 4)
-+ Netherite (ingot -> scrap)
-+ Obsidian (2 -> 1)
-+ Slime (8 -> 2)
-
-Others:
-+ Guide sequence changed
-+ Update Spigot libraries to 1.17.1
-
-# ExoticGarden
-
-ExoticGarden is a big addon to [Slimefun 4](https://github.com/TheBusyBiscuit/Slimefun4) which brings various new Plants, fruits, vegetables and food items to the game.
-
-You can find more Information on the **outdated** BukkitDev page:
-https://dev.bukkit.org/projects/exotic-garden
-
-ExoticGarden is licensed under
-[GNU General Public License v3.0](https://github.com/TheBusyBiscuit/ExoticGarden/blob/master/LICENSE)
-
-## Download ExoticGarden
-Click on the badge below to go to our "development" build page, where you can download the latest versions before they are released to the public.
-But keep in mind: These builds are still in development and not guaranteed to work or to be stable.
-
-<p align="center">
-  <a href="https://thebusybiscuit.github.io/builds/TheBusyBiscuit/ExoticGarden/master/">
-    <img src="https://thebusybiscuit.github.io/builds/TheBusyBiscuit/ExoticGarden/master/badge.svg" alt="Build Server"/>
-  </a>
-</p>
-
-## Contributions
-
-You are allowed, even encouraged, to contribute to ExoticGarden by making Pull Requests.
-These Pull Requests can be Fixes, Changes or even Additions, it is your choice.
-
-Check the license for more Info on redistributing and modifying ExoticGarden.
