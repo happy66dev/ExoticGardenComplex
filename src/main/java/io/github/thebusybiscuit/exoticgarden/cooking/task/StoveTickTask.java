@@ -122,7 +122,8 @@ public class StoveTickTask extends BukkitRunnable {
 
             DonenessCalculator calculator = calculators.getOrDefault(data.calculatorType, defaultCalculator);
             CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
-            double increment = calculator.calculate(ctx);
+            // 全局食材成熟速度减慢4倍，让烹饪更有耐心喵~
+            double increment = calculator.calculate(ctx) / 4.0;
 
             // 喵~成熟系数>=2时（温度远超参考温度）开始焦化喵
             double refTemp = data.matureRefTemp;
@@ -174,7 +175,8 @@ public class StoveTickTask extends BukkitRunnable {
             if (data.baseTimeSeconds <= 0) continue;
             if (state.currentTemp < data.minTemp) continue;
             double boost = state.spatulaBoostTicksLeft > 0 ? 1.5 : 1.0;
-            double increment = (1.0 / data.baseTimeSeconds) * 0.1 * boost;
+            // 全局调料渗入速度减慢4倍，与食材成熟速度保持一致喵~
+            double increment = (1.0 / data.baseTimeSeconds) * 0.1 * boost / 4.0;
             // 辅料烹饪进度最大值200%（100%为完美值）喵
             se.progress = Math.min(se.progress + increment, 2.0);
         }

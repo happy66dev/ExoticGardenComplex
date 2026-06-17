@@ -9,7 +9,7 @@ slimefun:SALT:
   category: seasoning
   container_return: none
   hint: ""
-slimefun:SUGAR:
+minecraft:SUGAR:
   weight_grams: 1
   water_ml: 0
   oil_ml: 0
