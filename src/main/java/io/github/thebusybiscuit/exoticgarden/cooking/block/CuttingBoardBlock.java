@@ -56,6 +56,14 @@ public class CuttingBoardBlock extends SlimefunItem {
                 ItemStack hand = player.getInventory().getItemInMainHand();
                 if (hand.getType() == Material.AIR) return;
 
+                // 喵~防御：菜肴物品不能放到砧板上，防止PDC被污染喵
+                if (hand.getItemMeta() != null
+                        && hand.getItemMeta().getPersistentDataContainer()
+                            .has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) {
+                    player.sendMessage("§c菜肴不能放到砧板上喵~");
+                    return;
+                }
+
                 if (stand == null) {
                     if (loc.getWorld() == null) return;
                     ItemStack toPlace = ensureIngredientId(hand.clone());
@@ -125,6 +133,8 @@ public class CuttingBoardBlock extends SlimefunItem {
         if (item.getItemMeta() == null) return item;
         org.bukkit.inventory.meta.ItemMeta meta = item.getItemMeta();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        // 喵~防御：菜肴物品（有DISH_HUNGER标记）不能打食材标签，直接返回原物品喵
+        if (pdc.has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) return item;
         if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
             io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem =
                 io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
