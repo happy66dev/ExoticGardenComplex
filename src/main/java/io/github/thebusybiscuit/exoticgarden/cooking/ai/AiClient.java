@@ -198,13 +198,14 @@ public class AiClient {
             int hunger = obj.has("hunger") ? obj.get("hunger").getAsInt() : 0;
             double saturation = obj.has("saturation") ? obj.get("saturation").getAsDouble() : 0.0;
             int shelfLifeMinutes = obj.has("shelfLifeMinutes") ? obj.get("shelfLifeMinutes").getAsInt() : 60;
+            int qualityScore = obj.has("qualityScore") ? obj.get("qualityScore").getAsInt() : 50;
             java.util.List<String> effects = new java.util.ArrayList<>();
             if (obj.has("effects") && obj.get("effects").isJsonArray()) {
                 for (JsonElement el : obj.getAsJsonArray("effects")) {
                     effects.add(el.getAsString());
                 }
             }
-            return new DishGenerator.DishResult(name, servings, quality, effects, description, hunger, saturation, shelfLifeMinutes);
+            return new DishGenerator.DishResult(name, servings, quality, qualityScore, effects, description, hunger, saturation, shelfLifeMinutes);
         } catch (Exception e) {
             throw new RuntimeException("JSON解析失败，原始内容: " + content, e);
         }

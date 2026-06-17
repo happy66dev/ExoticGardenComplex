@@ -55,9 +55,11 @@ public class DishGenerator {
     public static class DishResult {
         public final String name;
         public final int servings;
-        // 品质中文形容词，如"良好"/"优秀"，通过 qualityToCoefficient 转为系数喵
+        // 品质中文形容词，如"良好"/"优秀"喵
         public final String quality;
         public final double qualityCoefficient;
+        // 细化品质分数，10~100，AI自由判断喵
+        public final int qualityScore;
         public final List<String> effects;
         public final String description;
         // 菜肴饱食度（hunger points），缺省0喵
@@ -67,13 +69,14 @@ public class DishGenerator {
         // 菜肴常温变质期（分钟），缺省60喵
         public final int shelfLifeMinutes;
 
-        public DishResult(String name, int servings, String quality,
+        public DishResult(String name, int servings, String quality, int qualityScore,
                           List<String> effects, String description,
                           int hunger, double saturation, int shelfLifeMinutes) {
             this.name = name;
             this.servings = servings;
             this.quality = quality;
             this.qualityCoefficient = qualityToCoefficient(quality);
+            this.qualityScore = qualityScore;
             this.effects = effects;
             this.description = description;
             this.hunger = hunger;
@@ -205,21 +208,27 @@ public class DishGenerator {
             + "- 无水无油->烧烤/干烧(食材适合烤则品质不差,否则干烧品质差)\n"
             + "- 有水无油->炖/煮/蒸  有油无水->煎/炒/炸  有水有油->汤/烩/焖\n"
             + "- 水或油过多(判断按照正常思维来)->影响品质判断\n"
-            + "品质: 彻底失败/很差/差/普通/良好/优秀/完美\n"
+            + "品质: 彻底失败/很差/差/普通/良好/优秀/完美 (大类)\n"
+            + "qualityScore: 10~100的整数，细化品质分数，在品质大类范围内自由判断\n"
+            + "  参考区间: 彻底失败0~15 很差16~35 差36~45 普通46~55 良好56~70 优秀71~85 完美86~100\n"
+            + "  对应颜色: §4彻底失败 §c很差 §e差 §7普通 §a良好 §b优秀 §6完美\n"
+            + "  name字段内格式示例: §6完美§6红烧牛肉 §7(§692§7/§e100分§r)\n"
+            + "  格式规则: [品质颜色]品质字[品质颜色]菜名 §7([品质颜色]分数§7/§e100分§r) 全部使用§符号不使用&\n"
             + "servings: 根据食材克重和水量油量和加工方式估算可吃次数(1-10)\n"
             + "hunger: 每次食用恢复的饱食度(整数,参考食材foodPoints之和按品质调整,缺省0)\n"
             + "saturation: 每次食用恢复的饱和度(浮点,参考食材saturation之和按品质调整,缺省0.0)\n"
             + "shelfLifeMinutes: 常温变质期(整数 单位:分钟 参考现实食物常温保质时间 缺省60)\n"
             + "name: 菜名必须包含§颜色符（如§6金苹果炖菜）品质与菜名自然结合 正常食材贴合菜名 猎奇加工/食材组合允许猎奇名\n"
             + "description: 风味描述, 颜色符必须使用§前缀(不用&前缀), 每行都必须包含颜色符(不支持跨行颜色继承), "
-            + "换行使用JSON标准\\n(即JSON字符串中的\\n转义符) 每行严格控制在12字以内(含颜色符不算字数) 总行数3~7行 "
+            + "换行使用JSON标准\\n(即JSON字符串中的\\n转义符) 每行严格控制在24字以内(含颜色符不算字数) 总行数3~7行 "
             + "分割线格式:§7---------\n"
             + "effects: 可选, 仅特殊食材或含药水或完美烹饪时出现, 支持多个效果, 格式[\"药水ID:等级:秒\",\"药水ID2:等级:秒\"];\n"
             + "  注意:等级从0开始 即0=1级 1=2级 以此类推 返回1实际为2级 请按实际期望等级-1填写\n\n"
             + "必须返回纯JSON，必须包含以下所有字段（无论如何不能省略）：\n"
-            + "{\"name\":\"菜名（缺省用'未知菜肴'）\","
+            + "{\"name\":\"[品质颜色]品质字[品质颜色]菜名 §7([品质颜色]分数§7/§e100分§r)（缺省'§7普通§7未知菜肴 §7(§750§7/§e100分§r)'）\","
             + "\"servings\":份数整数(缺省1),"
             + "\"quality\":\"品质中文形容词(缺省'普通')\","
+            + "\"qualityScore\":细化品质分数整数10~100(缺省50),"
             + "\"hunger\":饱食度整数(缺省0),"
             + "\"saturation\":饱和度浮点(缺省0.0),"
             + "\"shelfLifeMinutes\":常温变质期整数分钟(缺省60),"
