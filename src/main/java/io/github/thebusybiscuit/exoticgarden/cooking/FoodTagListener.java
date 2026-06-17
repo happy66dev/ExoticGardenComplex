@@ -155,19 +155,72 @@ public class FoodTagListener implements Listener {
     }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
-        // 喵~扫描背包36格喵
         for (int i = 0; i < player.getInventory().getSize(); i++) {
             ItemStack it = player.getInventory().getItem(i);
             if (it == null || it.getType().isAir()) continue;
             ItemStack copy = it.clone();
-            if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
+            if (updateItem(copy)) player.getInventory().setItem(i, copy);
         }
-        // 喵~副手槽单独处理喵
         ItemStack offHand = player.getInventory().getItemInOffHand();
         if (!offHand.getType().isAir()) {
             ItemStack copy = offHand.clone();
-            if (tagIfIngredient(copy)) player.getInventory().setItemInOffHand(copy);
+            if (updateItem(copy)) player.getInventory().setItemInOffHand(copy);
         }
+    }
+
+    // 喵~统一更新接口：菜肴走过期lore更新，食材走tagIfIngredient喵
+    private boolean updateItem(ItemStack item) {
+        if (item == null || item.getType().isAir()) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        // 喵~菜肴：只更新过期相关的lore和displayName，不改PDC喵
+        if (meta.getPersistentDataContainer().has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) {
+            return refreshDishExpiryLore(item, meta);
+        }
+        // 普通食材喵
+        return tagIfIngredient(item);
+    }
+
+    /**
+     * 刷新菜肴的过期 lore 和 displayName，不改动任何 PDC 字段喵~
+     */
+    private boolean refreshDishExpiryLore(ItemStack item, ItemMeta meta) {
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
+        Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
+        if (timestamp == null || shelfLifeMinutes == null) return false;
+
+        long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
+        boolean expired = diffMinutes >= shelfLifeMinutes;
+
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+        String expiredMark = "§c已过期";
+        boolean hasExpiredMark = !lore.isEmpty() && lore.get(0).equals(expiredMark);
+
+        boolean changed = false;
+        if (expired && !hasExpiredMark) {
+            lore.add(0, expiredMark);
+            changed = true;
+        } else if (!expired && hasExpiredMark) {
+            lore.remove(0);
+            changed = true;
+        }
+
+        // 喵~displayName 加/移除"§7(过期)"后缀喵
+        String displayName = meta.hasDisplayName() ? meta.getDisplayName() : null;
+        if (expired && displayName != null && !displayName.endsWith("§7(过期)")) {
+            meta.setDisplayName(displayName + "§7(过期)");
+            changed = true;
+        } else if (!expired && displayName != null && displayName.endsWith("§7(过期)")) {
+            meta.setDisplayName(displayName.substring(0, displayName.length() - "§7(过期)".length()));
+            changed = true;
+        }
+
+        if (changed) {
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+        return changed;
     }
 
     /**
