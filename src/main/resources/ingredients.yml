@@ -7,7 +7,7 @@ minecraft:BEEF:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 45
+  base_cook_time_seconds: 45
   flip_required: true
   food_points: 2
   saturation: 2
@@ -22,7 +22,7 @@ minecraft:PORKCHOP:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 170
- 45
+  base_cook_time_seconds: 45
   flip_required: true
   food_points: 2
   saturation: 2
@@ -37,7 +37,7 @@ minecraft:CHICKEN:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 140
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -53,7 +53,7 @@ minecraft:APPLE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -68,7 +68,7 @@ minecraft:GOLDEN_APPLE:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -83,7 +83,7 @@ minecraft:GOLDEN_CARROT:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -98,7 +98,7 @@ minecraft:PUMPKIN:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 45
+  base_cook_time_seconds: 45
   flip_required: false
   food_points: 2
   saturation: 2
@@ -113,7 +113,7 @@ minecraft:DRIED_KELP:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 60
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -130,7 +130,7 @@ minecraft:COCOA_BEANS:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 60
- 20
+  base_cook_time_seconds: 20
   flip_required: false
   food_points: 2
   saturation: 2
@@ -145,7 +145,7 @@ minecraft:BREAD:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 60
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -158,7 +158,7 @@ minecraft:COD:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 110
- 30
+  base_cook_time_seconds: 30
   flip_required: true
   food_points: 2
   saturation: 2
@@ -173,7 +173,7 @@ minecraft:SALMON:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 110
- 30
+  base_cook_time_seconds: 30
   flip_required: true
   food_points: 2
   saturation: 2
@@ -188,7 +188,7 @@ minecraft:MUTTON:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 45
+  base_cook_time_seconds: 45
   flip_required: true
   food_points: 2
   saturation: 2
@@ -203,7 +203,7 @@ minecraft:RABBIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -218,7 +218,7 @@ minecraft:EGG:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 60
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -235,7 +235,7 @@ minecraft:POTATO:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 50
+  base_cook_time_seconds: 50
   flip_required: false
   food_points: 2
   saturation: 2
@@ -250,7 +250,7 @@ minecraft:CARROT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: false
   food_points: 2
   saturation: 2
@@ -265,7 +265,7 @@ minecraft:BEETROOT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: false
   food_points: 2
   saturation: 2
@@ -280,7 +280,7 @@ minecraft:BROWN_MUSHROOM:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 70
- 20
+  base_cook_time_seconds: 20
   flip_required: false
   food_points: 2
   saturation: 2
@@ -295,7 +295,7 @@ minecraft:RED_MUSHROOM:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 70
- 20
+  base_cook_time_seconds: 20
   flip_required: false
   food_points: 2
   saturation: 2
@@ -312,7 +312,7 @@ minecraft:MELON_SLICE:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -327,7 +327,7 @@ minecraft:SWEET_BERRIES:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -342,7 +342,7 @@ minecraft:GLOW_BERRIES:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -359,7 +359,7 @@ slimefun:CORN:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 50
+  base_cook_time_seconds: 50
   flip_required: true
   food_points: 2
   saturation: 2
@@ -372,7 +372,7 @@ slimefun:CABBAGE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 30
+  base_cook_time_seconds: 30
   flip_required: false
   food_points: 2
   saturation: 2
@@ -385,7 +385,7 @@ slimefun:LETTUCE:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 10
+  base_cook_time_seconds: 10
   flip_required: false
   food_points: 2
   saturation: 2
@@ -398,7 +398,7 @@ slimefun:GARLIC:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 90
- 20
+  base_cook_time_seconds: 20
   flip_required: false
   food_points: 2
   saturation: 2
@@ -411,7 +411,7 @@ slimefun:BREADFRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -424,7 +424,7 @@ slimefun:ALIEN_FRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -437,7 +437,7 @@ slimefun:PUNCH_FRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -450,7 +450,7 @@ slimefun:JACKFRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 160
- 45
+  base_cook_time_seconds: 45
   flip_required: true
   food_points: 2
   saturation: 2
@@ -463,7 +463,7 @@ slimefun:BIG_CARROT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
- 40
+  base_cook_time_seconds: 40
   flip_required: true
   food_points: 2
   saturation: 2
@@ -476,7 +476,7 @@ slimefun:ACORN_SQUASH:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 50
+  base_cook_time_seconds: 50
   flip_required: true
   food_points: 2
   saturation: 2
@@ -489,7 +489,7 @@ slimefun:GINSENGBABY:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 120
- 35
+  base_cook_time_seconds: 35
   flip_required: true
   food_points: 2
   saturation: 2
@@ -502,7 +502,7 @@ slimefun:BIG_WHEAT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 50
+  base_cook_time_seconds: 50
   flip_required: true
   food_points: 2
   saturation: 2
@@ -515,7 +515,7 @@ slimefun:AMARANTH:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: false
   food_points: 2
   saturation: 2
@@ -528,7 +528,7 @@ slimefun:TEQUILA:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 60
- 20
+  base_cook_time_seconds: 20
   flip_required: false
   food_points: 2
   saturation: 2
@@ -543,7 +543,7 @@ slimefun:TOMATO:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 70
- 30
+  base_cook_time_seconds: 30
   flip_required: false
   food_points: 2
   saturation: 2
@@ -558,7 +558,7 @@ slimefun:ONION:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 80
- 25
+  base_cook_time_seconds: 25
   flip_required: false
   food_points: 2
   saturation: 2
@@ -573,7 +573,7 @@ slimefun:RED_BELL_PEPPER:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 80
- 25
+  base_cook_time_seconds: 25
   flip_required: false
   food_points: 2
   saturation: 2
@@ -590,7 +590,7 @@ slimefun:OAK_APPLE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -605,7 +605,7 @@ slimefun:CHERRY:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 70
- 20
+  base_cook_time_seconds: 20
   flip_required: true
   food_points: 2
   saturation: 2
@@ -620,7 +620,7 @@ slimefun:POMEGRANATE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -635,7 +635,7 @@ slimefun:LEMON:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 60
- 15
+  base_cook_time_seconds: 15
   flip_required: true
   food_points: 2
   saturation: 2
@@ -650,7 +650,7 @@ slimefun:PLUM:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 22
+  base_cook_time_seconds: 22
   flip_required: true
   food_points: 2
   saturation: 2
@@ -665,7 +665,7 @@ slimefun:LIME:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 60
- 15
+  base_cook_time_seconds: 15
   flip_required: true
   food_points: 2
   saturation: 2
@@ -680,7 +680,7 @@ slimefun:ORANGE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 80
- 22
+  base_cook_time_seconds: 22
   flip_required: true
   food_points: 2
   saturation: 2
@@ -695,7 +695,7 @@ slimefun:PEACH:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -710,7 +710,7 @@ slimefun:PEAR:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -725,7 +725,7 @@ slimefun:DRAGON_FRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 70
- 20
+  base_cook_time_seconds: 20
   flip_required: true
   food_points: 2
   saturation: 2
@@ -740,7 +740,7 @@ slimefun:PINEAPPLE:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 90
- 25
+  base_cook_time_seconds: 25
   flip_required: true
   food_points: 2
   saturation: 2
@@ -755,7 +755,7 @@ slimefun:COCONUT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 120
- 35
+  base_cook_time_seconds: 35
   flip_required: true
   food_points: 2
   saturation: 2
@@ -772,7 +772,7 @@ slimefun:STRAWBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -787,7 +787,7 @@ slimefun:GRAPE:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -802,7 +802,7 @@ slimefun:BLUEBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -817,7 +817,7 @@ slimefun:RASPBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 12
+  base_cook_time_seconds: 12
   flip_required: false
   food_points: 2
   saturation: 2
@@ -832,7 +832,7 @@ slimefun:BLACKBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -847,7 +847,7 @@ slimefun:CRANBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -862,7 +862,7 @@ slimefun:ELDERBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -877,7 +877,7 @@ slimefun:COWBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
- 15
+  base_cook_time_seconds: 15
   flip_required: false
   food_points: 2
   saturation: 2
@@ -894,7 +894,7 @@ slimefun:SWEET_POTATO:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
- 50
+  base_cook_time_seconds: 50
   flip_required: false
   food_points: 2
   saturation: 2

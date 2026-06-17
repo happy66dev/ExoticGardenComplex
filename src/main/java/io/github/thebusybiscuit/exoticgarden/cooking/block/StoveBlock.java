@@ -125,7 +125,9 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 org.bukkit.block.Block b = e.getBlock();
                 Location loc = b.getLocation();
                 StoveState state = activeStoves.remove(loc);
-                removeHologram(b);
+                // 喵~清除多行全息（removeAndClean 会扫描所有可能的全息位置并移除），
+                // 同时也调用 HologramOwner.removeHologram 清除单行全息兜底喵
+                io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram.removeAndClean(loc, StoveBlock.this);
                 if (state == null) return;
                 if (b.getState() instanceof Campfire campfire) {
                     for (int i = 0; i < 4; i++) campfire.setItem(i, null);

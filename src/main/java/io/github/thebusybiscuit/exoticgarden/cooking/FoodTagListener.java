@@ -64,7 +64,10 @@ public class FoodTagListener implements Listener {
     public void onPickup(EntityPickupItemEvent e) {
         if (e.getEntity().getType() != org.bukkit.entity.EntityType.PLAYER) return;
         ItemStack item = e.getItem().getItemStack();
-        tagIfIngredient(item);
+        // 喵~防御：修改后写回 Item 实体，防止 getItemStack 返回快照时 PDC 标签丢失喵
+        if (tagIfIngredient(item)) {
+            e.getItem().setItemStack(item);
+        }
     }
 
     // 创造模式取物：延迟扫描背包（不在事件里写回，避免虚空物品）喵
