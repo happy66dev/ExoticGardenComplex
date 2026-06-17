@@ -112,6 +112,8 @@ public class CookingModule {
         plugin.getServer().getPluginManager().registerEvents(new DishConsumptionListener(ingredients), plugin);
         // 喵~头颅食物(EGPlant)右键食用也受过期机制影响
         plugin.getServer().getPluginManager().registerEvents(new FoodListener(plugin, ingredients), plugin);
+        // 喵~熔炉补丁：菜肴不可被原版熔炉/烟熏炉/高炉/SF电炉烹饪喵
+        plugin.getServer().getPluginManager().registerEvents(new FurnacePatchListener(), plugin);
     }
 
     private static Map<String, FuelConfig.FuelData> loadConfigs(ExoticGarden plugin) {
