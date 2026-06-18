@@ -265,7 +265,7 @@ public class DishGenerator {
             + "  flavorTexts 规则: 每句必须包含§颜色符 每句严格不超过35字(含颜色符不算字数)\n"
             + "  flavorTexts 风格示例: §e第一口下去满是烟熏香  §a每一口都像在炉火旁的冬夜  §6有些味道 只有吃过才懂\n"
             + "icon 选材建议: 炖菜类→MUSHROOM_STEW/SUSPICIOUS_STEW 烧烤类→COOKED_BEEF/COOKED_PORKCHOP/COOKED_CHICKEN/COOKED_MUTTON "
-            + "煎炒类→COOKED_COD/COOKED_SALMON 面包类→BREAD 汤类→BEETROOT_SOUP/RABBIT_STEW 甜点类→CAKE/COOKIE/PUMPKIN_PIE 生食类→APPLE/MELON_SLICE\n"
+            + "煎炒类→COOKED_COD/COOKED_SALMON 面包类→BREAD 汤类→BEETROOT_SOUP/RABBIT_STEW 甜点类→COOKIE/PUMPKIN_PIE 生食类→APPLE/MELON_SLICE\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
             + "生成的菜肴参数准则:\n"
             + "1.品质系数需要严格判断\n"
