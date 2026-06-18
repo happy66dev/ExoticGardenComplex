@@ -147,24 +147,29 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
     }
 
     /**
-     * 处理普通调料（seasoning 类）：加水量/油量、加入调料槽喵~
+     * 处理普通调料（seasoning 类）：加水量/油量、热均衡、加入调料槽喵~
      */
     private void handleSeasoning(Player player, ItemStack handItem, StoveState state,
                                  SeasoningConfig.SeasoningData data, String seasoningId) {
-        // 调料有水分时加水量喵
-        if (data != null && data.waterMl > 0) {
-            state.waterAmount += data.waterMl;
-            String src = data.displayName;
-            if (!state.waterSources.contains(src)) state.waterSources.add(src);
-        }
-        // 调料有油分时加油量喵
-        if (data != null && data.oilMl > 0) {
-            state.oilAmount += data.oilMl;
+        // 调料有液体时热均衡后再加入喵
+        if (data != null) {
+            double totalLiquid = data.waterMl + data.oilMl;
+            if (totalLiquid > 0) state.mixLiquid(totalLiquid);
+            if (data.waterMl > 0) {
+                state.waterAmount += data.waterMl;
+                String src = data.displayName;
+                if (!state.waterSources.contains(src)) state.waterSources.add(src);
+            }
+            if (data.oilMl > 0) {
+                state.oilAmount += data.oilMl;
+            }
         }
 
-        // 加入调料槽喵
+        // 加入调料槽，记录加入时间戳（用于过期判断）喵
         double w = data != null ? data.weightGrams : 1;
-        state.seasonings.add(new SeasoningEntry(seasoningId, 0, w));
+        SeasoningEntry entry = new SeasoningEntry(seasoningId, 0, w);
+        entry.addedTimestamp = System.currentTimeMillis();
+        state.seasonings.add(entry);
 
         // 消耗手持物品，并按配置返还容器喵
         handItem.setAmount(handItem.getAmount() - 1);

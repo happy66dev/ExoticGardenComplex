@@ -47,13 +47,16 @@ public class DishGenerator {
         public final double mlAmount;
         // 给 AI 的特殊属性提示，帮助 AI 更准确识别调料风味和用途喵
         public final String hint;
+        // 调料是否已过期，影响菜肴品质和命名风格喵
+        public final boolean isExpired;
 
-        public SeasoningInfo(String name, Integer progress, double mlAmount, String hint) {
+        public SeasoningInfo(String name, Integer progress, double mlAmount, String hint, boolean isExpired) {
             this.name = name;
             this.progress = progress;
             this.mlAmount = mlAmount;
             // 喵~防御：hint 为 null 时存为空字符串，避免 NPE 喵
             this.hint = hint != null ? hint : "";
+            this.isExpired = isExpired;
         }
     }
 
@@ -163,6 +166,8 @@ public class DishGenerator {
             if (!si.hint.isEmpty()) {
                 obj.addProperty("hint", si.hint);
             }
+            // 调料过期时传给 AI，影响品质和命名风格喵
+            if (si.isExpired) obj.addProperty("expired", true);
             seaArr.add(obj);
         }
         userContent.add("seasonings", seaArr);
@@ -209,7 +214,7 @@ public class DishGenerator {
             + "weight:克,foodPoints:饱食度,saturation:饱和度,"
             + "hint(可选):该食材的特殊属性或用途,fuelEffects:烹饪期间经历的燃料风味（可为空）,"
             + "expired(可选):true表示食材放入灶台前已过期，会影响菜肴品质和命名风格}]\n"
-            + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美,200%变味了),mlAmount:液体毫升量,hint(可选):该调料的特殊属性或用途}]\n"
+            + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美,200%变味了),mlAmount:液体毫升量,hint(可选):该调料的特殊属性或用途,expired(可选):true表示该调料放入灶台前已过期 影响菜肴品质}]\n"
             + "  可用调料参考(玩家实际投料在上方seasonings列表中): 盐 白糖 红糖 料酒 醋 黑胡椒碎 葱花 花生碎 香菜碎 咖喱叶 茶叶 蜂蜜 黄油(辅料) 淡奶油(辅料) 植物油(油类) 味精 "
             + "各类果汁(柠檬汁/橙汁/苹果汁/葡萄汁/草莓汁/樱桃汁/梅子汁/桃子汁/梨汁/石榴汁/火龙果汁/菠萝汁/椰奶/番茄汁/胡萝卜汁/南瓜汁等) "
             + "特殊调料(恶魔瓜丁/地狱果片/药水) 肉类碎料(培根碎/炸鸡碎/鸡块碎/薯条碎/洋葱圈碎/芝士碎) 酱料(烤肉酱/蛋黄酱/芥末/肉汁)\n"

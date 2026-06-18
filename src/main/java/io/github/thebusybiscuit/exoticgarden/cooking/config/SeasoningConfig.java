@@ -24,11 +24,14 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
 
         // 给 AI 的提示信息，帮助 AI 更准确识别调料风味和用途喵
         public final String hint;
+        // 调料保质期（分钟），0 表示不过期，默认 0 喵
+        public final int shelfLifeMinutes;
 
         public SeasoningData(String displayName, boolean hasDoneness, double minTemp,
                              double optimalTemp, double baseTimeSeconds,
                              double weightGrams, double waterMl, double oilMl,
-                             String category, String containerReturn, String hint) {
+                             String category, String containerReturn, String hint,
+                             int shelfLifeMinutes) {
             this.displayName = displayName;
             this.hasDoneness = hasDoneness;
             this.minTemp = minTemp;
@@ -40,6 +43,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             this.category = category;
             this.containerReturn = containerReturn;
             this.hint = hint;
+            this.shelfLifeMinutes = shelfLifeMinutes;
         }
     }
 
@@ -56,11 +60,12 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             s.getDouble("optimal_temp", 100),
             s.getDouble("base_time_seconds", 30),
             s.getDouble("weight_grams", 1),
-            s.getDouble("water_ml", 0),   // 默认出水量0ml，每个调料需显式配置喵
-            s.getDouble("oil_ml", 0),      // 默认出油量0ml喵
-            s.getString("category", "seasoning"),       // 默认为普通调料喵
-            s.getString("container_return", "none"),    // 默认不返还容器喵
-            s.getString("hint", "")                     // 默认无提示喵
+            s.getDouble("water_ml", 0),
+            s.getDouble("oil_ml", 0),
+            s.getString("category", "seasoning"),
+            s.getString("container_return", "none"),
+            s.getString("hint", ""),
+            s.getInt("shelf_life_minutes", 0)  // 0=不过期 喵
         );
     }
 }

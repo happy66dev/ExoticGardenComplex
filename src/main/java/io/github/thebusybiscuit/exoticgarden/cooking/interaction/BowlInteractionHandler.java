@@ -92,18 +92,22 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         for (SeasoningEntry se : state.seasonings) {
             SeasoningConfig.SeasoningData sd = seasonings.get(se.seasoningId);
             // 水/油分类的调料不显示在调料列表中（它们已计入水量/油量）喵
-            // 用 sd.category 判断，避免旧硬编码 ID 喵
             if (sd != null && ("water".equals(sd.category) || "oil".equals(sd.category))) continue;
             String displayName = sd != null ? sd.displayName : se.seasoningId;
-            // 读取 hint，sd 为 null 时用空字符串喵
             String hint = sd != null ? sd.hint : "";
             totalWeight += se.weight;
             int progress = sd != null && sd.hasDoneness ? (int) Math.round(se.progress * 100) : -1;
             double mlAmt = sd != null ? sd.waterMl + sd.oilMl : 0;
+            // 喵~判断调料是否过期（addedTimestamp>0 且 shelfLifeMinutes>0）喵
+            boolean seaExpired = false;
+            if (sd != null && sd.shelfLifeMinutes > 0 && se.addedTimestamp > 0) {
+                long diffMin = (System.currentTimeMillis() - se.addedTimestamp) / 60000L;
+                seaExpired = diffMin >= sd.shelfLifeMinutes;
+            }
             seaInfos.add(new DishGenerator.SeasoningInfo(
                 displayName,
                 sd != null && sd.hasDoneness ? progress : null,
-                mlAmt, hint));
+                mlAmt, hint, seaExpired));
         }
 
         // 喵~fuelEffects 已绑定到各食材 slot.fuelEffects，不需要全局 fxList 喵
