@@ -76,8 +76,8 @@ public class CookingModule {
         registerSpatula(plugin, cookingGroup, ingredients);
 
         new StoveTickTask(fuels, ingredients, seasonings, calculators, stoveInstance).runTaskTimer(plugin, 2L, 2L);
-        // 传入 foodsConfig，让 FoodTagListener 从配置读取黑名单和保质期喵
-        FoodTagListener foodTagListener = new FoodTagListener(ingredients, foodsConfig);
+        // 传入 foodsConfig 和 fuels，让 FoodTagListener 从配置读取黑名单/保质期并处理燃料 lore 喵
+        FoodTagListener foodTagListener = new FoodTagListener(ingredients, foodsConfig, fuels);
         plugin.getServer().getPluginManager().registerEvents(foodTagListener, plugin);
         // 喵~启动200tick定时扫描，兜底覆盖所有遗漏场景喵
         foodTagListener.startPeriodicScan(plugin);

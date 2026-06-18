@@ -1,7 +1,9 @@
 package io.github.thebusybiscuit.exoticgarden.cooking;
 
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig;
+import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
+import io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -47,13 +49,17 @@ public class FoodTagListener implements Listener {
     private final int genericPotionShelfLifeMinutes;
 
     private final Map<String, IngredientConfig.IngredientData> ingredients;
+    // 燃料配置 map，用于燃料物品 lore 标签喵
+    private final Map<String, FuelConfig.FuelData> fuels;
 
     /**
-     * 构造函数，接收 FoodsConfig 以替代硬编码常量喵~
+     * 构造函数，接收 FoodsConfig 和 fuels map 喵~
      */
     public FoodTagListener(Map<String, IngredientConfig.IngredientData> ingredients,
-                           FoodsConfig foodsConfig) {
+                           FoodsConfig foodsConfig,
+                           Map<String, FuelConfig.FuelData> fuels) {
         this.ingredients = ingredients;
+        this.fuels = fuels;
         // 从 foodsConfig 读取配置，不再硬编码喵
         this.blacklist = foodsConfig.getBlacklist();
         this.genericFoodShelfLifeMinutes = foodsConfig.getGenericFoodShelfLife();
@@ -171,7 +177,7 @@ public class FoodTagListener implements Listener {
         }
     }
 
-    // 喵~统一更新接口：菜肴走过期lore更新，食材走tagIfIngredient喵
+    // 喵~统一更新接口：菜肴走过期lore更新，食材走tagIfIngredient，燃料走tagIfFuel喵
     private boolean updateItem(ItemStack item) {
         if (item == null || item.getType().isAir()) return false;
         ItemMeta meta = item.getItemMeta();
@@ -180,8 +186,11 @@ public class FoodTagListener implements Listener {
         if (meta.getPersistentDataContainer().has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) {
             return refreshDishExpiryLore(item, meta);
         }
-        // 普通食材喵
-        return tagIfIngredient(item);
+        // 食材喵
+        boolean taggedAsIngredient = tagIfIngredient(item);
+        if (taggedAsIngredient) return true;
+        // 燃料喵
+        return tagIfFuel(item);
     }
 
     /**
@@ -315,6 +324,23 @@ public class FoodTagListener implements Listener {
             // 不可变标签：读取实际 FOOD_STATE，而非硬编码"WHOLE"喵
             String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
             ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr + weightStr;
+
+            // 喵~可变：推荐烹饪温度和时间，每次刷新喵
+            if (data != null) {
+                String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: §e" + (int) data.baseCookTimeSeconds + "s";
+                replaceLoreLineOrAdd(lore, "§7推荐温度:", tempLine);
+            }
+
+            // 喵~可变：hint 非空时替换/追加，为空时删除旧提示行喵
+            if (data != null && !data.hint.isEmpty()) {
+                String hintLine = "§8食材提示: §7" + data.hint;
+                pdc.set(CookingKeys.INGREDIENT_HINT, PersistentDataType.STRING, data.hint);
+                replaceLoreLineOrAdd(lore, "§8食材提示:", hintLine);
+            } else {
+                // hint 为空时删除已有的提示行喵
+                lore.removeIf(line -> line.startsWith("§8食材提示:"));
+                pdc.remove(CookingKeys.INGREDIENT_HINT);
+            }
         }
 
         // 检查lore中是否已有对应类型行，有则替换，没有则追加喵
@@ -587,5 +613,60 @@ public class FoodTagListener implements Listener {
 
         // 既不是配置食材、也不是药水、也不是可食用物品，返回null跳过喵
         return null;
+    }
+
+    /**
+     * 替换 lore 中以 prefix 开头的行，找不到则追加喵~
+     * 复用 DishConsumptionListener.replaceLoreLine 相同逻辑喵
+     */
+    private static void replaceLoreLineOrAdd(List<String> lore, String prefix, String newLine) {
+        for (int i = 0; i < lore.size(); i++) {
+            if (lore.get(i).startsWith(prefix)) {
+                lore.set(i, newLine);
+                return;
+            }
+        }
+        lore.add(newLine);
+    }
+
+    /**
+     * 为燃料物品打 lore 标签喵~
+     * 整体思路：查燃料配置 → 写 [燃料] 行 + 可选 hint 行到 lore + 写 PDC。
+     * hint 缺省（空字符串）时不添加也不删除 lore 中的 §8燃料提示: 行喵。
+     * 输入：ItemStack（可为null）
+     * 输出：是否对物品做了修改
+     */
+    private boolean tagIfFuel(ItemStack item) {
+        // 喵~防御：null 或空气直接跳过喵
+        if (item == null || item.getType().isAir()) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        // 喵~防御：已有食材或菜肴标记的物品不处理喵
+        if (pdc.has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) return false;
+        if (pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) return false;
+
+        // 查燃料配置喵
+        String fuelKey = ItemIdUtil.toKey(item);
+        if (fuelKey == null) return false;
+        FuelConfig.FuelData data = fuels.get(fuelKey);
+        if (data == null) return false;
+
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+
+        // 喵~可变：[燃料] 行始终替换/追加喵
+        String fuelLine = "§7[燃料] §f" + data.effectDisplayName;
+        replaceLoreLineOrAdd(lore, "§7[燃料]", fuelLine);
+
+        // 喵~可变：hint 非缺省才操作，缺省时保留现有 lore 不变喵
+        if (!data.hint.isEmpty()) {
+            pdc.set(CookingKeys.FUEL_HINT, PersistentDataType.STRING, data.hint);
+            String hintLine = "§8燃料提示: §7" + data.hint;
+            replaceLoreLineOrAdd(lore, "§8燃料提示:", hintLine);
+        }
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return true;
     }
 }

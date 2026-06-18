@@ -1,4 +1,4 @@
-# config_version: 3
+# config_version: 4
 # ===== 木材类 - 热值中等, 短燃烧, 产木炭 =====
 minecraft:OAK_LOG:
   display_name: 橡木原木
@@ -8,6 +8,7 @@ minecraft:OAK_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "橡木烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:BIRCH_LOG:
   display_name: 桦木原木
   temp_gain: 280
@@ -16,6 +17,7 @@ minecraft:BIRCH_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "桦木烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:SPRUCE_LOG:
   display_name: 云杉原木
   temp_gain: 290
@@ -24,6 +26,7 @@ minecraft:SPRUCE_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "云杉烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:JUNGLE_LOG:
   display_name: 丛林原木
   temp_gain: 310
@@ -32,6 +35,7 @@ minecraft:JUNGLE_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "丛林木烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:ACACIA_LOG:
   display_name: 金合欢原木
   temp_gain: 270
@@ -40,6 +44,7 @@ minecraft:ACACIA_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "金合欢烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:DARK_OAK_LOG:
   display_name: 深色橡木原木
   temp_gain: 320
@@ -48,6 +53,7 @@ minecraft:DARK_OAK_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "深色橡木烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:MANGROVE_LOG:
   display_name: 红树原木
   temp_gain: 290
@@ -56,6 +62,7 @@ minecraft:MANGROVE_LOG:
   effect: WOOD_SMOKE
   effect_display_name: "红树烟熏"
   byproduct: CHARCOAL
+  hint: ""
 minecraft:CHERRY_LOG:
   display_name: 樱花原木
   temp_gain: 300
@@ -64,6 +71,7 @@ minecraft:CHERRY_LOG:
   effect: FRUIT_WOOD
   effect_display_name: "樱花果木香"
   byproduct: CHARCOAL
+  hint: ""
 
 # ===== 炭类 - 高热, 长燃烧 =====
 minecraft:CHARCOAL:
@@ -74,6 +82,7 @@ minecraft:CHARCOAL:
   effect: SMOKY
   effect_display_name: "木炭温火"
   byproduct: null
+  hint: ""
 minecraft:COAL:
   display_name: 煤炭
   temp_gain: 500
@@ -82,6 +91,7 @@ minecraft:COAL:
   effect: SMOKY
   effect_display_name: "煤炭炭火"
   byproduct: null
+  hint: ""
 minecraft:COAL_BLOCK:
   display_name: 煤炭块
   temp_gain: 900
@@ -90,6 +100,7 @@ minecraft:COAL_BLOCK:
   effect: INTENSE_SMOKE
   effect_display_name: "煤炭块浓烟"
   byproduct: null
+  hint: ""
 
 # ===== 高效燃料 - 超高温 =====
 minecraft:BLAZE_ROD:
@@ -100,6 +111,7 @@ minecraft:BLAZE_ROD:
   effect: BLAZING
   effect_display_name: "烈焰灼烧"
   byproduct: null
+  hint: ""
 minecraft:BLAZE_POWDER:
   display_name: 烈焰粉
   temp_gain: 500
@@ -108,6 +120,7 @@ minecraft:BLAZE_POWDER:
   effect: BLAZING
   effect_display_name: "烈焰灼烧"
   byproduct: null
+  hint: ""
 minecraft:LAVA_BUCKET:
   display_name: 岩浆桶
   temp_gain: 1500
@@ -116,6 +129,7 @@ minecraft:LAVA_BUCKET:
   effect: LAVA_INFUSED
   effect_display_name: "岩浆淬炼"
   byproduct: null
+  hint: ""
 minecraft:MAGMA_BLOCK:
   display_name: 岩浆块
   temp_gain: 600
@@ -124,6 +138,7 @@ minecraft:MAGMA_BLOCK:
   effect: MAGMATIC
   effect_display_name: "岩浆块烘烤"
   byproduct: null
+  hint: ""
 
 # ===== 速燃类 - 低热, 短燃烧 =====
 minecraft:STICK:
@@ -134,6 +149,7 @@ minecraft:STICK:
   effect: LIGHT_SMOKE
   effect_display_name: "木棍轻烟"
   byproduct: null
+  hint: ""
 minecraft:BAMBOO:
   display_name: 竹子
   temp_gain: 80
@@ -142,6 +158,7 @@ minecraft:BAMBOO:
   effect: LIGHT_SMOKE
   effect_display_name: "竹香"
   byproduct: null
+  hint: ""
 
 # ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
 minecraft:WHEAT:
@@ -152,6 +169,7 @@ minecraft:WHEAT:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:WHEAT_SEEDS:
   display_name: 小麦种子
   temp_gain: 20
@@ -160,6 +178,7 @@ minecraft:WHEAT_SEEDS:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:SHORT_GRASS:
   display_name: 矮草
   temp_gain: 15
@@ -168,6 +187,7 @@ minecraft:SHORT_GRASS:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:TALL_GRASS:
   display_name: 高草
   temp_gain: 30
@@ -176,6 +196,7 @@ minecraft:TALL_GRASS:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:FERN:
   display_name: 蕨
   temp_gain: 25
@@ -184,6 +205,7 @@ minecraft:FERN:
   effect: GRASS_SMOKE
   effect_display_name: "蕨草烟熏"
   byproduct: null
+  hint: ""
 minecraft:LARGE_FERN:
   display_name: 大型蕨
   temp_gain: 40
@@ -192,6 +214,7 @@ minecraft:LARGE_FERN:
   effect: GRASS_SMOKE
   effect_display_name: "蕨草烟熏"
   byproduct: null
+  hint: ""
 minecraft:DEAD_BUSH:
   display_name: 枯萎的灌木
   temp_gain: 35
@@ -200,6 +223,7 @@ minecraft:DEAD_BUSH:
   effect: GRASS_SMOKE
   effect_display_name: "枯木烟熏"
   byproduct: null
+  hint: ""
 minecraft:SUGAR_CANE:
   display_name: 甘蔗
   temp_gain: 25
@@ -208,6 +232,7 @@ minecraft:SUGAR_CANE:
   effect: SWEET_SMOKE
   effect_display_name: "甘蔗甜烟"
   byproduct: null
+  hint: ""
 minecraft:VINE:
   display_name: 藤蔓
   temp_gain: 20
@@ -216,6 +241,7 @@ minecraft:VINE:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:TWISTING_VINES:
   display_name: 扭曲藤蔓
   temp_gain: 30
@@ -224,6 +250,7 @@ minecraft:TWISTING_VINES:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:WEEPING_VINES:
   display_name: 垂泪藤蔓
   temp_gain: 30
@@ -232,6 +259,7 @@ minecraft:WEEPING_VINES:
   effect: GRASS_SMOKE
   effect_display_name: "草香烟熏"
   byproduct: null
+  hint: ""
 minecraft:MOSS_BLOCK:
   display_name: 苔藓块
   temp_gain: 50
@@ -240,6 +268,7 @@ minecraft:MOSS_BLOCK:
   effect: MOSSY_SMOKE
   effect_display_name: "苔藓烟熏"
   byproduct: null
+  hint: ""
 minecraft:HAY_BLOCK:
   display_name: 干草块
   temp_gain: 100
@@ -248,6 +277,7 @@ minecraft:HAY_BLOCK:
   effect: GRASS_SMOKE
   effect_display_name: "干草烟熏"
   byproduct: null
+  hint: ""
 
 # ===== 海藻类 =====
 minecraft:DRIED_KELP_BLOCK:
@@ -258,6 +288,7 @@ minecraft:DRIED_KELP_BLOCK:
   effect: KELP_SMOKE
   effect_display_name: "海草鲜香"
   byproduct: null
+  hint: ""
 
 # ===== 降温类 =====
 minecraft:ICE:
@@ -268,6 +299,7 @@ minecraft:ICE:
   effect: FREEZING
   effect_display_name: "冰雪慢炖"
   byproduct: null
+  hint: ""
 minecraft:SNOW_BLOCK:
   display_name: 雪块
   temp_gain: 0
@@ -276,6 +308,7 @@ minecraft:SNOW_BLOCK:
   effect: FREEZING
   effect_display_name: "冰雪慢炖"
   byproduct: null
+  hint: ""
 minecraft:POWDER_SNOW_BUCKET:
   display_name: 细雪桶
   temp_gain: 0
@@ -284,6 +317,7 @@ minecraft:POWDER_SNOW_BUCKET:
   effect: DEEP_FREEZE
   effect_display_name: "冰雪慢炖"
   byproduct: null
+  hint: ""
 minecraft:BLUE_ICE:
   display_name: 蓝冰
   temp_gain: 0
@@ -292,3 +326,4 @@ minecraft:BLUE_ICE:
   effect: DEEP_FREEZE
   effect_display_name: "极寒冰封"
   byproduct: null
+  hint: ""

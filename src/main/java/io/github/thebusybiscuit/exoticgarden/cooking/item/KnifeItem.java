@@ -223,7 +223,35 @@ public class KnifeItem extends SlimefunItem {
             }
         }
         if (!replaced) lore.add(newLine);
+
+        // 喵~可变：推荐温度/时间，每次切割后同步更新喵
+        if (data != null) {
+            String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: §e" + (int) data.baseCookTimeSeconds + "s";
+            replaceLoreLine(lore, "§7推荐温度:", tempLine);
+        }
+
+        // 喵~可变：hint 非空则替换/追加，为空则删除旧提示行喵
+        if (data != null && !data.hint.isEmpty()) {
+            String hintLine = "§8食材提示: §7" + data.hint;
+            pdc.set(CookingKeys.INGREDIENT_HINT, PersistentDataType.STRING, data.hint);
+            replaceLoreLine(lore, "§8食材提示:", hintLine);
+        } else {
+            lore.removeIf(line -> line.startsWith("§8食材提示:"));
+            pdc.remove(CookingKeys.INGREDIENT_HINT);
+        }
+
         meta.setLore(lore);
+    }
+
+    // 喵~辅助：替换 lore 中以 prefix 开头的行，找不到则追加喵
+    private static void replaceLoreLine(List<String> lore, String prefix, String newLine) {
+        for (int i = 0; i < lore.size(); i++) {
+            if (lore.get(i).startsWith(prefix)) {
+                lore.set(i, newLine);
+                return;
+            }
+        }
+        lore.add(newLine);
     }
 
     private static String translateState(String state) {

@@ -29,6 +29,10 @@ public final class CookingKeys {
     public static final NamespacedKey DISH_SHELF_LIFE = new NamespacedKey(NS, "dish_shelf_life");
     // 菜肴剩余可食用次数，食用一次扣1，归零时物品变碗喵
     public static final NamespacedKey DISH_SERVINGS_REMAINING = new NamespacedKey(NS, "dish_servings_remaining");
+    // 食材配置中的 hint 提示词（可变，每次刷新覆写）喵
+    public static final NamespacedKey INGREDIENT_HINT = new NamespacedKey(NS, "ingredient_hint");
+    // 燃料配置中的 hint 提示词（可变，每次刷新覆写）喵
+    public static final NamespacedKey FUEL_HINT = new NamespacedKey(NS, "fuel_hint");
 
     private CookingKeys() {}
 }

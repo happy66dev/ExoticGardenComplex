@@ -17,9 +17,11 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
         // 燃料风味效果的中文显示名（如 "橡木烟熏"），来自 fuels.yml 的 effect_display_name 字段喵
         // 若未配置则回退为 effect 字段原值喵
         public final String effectDisplayName;
+        // 燃料提示词，显示在物品 lore 中，供服主自定义描述喵
+        public final String hint;
 
         public FuelData(double tempGain, double durationSeconds, double heatRate,
-                        String effect, String byproduct, String displayName, String effectDisplayName) {
+                        String effect, String byproduct, String displayName, String effectDisplayName, String hint) {
             this.tempGain = tempGain;
             this.durationSeconds = durationSeconds;
             this.heatRate = heatRate;
@@ -28,6 +30,8 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
             this.displayName = displayName;
             // 喵~防御：effectDisplayName 为 null 时回退为 effect 原值，避免 NPE 喵
             this.effectDisplayName = effectDisplayName != null ? effectDisplayName : effect;
+            // 喵~防御：hint 为 null 时存为空字符串喵
+            this.hint = hint != null ? hint : "";
         }
     }
 
@@ -56,7 +60,8 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
             effect,
             s.getString("byproduct", null),
             s.getString("display_name", key),
-            effectDisplayName
+            effectDisplayName,
+            s.getString("hint", "")
         );
     }
 }
