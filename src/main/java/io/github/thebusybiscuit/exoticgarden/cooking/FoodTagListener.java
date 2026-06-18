@@ -184,7 +184,7 @@ public class FoodTagListener implements Listener {
         }
     }
 
-    // 喵~统一更新接口：菜肴走过期lore更新，食材走tagIfIngredient，燃料走tagIfFuel喵
+    // 喵~统一更新接口：菜肴走过期lore更新，调料优先检查，食材走tagIfIngredient，燃料走tagIfFuel喵
     private boolean updateItem(ItemStack item) {
         if (item == null || item.getType().isAir()) return false;
         ItemMeta meta = item.getItemMeta();
@@ -193,11 +193,81 @@ public class FoodTagListener implements Listener {
         if (meta.getPersistentDataContainer().has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) {
             return refreshDishExpiryLore(item, meta);
         }
+        // 喵~调料优先：防止旧PDC里遗留的INGREDIENT_ID=GENERIC_FOOD_ID导致调料被误标为[食物]喵
+        boolean taggedAsSeasoning = tagIfSeasoning(item);
+        if (taggedAsSeasoning) return true;
         // 食材喵
         boolean taggedAsIngredient = tagIfIngredient(item);
         if (taggedAsIngredient) return true;
         // 燃料喵
         return tagIfFuel(item);
+    }
+
+    /**
+     * 为调料物品打 [辅料] 标签，并清除旧版本可能遗留的食物 PDC/lore 喵~
+     * 整体思路：用 ItemIdUtil.toKey() 在 seasonings map 里查，命中则写 [辅料] 行，
+     * 同时清理旧的 INGREDIENT_ID/FOOD_STATE/FOOD_TIMESTAMP PDC 和保质期/生产日期 lore 行。
+     * 输入：ItemStack（可为null）
+     * 输出：是否是调料（true=是调料已处理，false=不是调料跳过）
+     */
+    private boolean tagIfSeasoning(ItemStack item) {
+        // 喵~防御：null 或空气直接跳过喵
+        if (item == null || item.getType().isAir()) return false;
+        // 用带命名空间的 key 在 seasonings 配置里查找喵
+        String itemKey = ItemIdUtil.toKey(item);
+        if (itemKey == null || !seasonings.containsKey(itemKey)) return false;
+
+        // 是调料，开始处理喵
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return true; // 是调料但无法修改，返回true阻止后续食物检查喵
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        boolean changed = false;
+
+        // 喵~清除旧版本可能错误写入的食材PDC（旧PDC导致下次扫描绕过调料检查）喵
+        if (pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
+            pdc.remove(CookingKeys.INGREDIENT_ID);
+            changed = true;
+        }
+        if (pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
+            pdc.remove(CookingKeys.FOOD_STATE);
+            changed = true;
+        }
+        if (pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
+            pdc.remove(CookingKeys.FOOD_TIMESTAMP);
+            changed = true;
+        }
+
+        // 更新 lore：移除旧食物/食材/保质期/生产日期行，确保有且仅有 [辅料] 行喵
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+        String seasoningLine = "§7[辅料]";
+        boolean hasSeasoningLine = false;
+
+        java.util.Iterator<String> it = lore.iterator();
+        while (it.hasNext()) {
+            String line = it.next();
+            // 喵~移除旧的食物/食材标签及保质期信息喵
+            if (line.startsWith("§7[食物]") || line.startsWith("§7[烹饪食材]")
+                    || line.startsWith("§8保质期:") || line.startsWith("§8生产日期:")) {
+                it.remove();
+                changed = true;
+            } else if (line.equals(seasoningLine)) {
+                // 已有 [辅料] 行，记录一下喵
+                hasSeasoningLine = true;
+            }
+        }
+
+        if (!hasSeasoningLine) {
+            // 首次打 [辅料] 标签喵
+            lore.add(seasoningLine);
+            changed = true;
+        }
+
+        if (changed) {
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+        // 返回true表示"是调料"，阻止后续走食物/燃料检查喵
+        return true;
     }
 
     /**

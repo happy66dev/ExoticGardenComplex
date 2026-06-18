@@ -9,7 +9,7 @@ public final class CookingConstants {
     public static final double BASE_AMBIENT_TEMP = 30.0;
 
     // 灶台最低温度限制，低于此值不再降温喵
-    public static final double MIN_TEMP = -20.0;
+    public static final double MIN_TEMP = -50.0;
 
     // 工具类不允许实例化喵
     private CookingConstants() {}
