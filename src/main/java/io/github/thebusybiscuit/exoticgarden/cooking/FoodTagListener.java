@@ -51,15 +51,18 @@ public class FoodTagListener implements Listener {
     private final Map<String, IngredientConfig.IngredientData> ingredients;
     // 燃料配置 map，用于燃料物品 lore 标签喵
     private final Map<String, FuelConfig.FuelData> fuels;
+    // 完整 foodsConfig 引用，用于 overrides 逐物品保质期查询喵
+    private final io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig foodsConfig;
 
     /**
      * 构造函数，接收 FoodsConfig 和 fuels map 喵~
      */
     public FoodTagListener(Map<String, IngredientConfig.IngredientData> ingredients,
-                           FoodsConfig foodsConfig,
+                           io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig foodsConfig,
                            Map<String, FuelConfig.FuelData> fuels) {
         this.ingredients = ingredients;
         this.fuels = fuels;
+        this.foodsConfig = foodsConfig;
         // 从 foodsConfig 读取配置，不再硬编码喵
         this.blacklist = foodsConfig.getBlacklist();
         this.genericFoodShelfLifeMinutes = foodsConfig.getGenericFoodShelfLife();
@@ -300,9 +303,17 @@ public class FoodTagListener implements Listener {
         final String ingredientLine; // 最终显示在lore里的类型标签行喵
 
         if (GENERIC_FOOD_ID.equals(ingId)) {
-            // 通用原版食物：lore显示"[食物]"，保质期优先读配置文件，默认用 foodsConfig 值喵
-            IngredientConfig.IngredientData genericFood = ingredients.get(GENERIC_FOOD_ID);
-            shelfLifeMinutes = genericFood != null ? genericFood.shelfLifeMinutes : genericFoodShelfLifeMinutes;
+            // 通用食物：先查 foods.yml overrides 逐物品覆盖，再查 ingredients 通用配置，最后用默认值喵
+            String itemKey = io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil.toKey(item);
+            java.util.Optional<Integer> override = itemKey != null
+                ? foodsConfig.getOverrideShelfLife(itemKey)
+                : java.util.Optional.empty();
+            if (override.isPresent()) {
+                shelfLifeMinutes = override.get();
+            } else {
+                IngredientConfig.IngredientData genericFood = ingredients.get(GENERIC_FOOD_ID);
+                shelfLifeMinutes = genericFood != null ? genericFood.shelfLifeMinutes : genericFoodShelfLifeMinutes;
+            }
             ingredientLine = "§7[食物]";
         } else if (GENERIC_POTION_ID.equals(ingId)) {
             // 通用药水/水瓶：lore显示"[药水] 200ml"，保质期优先读配置文件，默认用 foodsConfig 值喵
