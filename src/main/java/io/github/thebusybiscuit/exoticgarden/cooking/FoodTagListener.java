@@ -601,10 +601,11 @@ public class FoodTagListener implements Listener {
             if (sfId != null) {
                 SlimefunItem sfItem = SlimefunItem.getById(sfId);
                 if (sfItem != null) {
-                    // 喵~原版材质可食用，或者是 EGPlant（头颅食物，不 isEdible 但可吃）喵
+                    // 喵~原版材质可食用、EGPlant、CustomFood、或 ExoticGardenFruit（果实类，不是 EGPlant/CustomFood 子类但可食用）喵
                     if (sfItem.getItem().getType().isEdible()
                             || sfItem instanceof io.github.thebusybiscuit.exoticgarden.EGPlant
-                            || sfItem instanceof io.github.thebusybiscuit.exoticgarden.items.CustomFood) {
+                            || sfItem instanceof io.github.thebusybiscuit.exoticgarden.items.CustomFood
+                            || sfItem instanceof io.github.thebusybiscuit.exoticgarden.items.ExoticGardenFruit) {
                         return GENERIC_FOOD_ID;
                     }
                 }
