@@ -976,6 +976,7 @@ slimefun:RAW_NOODLES:
   mature_ref_temp: 100
   base_cook_time_seconds: 60
   flip_required: false
+  no_flip_side: true
   food_points: 2
   saturation: 1.5
   shelf_life_minutes: 15

@@ -182,8 +182,17 @@ public class StoveTickTask extends BukkitRunnable {
             }
 
             // 喵~WHOLE 状态下双面熟度增量喵
+            // 判断是否水煮模式：有足够水量(>食材数*50ml)或食材配置no_flip_side时双面同时加热喵
             if (slot.state == FoodState.WHOLE) {
-                if (slot.currentFace == ActiveFace.FRONT) {
+                int slotCount = 0;
+                for (IngredientSlot s2 : state.slots) { if (s2 != null) slotCount++; }
+                boolean waterCook = data.noFlipSide || state.waterAmount > slotCount * 50.0;
+                if (waterCook) {
+                    // 水煮/no_flip_side：双面同时加热，速度 * 0.8（均匀受热稍慢）喵
+                    double waterIncrement = increment * 0.8;
+                    slot.frontDoneness += waterIncrement;
+                    slot.backDoneness += waterIncrement;
+                } else if (slot.currentFace == ActiveFace.FRONT) {
                     slot.frontDoneness += increment;
                     slot.backDoneness += increment * 0.3;
                 } else {

@@ -38,15 +38,17 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
         public final String hint;
         // 加工完成后变为的新 SF 物品 ID，null 表示不转换喵
-        // 例：面团(DOUGH) 搅拌后变为面饼(FLATBREAD_ITEM)，面饼刀切后变为宽面(WIDE_NOODLES)喵
         public final String transformTo;
+        // 是否不分正反（水煮时双面同时加热，如面条类），优先于灶台水量检测喵
+        public final boolean noFlipSide;
 
         public IngredientData(double matureRefTemp, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
                               double foodPoints, double saturation, int shelfLifeMinutes,
-                              double waterMl, double oilMl, String hint, String transformTo) {
+                              double waterMl, double oilMl, String hint, String transformTo,
+                              boolean noFlipSide) {
             this.matureRefTemp = matureRefTemp;
             this.baseCookTimeSeconds = baseCookTimeSeconds;
             this.flipRequired = flipRequired;
@@ -62,6 +64,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.oilMl = oilMl;
             this.hint = hint;
             this.transformTo = transformTo;
+            this.noFlipSide = noFlipSide;
         }
     }
 
@@ -76,7 +79,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             sauce = new SauceCreation(s.getInt("sauce_creation.clicks_required", 3));
         }
         return new IngredientData(
-            s.getDouble("mature_ref_temp", 150),  // 成熟参考温度，默认150°C喵
+            s.getDouble("mature_ref_temp", 150),
             s.getDouble("base_cook_time_seconds"),
             s.getBoolean("flip_required", false),
             s.getStringList("states"),
@@ -90,7 +93,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getDouble("water_ml", 0),
             s.getDouble("oil_ml", 0),
             s.getString("hint", ""),
-            s.getString("transform_to", null)  // 加工转换目标，null 表示不转换喵
+            s.getString("transform_to", null),
+            s.getBoolean("no_flip_side", false)  // 不分正反（如面条类）喵
         );
     }
 }
