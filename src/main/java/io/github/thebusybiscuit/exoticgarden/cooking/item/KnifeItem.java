@@ -59,17 +59,19 @@ public class KnifeItem extends SlimefunItem {
                 if (held == null) return;
 
                 if (player.isSneaking()) {
-                    // 取回前刷新lore，确保显示最新状态喵
+                    // 喵~取回前刷新lore，仅对已知食材执行，防止普通物品（碗等）被写入食材lore喵
                     org.bukkit.inventory.meta.ItemMeta heldMetaReturn = held.getItemMeta();
                     if (heldMetaReturn != null) {
                         PersistentDataContainer heldPdcReturn = heldMetaReturn.getPersistentDataContainer();
                         String rawStateReturn = heldPdcReturn.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
-                        FoodState stateReturn = FoodState.WHOLE;
-                        if (rawStateReturn != null) {
+                        String ingIdReturn = heldPdcReturn.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+                        // 喵~防御：INGREDIENT_ID 必须在 ingredients map 里才刷新 lore，裸 ID（如 BOWL）直接跳过喵
+                        if (rawStateReturn != null && ingIdReturn != null && ingredients.containsKey(ingIdReturn)) {
+                            FoodState stateReturn = FoodState.WHOLE;
                             try { stateReturn = FoodState.valueOf(rawStateReturn); } catch (IllegalArgumentException ignored) {}
+                            refreshIngredientLore(heldMetaReturn, stateReturn, heldPdcReturn, ingredients);
+                            held.setItemMeta(heldMetaReturn);
                         }
-                        refreshIngredientLore(heldMetaReturn, stateReturn, heldPdcReturn, ingredients);
-                        held.setItemMeta(heldMetaReturn);
                     }
                     Map<Integer, ItemStack> leftover = player.getInventory().addItem(held);
                     if (!leftover.isEmpty() && boardLoc.getWorld() != null) {
