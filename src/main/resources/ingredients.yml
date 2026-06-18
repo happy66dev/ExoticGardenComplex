@@ -929,8 +929,8 @@ slimefun:DOUGH:
   mature_ref_temp: 180
   base_cook_time_seconds: 160
   flip_required: false
-  food_points: 0
-  saturation: 0
+  food_points: 3
+  saturation: 2
   shelf_life_minutes: 30
   hint: "面团需在砧板上擀制成面饼后方可烹饪"
   transform_to: FLATBREAD_ITEM
