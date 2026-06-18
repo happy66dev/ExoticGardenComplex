@@ -28,8 +28,6 @@ public class StoveTickTask extends BukkitRunnable {
     private final StoveBlock stove;
     private int hologramCounter = 0;
 
-    // 冰系食材每槽等效冷却速率（°C/tick），参考 minecraft:ICE 的 heatRate=-40 喵
-    private static final double ICE_COOLING_PER_SLOT = -2.0;
 
     public StoveTickTask(Map<String, FuelConfig.FuelData> fuels,
                          Map<String, IngredientConfig.IngredientData> ingredients,
@@ -61,8 +59,6 @@ public class StoveTickTask extends BukkitRunnable {
                 }
                 continue;
             }
-            // 喵~先计算冰食材冷却速率（每槽固定值），再升温/散热喵
-            updateIceCooling(state);
             tickFuels(state, loc);
             tickTemperature(state);
             tickEvaporation(state);
@@ -101,32 +97,17 @@ public class StoveTickTask extends BukkitRunnable {
     }
 
     /**
-     * 每 tick 计算冰系食材的等效冷却速率，写入 state.iceCoolingRate 喵~
-     * 冰食材每个槽等效于投入冰类燃料（负 heatRate），持续降低灶台温度喵
-     */
-    private void updateIceCooling(StoveState state) {
-        double iceRate = 0;
-        for (IngredientSlot slot : state.slots) {
-            if (slot == null) continue;
-            IngredientConfig.IngredientData data = ingredients.get(slot.ingredientId);
-            if (data != null && "ice".equals(data.calculatorType)) {
-                iceRate += ICE_COOLING_PER_SLOT;
-            }
-        }
-        state.iceCoolingRate = iceRate;
-    }
-
-    /**
-     * 温度计算：升温 + 散热/反向散热 + 冰食材冷却喵~
+     * 温度计算：升温 + 散热/反向散热 + 冰燃料冷却喵~
      *
      * 整体思路：
-     *   1. 累计燃料的 maxTemp 和 totalHeatRate
-     *   2. 叠加冰食材的 iceCoolingRate 到 totalHeatRate
-     *   3. 温度 > 室温时正常散热，< 室温时反向散热回升
-     *   4. 有燃料（或冰冷却）时，向 maxTemp 方向移动
+     *   1. 累计燃料的 maxTemp 和 totalHeatRate（冰燃料 heatRate 为负值）
+     *   2. 温度 > 室温时正常散热，< 室温时反向散热回升
+     *   3. 冰燃料降温需快于反向散热，保证温度实际下降
+     *   4. 最低温度限制 MIN_TEMP，不可低于 -20°C
      */
     private void tickTemperature(StoveState state) {
         double base = CookingConstants.BASE_AMBIENT_TEMP;
+        double minTemp = CookingConstants.MIN_TEMP;
         double maxTemp = base;
         double totalHeatRate = 0;
         for (FuelEntry fe : state.fuels) {
@@ -136,40 +117,48 @@ public class StoveTickTask extends BukkitRunnable {
                 totalHeatRate += data.heatRate;
             }
         }
-        // 冰食材等效冷却叠加到总加热速率（负值使温度下降）喵
-        totalHeatRate += state.iceCoolingRate;
 
+        // 喵~先计算反向散热量（低温时回升到室温的自然速率）喵
+        double warmDelta = 0;
+        if (state.currentTemp < base) {
+            double warmRate = (base - state.currentTemp) * 0.05;
+            warmDelta = warmRate * 0.05; // 正值，代表每tick回升量喵
+        }
+
+        // 喵~散热（高温向室温回落）喵
         if (state.currentTemp > base) {
-            // 正常散热：高温向室温回落喵
             double coolRate = (state.currentTemp - base) * 0.05;
             state.currentTemp = Math.max(state.currentTemp - coolRate * 0.05, base);
         } else if (state.currentTemp < base) {
-            // 反向散热：低温回升到室温（同等速率）喵
-            double warmRate = (base - state.currentTemp) * 0.05;
-            state.currentTemp = Math.min(state.currentTemp + warmRate * 0.05, base);
+            // 喵~反向散热：低温回升到室温（warmDelta 正值）喵
+            // 冰燃料降温在下方叠加，需净效果 < 0 才能继续降温喵
+            state.currentTemp = Math.min(state.currentTemp + warmDelta, base);
         }
 
-        // 有燃料或冰冷却时，向 maxTemp 方向移动喵
-        // 冰食材降温时不受 maxTemp=30 限制，可将温度降到低于室温喵
-        if (!state.fuels.isEmpty() || state.iceCoolingRate != 0) {
+        // 喵~燃料效果（含冰燃料负 heatRate）喵
+        if (!state.fuels.isEmpty()) {
             if (totalHeatRate > 0 && state.currentTemp < maxTemp) {
-                // 燃料加热：向上升温喵
+                // 正常燃料加热喵
                 state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
             } else if (totalHeatRate < 0) {
-                // 冰冷却：直接降温，不设下限（可低于室温），由反向散热逻辑负责回升到室温喵
-                state.currentTemp += totalHeatRate * 0.1;
+                // 冰燃料降温：每 tick 降温量需大于反向散热量，确保净效果是降温喵
+                // 降温量 = |totalHeatRate| * 0.1，反向散热量 = warmDelta（低于室温时）
+                // 净降温 = 降温量 - warmDelta（若为正则实际降温）喵
+                double coolingDelta = -totalHeatRate * 0.1; // 正值，代表降温量喵
+                double netCooling = coolingDelta - warmDelta; // 净降温喵
+                if (netCooling > 0) {
+                    state.currentTemp = Math.max(state.currentTemp - netCooling, minTemp);
+                }
+                // 喵~若净降温 <= 0（冰效果弱于反向散热），则维持反向散热的结果，不额外降温喵
             }
         }
+
+        // 喵~防御：绝对不低于最低温度喵
+        if (state.currentTemp < minTemp) state.currentTemp = minTemp;
     }
 
     /**
-     * 食材成熟/融化计算喵~
-     *
-     * 整体思路：
-     *   1. 改用索引循环（不再用 for-each），以便冰食材融化后 null 掉槽位
-     *   2. standard 类型走标准焦化逻辑，ice 类型走融化逻辑
-     *   3. 冰食材融化到 100% 时：释放水分到灶台、记录水源、移除槽位
-     *   4. 普通食材水/油释放逻辑不变
+     * 食材成熟计算喵~（冰系食材相关代码已移除，冰系仅作为燃料使用）
      */
     private void tickIngredients(StoveState state) {
         for (int i = 0; i < state.slots.length; i++) {
@@ -183,20 +172,16 @@ public class StoveTickTask extends BukkitRunnable {
             CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
             double increment = calculator.calculate(ctx);
 
-            // 喵~ice 类型走融化逻辑，不焦化喵
-            boolean isIce = "ice".equals(data.calculatorType);
-            if (!isIce) {
-                // 喵~成熟系数>=2时（温度远超参考温度）开始焦化喵
-                double base = CookingConstants.BASE_AMBIENT_TEMP;
-                double refTemp = data.matureRefTemp;
-                double denominator = Math.max(Math.max(refTemp, 50.0) - base, 20.0);
-                double coefficient = (state.currentTemp - base) / denominator;
-                if (coefficient >= 2.0) {
-                    slot.charSeconds = Math.min(slot.charSeconds + 0.1, 60.0);
-                }
+            // 喵~成熟系数>=2时（温度远超参考温度）开始焦化喵
+            double base = CookingConstants.BASE_AMBIENT_TEMP;
+            double refTemp = data.matureRefTemp;
+            double denominator = Math.max(Math.max(refTemp, 50.0) - base, 20.0);
+            double coefficient = (state.currentTemp - base) / denominator;
+            if (coefficient >= 2.0) {
+                slot.charSeconds = Math.min(slot.charSeconds + 0.1, 60.0);
             }
 
-            // 喵~WHOLE 状态下双面熟度增量，冰类食材 frontDoneness 代表融化进度喵
+            // 喵~WHOLE 状态下双面熟度增量喵
             if (slot.state == FoodState.WHOLE) {
                 if (slot.currentFace == ActiveFace.FRONT) {
                     slot.frontDoneness += increment;
@@ -208,32 +193,12 @@ public class StoveTickTask extends BukkitRunnable {
                 slot.frontDoneness += increment;
             }
 
-            // 喵~冰食材：融化到 100% 时消失（释放水分+移除槽位）喵
-            if (isIce) {
-                double meltProgress = Math.max(slot.frontDoneness, slot.backDoneness);
-                if (meltProgress >= 1.0) {
-                    // 融化完成：释放水分到灶台水量喵
-                    state.waterAmount += data.waterMl;
-                    if (!state.waterSources.contains(data.displayName)) {
-                        state.waterSources.add(data.displayName);
-                    }
-                    state.slots[i] = null;
-                    // 跳过后续水/油释放逻辑（冰已消失）喵
-                    continue;
-                }
-                // 冰类未融化完毕：不释放水/油，继续等待喵
-                continue;
-            }
-
-            // 喵~普通食材：在0-50%熟度阶段，按比例缓慢释放食材的出水/出油量喵
+            // 喵~在0-50%熟度阶段，按比例缓慢释放食材的出水/出油量喵
             if (data.waterMl > 0 || data.oilMl > 0) {
                 double maxDoneness = Math.max(slot.frontDoneness, slot.backDoneness);
-                // 喵~防御：熟度钳制在0-0.5区间内计算释放比例，超过0.5后不再释放喵
                 double releaseRatio = Math.min(maxDoneness / 0.5, 1.0);
-                // 本tick应累计到的总释放量 = 总量 * 比例喵
                 double targetWater = data.waterMl * releaseRatio;
                 double targetOil   = data.oilMl   * releaseRatio;
-                // 本tick实际释放增量（目标值 - 已释放量），不倒流喵
                 double deltaWater = Math.max(0, targetWater - slot.releasedWaterMl);
                 double deltaOil   = Math.max(0, targetOil   - slot.releasedOilMl);
                 if (deltaWater > 0) {

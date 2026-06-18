@@ -300,6 +300,15 @@ minecraft:ICE:
   effect_display_name: "冰雪慢炖"
   byproduct: null
   hint: ""
+minecraft:SNOWBALL:
+  display_name: 雪球
+  temp_gain: 0
+  duration_seconds: 3
+  heat_rate: -15
+  effect: FREEZING
+  effect_display_name: "冰雪慢炖"
+  byproduct: null
+  hint: ""
 minecraft:SNOW_BLOCK:
   display_name: 雪块
   temp_gain: 0

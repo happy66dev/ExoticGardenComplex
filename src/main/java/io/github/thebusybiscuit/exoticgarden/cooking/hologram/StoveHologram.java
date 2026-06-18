@@ -96,9 +96,6 @@ public class StoveHologram {
                 maxTemp += fd.tempGain;
             }
         }
-        // 冰食材等效冷却叠加到总加热速率喵
-        double iceRate = state.iceCoolingRate;
-        totalHeatRate += iceRate;
 
         sb.append(String.format("§6[灶台] §e温度: §a%.0f°C §7/ §f%.0f°C\n",
             state.currentTemp, maxTemp));
@@ -107,14 +104,14 @@ public class StoveHologram {
         sb.append(String.format("§b水量: §f%.0fml  §e油量: §f%.0fml\n",
             state.waterAmount, state.oilAmount));
 
-        if (!state.fuels.isEmpty() || iceRate != 0) {
+        if (!state.fuels.isEmpty()) {
             for (FuelEntry fe : state.fuels) {
                 double secs = fe.ticksRemaining / 20.0;
                 FuelConfig.FuelData fd = fuels.get(fe.fuelId);
                 String fuelName = fd != null ? fd.displayName : fe.fuelId;
                 sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fuelName, secs));
             }
-            // 喵~显示升温速率（含冰冷却效果）喵
+            // 喵~升温/降温速率（冰燃料 totalHeatRate 为负）喵
             if (totalHeatRate >= 0) {
                 sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
             } else {

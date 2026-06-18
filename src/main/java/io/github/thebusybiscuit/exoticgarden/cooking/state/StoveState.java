@@ -26,8 +26,6 @@ public class StoveState {
     public String frozenReason;
     // 首次tick标志：第一次被tick时清除可能残留的旧全息喵
     public boolean firstTick;
-    // 冰系食材每 tick 累计的冷却速率（°C/tick），由 tickIngredients 计算后传给 tickTemperature 喵
-    public double iceCoolingRate;
 
     public StoveState() {
         this.currentTemp = CookingConstants.BASE_AMBIENT_TEMP;
@@ -45,6 +43,5 @@ public class StoveState {
         this.frozen = false;
         this.frozenReason = null;
         this.firstTick = true;
-        this.iceCoolingRate = 0;
     }
 }

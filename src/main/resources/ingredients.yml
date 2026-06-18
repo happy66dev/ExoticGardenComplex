@@ -919,37 +919,6 @@ minecraft:PUFFERFISH:
   sauce_creation:
     clicks_required: 3
 
-# ===== 冰系食材（calculator_type: ice，融化即消失）=====
-minecraft:ICE:
-  display_name: 冰
-  weight_grams: 900
-  type: MAIN
-  states: [WHOLE]
-  calculator_type: ice
-  mature_ref_temp: 100
-  base_cook_time_seconds: 120
-  flip_required: false
-  food_points: 0
-  saturation: 0
-  shelf_life_minutes: 1
-  water_ml: 1000
-  hint: "冰块融化即消失 释放大量水分；存在时持续降低灶台温度"
-
-minecraft:SNOWBALL:
-  display_name: 雪球
-  weight_grams: 100
-  type: MAIN
-  states: [WHOLE]
-  calculator_type: ice
-  mature_ref_temp: 100
-  base_cook_time_seconds: 40
-  flip_required: false
-  food_points: 0
-  saturation: 0
-  shelf_life_minutes: 1
-  water_ml: 200
-  hint: "雪球融化即消失 释放少量水分；存在时轻微降低灶台温度"
-
 # ===== 面条系列（砧板加工流水线：面团→面饼→宽面→生面条）=====
 slimefun:DOUGH:
   display_name: 面团
