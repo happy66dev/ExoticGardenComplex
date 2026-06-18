@@ -53,16 +53,20 @@ public class FoodTagListener implements Listener {
     private final Map<String, FuelConfig.FuelData> fuels;
     // 完整 foodsConfig 引用，用于 overrides 逐物品保质期查询喵
     private final io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig foodsConfig;
+    // 调料配置 map，用于排除调料物品被误标为食物喵
+    private final Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasonings;
 
     /**
-     * 构造函数，接收 FoodsConfig 和 fuels map 喵~
+     * 构造函数，接收 FoodsConfig、fuels、seasonings map 喵~
      */
     public FoodTagListener(Map<String, IngredientConfig.IngredientData> ingredients,
                            io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig foodsConfig,
-                           Map<String, FuelConfig.FuelData> fuels) {
+                           Map<String, FuelConfig.FuelData> fuels,
+                           Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasonings) {
         this.ingredients = ingredients;
         this.fuels = fuels;
         this.foodsConfig = foodsConfig;
+        this.seasonings = seasonings;
         // 从 foodsConfig 读取配置，不再硬编码喵
         this.blacklist = foodsConfig.getBlacklist();
         this.genericFoodShelfLifeMinutes = foodsConfig.getGenericFoodShelfLife();
@@ -591,6 +595,9 @@ public class FoodTagListener implements Listener {
         //    SF 物品 → "slimefun:ID"，原版 → "minecraft:MATERIAL" 喵
         String itemKey = io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil.toKey(item);
         if (itemKey != null && ingredients.containsKey(itemKey)) return itemKey;
+
+        // 喵~防御：如果物品在 seasonings map 里，说明它是调料不是食物，跳过喵
+        if (itemKey != null && seasonings.containsKey(itemKey)) return null;
 
         // ===== fallback：食材配置里没有时，检查原版食物和药水 =====
         Material mat = item.getType();

@@ -65,10 +65,12 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
     }
 
     /**
-     * 处理水类调料：加水量、记录水来源、返还容器喵~
+     * 处理水类调料：加水量、热均衡、记录水来源、返还容器喵~
      */
     private void handleWater(Player player, ItemStack handItem, StoveState state,
                              SeasoningConfig.SeasoningData data) {
+        // 喵~热均衡：新液体视为室温，与灶台现有溶液混合喵
+        state.mixLiquid(data.waterMl);
         // 加水量到灶台水量喵
         state.waterAmount += data.waterMl;
         // 记录水来源（去重）喵
@@ -80,10 +82,13 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
     }
 
     /**
-     * 处理油类调料：加油量、不加调料槽喵~
+     * 处理油类调料：加油量、热均衡、不加调料槽喵~
      */
     private void handleOil(Player player, ItemStack handItem, StoveState state,
                            SeasoningConfig.SeasoningData data) {
+        double totalLiquid = data.waterMl + data.oilMl;
+        // 喵~热均衡：新液体视为室温喵
+        if (totalLiquid > 0) state.mixLiquid(totalLiquid);
         // 加油量到灶台油量喵
         state.oilAmount += data.oilMl;
         // 油类有水分时也加水喵
@@ -114,6 +119,8 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
 
         // 药水加水量喵
         double waterMl = data != null ? data.waterMl : 200;
+        // 喵~热均衡：药水液体视为室温混入喵
+        state.mixLiquid(waterMl);
         state.waterAmount += waterMl;
         if (!state.waterSources.contains("药水")) state.waterSources.add("药水");
 

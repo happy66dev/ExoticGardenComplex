@@ -27,6 +27,9 @@ public class StoveState {
     // 首次tick标志：第一次被tick时清除可能残留的旧全息喵
     public boolean firstTick;
 
+    // 喵~灶台液体热存储基础容量（虚拟200ml溶液，代表灶台本体的热容）喵
+    public static final double BASE_LIQUID_ML = 200.0;
+
     public StoveState() {
         this.currentTemp = CookingConstants.BASE_AMBIENT_TEMP;
         this.fuels = new ArrayList<>();
@@ -43,5 +46,19 @@ public class StoveState {
         this.frozen = false;
         this.frozenReason = null;
         this.firstTick = true;
+    }
+
+    /**
+     * 向灶台混入新液体，根据热均衡公式更新温度喵~
+     * 公式：新温度 = (当前存量*当前温度 + 新液量*30°C) / (当前存量 + 新液量)
+     * 当前存量 = BASE_LIQUID_ML + 已有水量 + 已有油量
+     * 新液体视为室温(30°C)喵
+     */
+    public void mixLiquid(double addedMl) {
+        if (addedMl <= 0) return;
+        double base = CookingConstants.BASE_AMBIENT_TEMP;
+        double currentTotal = BASE_LIQUID_ML + waterAmount + oilAmount;
+        double newTemp = (currentTotal * currentTemp + addedMl * base) / (currentTotal + addedMl);
+        currentTemp = newTemp;
     }
 }

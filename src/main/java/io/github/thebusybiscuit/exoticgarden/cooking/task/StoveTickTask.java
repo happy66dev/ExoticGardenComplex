@@ -211,10 +211,13 @@ public class StoveTickTask extends BukkitRunnable {
                 double deltaWater = Math.max(0, targetWater - slot.releasedWaterMl);
                 double deltaOil   = Math.max(0, targetOil   - slot.releasedOilMl);
                 if (deltaWater > 0) {
+                    // 喵~热均衡：食材渗出的液体视为室温混入喵
+                    state.mixLiquid(deltaWater);
                     state.waterAmount += deltaWater;
                     slot.releasedWaterMl += deltaWater;
                 }
                 if (deltaOil > 0) {
+                    state.mixLiquid(deltaOil);
                     state.oilAmount += deltaOil;
                     slot.releasedOilMl += deltaOil;
                 }
