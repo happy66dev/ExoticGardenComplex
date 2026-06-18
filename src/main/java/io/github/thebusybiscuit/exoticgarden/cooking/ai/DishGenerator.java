@@ -270,11 +270,11 @@ public class DishGenerator {
             + "  1种食材: qualityScore最高90\n"
             + "  2种食材: qualityScore最高95\n"
             + "  3种及以上食材: qualityScore无上限\n"
-            + "5.buff效果(effects)条件: 食材种类>=2 且 qualityScore>=90 才可考虑给正面buff 否则禁止给正面buff\n"
+            + "5.buff效果(effects)条件: 食材种类>=2 且 qualityScore>=90 才可考虑追加正面buff 否则禁止追加正面buff\n"
+            + "  追加说明: 此处buff是在原有药水效果(potionEffects)基础上额外追加的奖励效果 与食材本身的药水无关\n"
             + "  buff强度软性参考(非硬规则 根据食材组合和烹饪情况自由判断):\n"
             + "  90~94=偏弱效果 短时长; 95~99=中等效果 中时长; 100=强效果 长时长\n"
-            + "  可叠加多种buff(如速度+生命恢复+饱和)，搭配越丰富品质越高的菜肴buff越多越好\n"
-            + "  单buff高等级 或 多buff低等级 均可，根据食材特性决定风格";
+            + "  可追加多种不同buff 搭配越丰富的菜肴可追加越多种类 根据食材特性决定风格";
 
         String userPrompt = gson.toJson(userContent);
 
