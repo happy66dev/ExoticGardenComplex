@@ -981,6 +981,186 @@ slimefun:RAW_NOODLES:
   shelf_life_minutes: 15
   hint: "生面条 需煮熟后食用；煮熟后即为成品面条"
 
+# ===== 新增异域植物食材 =====
+# --- 彩虹果/红醋栗 ---
+slimefun:RAINBOW_FRUITS:
+  display_name: 彩虹果
+  weight_grams: 100
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 70
+  base_cook_time_seconds: 80
+  flip_required: false
+  food_points: 2
+  saturation: 2
+  shelf_life_minutes: 10
+  hint: ""
+  sauce_creation:
+    clicks_required: 2
+
+slimefun:GOOSEBERRY:
+  display_name: 红醋栗
+  weight_grams: 50
+  type: DUAL
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 50
+  base_cook_time_seconds: 60
+  flip_required: false
+  food_points: 2
+  saturation: 2
+  shelf_life_minutes: 8
+  hint: ""
+  sauce_creation:
+    clicks_required: 2
+
+# --- 异域蔬菜/香辛料 ---
+slimefun:MEXICO_CHILI:
+  display_name: 异域墨西哥辣椒
+  weight_grams: 80
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 80
+  base_cook_time_seconds: 80
+  flip_required: false
+  food_points: 2
+  saturation: 2
+  shelf_life_minutes: 10
+  hint: "辛辣刺激的异域辣椒 充分加热后辣味会转化为鲜甜"
+  sauce_creation:
+    clicks_required: 3
+
+slimefun:MUSTARD_SEED:
+  display_name: 芥菜籽
+  weight_grams: 30
+  type: MAIN
+  states: [WHOLE, DICED]
+  calculator_type: standard
+  mature_ref_temp: 60
+  base_cook_time_seconds: 60
+  flip_required: false
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 20
+  hint: "芥菜籽 研磨后可制成芥末 烹调中可直接作为辛香料使用"
+
+# --- 异域根茎类 ---
+slimefun:MANDRAKE_ROOT:
+  display_name: 异域曼德拉根
+  weight_grams: 150
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 150
+  base_cook_time_seconds: 140
+  flip_required: false
+  food_points: 2
+  saturation: 2
+  shelf_life_minutes: 12
+  hint: "神秘的异域根茎 传说具有魔法力量 充分烹调后安全食用"
+  sauce_creation:
+    clicks_required: 4
+
+# --- 异域花卉类 ---
+slimefun:ROSE:
+  display_name: 异域玫瑰
+  weight_grams: 30
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 50
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 8
+  hint: "异域玫瑰 花瓣可食 适合制作甜点或茶饮"
+  sauce_creation:
+    clicks_required: 2
+
+slimefun:SAKURA:
+  display_name: 异域樱花
+  weight_grams: 20
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 45
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 8
+  hint: "异域樱花 花瓣轻盈 适合点缀甜品或制作樱花盐腌食品"
+  sauce_creation:
+    clicks_required: 2
+
+slimefun:PURPLE_FLOWER:
+  display_name: 紫花
+  weight_grams: 20
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 45
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 8
+  hint: ""
+  sauce_creation:
+    clicks_required: 2
+
+slimefun:PURPLE_ROSE:
+  display_name: 紫色玫瑰
+  weight_grams: 25
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 50
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 8
+  hint: ""
+  sauce_creation:
+    clicks_required: 2
+
+# --- 异域草本/茎秆类 ---
+slimefun:REED:
+  display_name: 异域甘蔗
+  weight_grams: 80
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 60
+  base_cook_time_seconds: 60
+  flip_required: false
+  food_points: 2
+  saturation: 1.5
+  shelf_life_minutes: 12
+  hint: "异域甘蔗 味甜多汁 可榨汁或直接炖煮提鲜"
+  sauce_creation:
+    clicks_required: 2
+
+slimefun:ALOE:
+  display_name: 异域芦荟
+  weight_grams: 100
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 40
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 1
+  saturation: 1.5
+  shelf_life_minutes: 8
+  hint: "异域芦荟 凝冻质地 低温烹调保留营养 高温则融化失去口感"
+  sauce_creation:
+    clicks_required: 3
+
 # ===== 通用食物/药水保质期覆盖（可选）=====
 # 取消注释并填写 shelf_life_minutes 可覆盖 foods.yml 中的默认值喵~
 # _GENERIC_FOOD_:
