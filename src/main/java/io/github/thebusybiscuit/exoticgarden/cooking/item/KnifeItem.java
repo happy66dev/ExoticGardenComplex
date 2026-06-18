@@ -125,9 +125,13 @@ public class KnifeItem extends SlimefunItem {
                 if (dataForTransform != null && dataForTransform.transformTo != null && !dataForTransform.transformTo.isEmpty()) {
                     ItemStack transformed = SpatulaItem.transformToItem(dataForTransform.transformTo, heldMeta, heldPdc);
                     if (transformed != null) {
-                        refreshIngredientLore(transformed.getItemMeta(), next,
-                            transformed.getItemMeta().getPersistentDataContainer(), ingredients);
-                        transformed.setItemMeta(transformed.getItemMeta());
+                        // 喵~防御：用局部变量保存 meta，避免多次 getItemMeta() 返回不同副本导致 lore 丢失喵
+                        org.bukkit.inventory.meta.ItemMeta tMeta = transformed.getItemMeta();
+                        if (tMeta != null) {
+                            refreshIngredientLore(tMeta, next,
+                                tMeta.getPersistentDataContainer(), ingredients);
+                            transformed.setItemMeta(tMeta);
+                        }
                         CuttingBoardBlock.setStoredItem(boardLoc, transformed);
                         player.sendMessage("§a食材状态: " + stateDisplayName(next) + "（已加工为" + dataForTransform.displayName + "）");
                         return;

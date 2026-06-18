@@ -150,13 +150,14 @@ public class StoveTickTask extends BukkitRunnable {
         }
 
         // 有燃料或冰冷却时，向 maxTemp 方向移动喵
-        // 主人注意：totalHeatRate 可能为负（冰食材降温），此时 maxTemp 可能低于当前温度，
-        // 燃料加热和冰冷却通过同一逻辑自然平衡喵
+        // 冰食材降温时不受 maxTemp=30 限制，可将温度降到低于室温喵
         if (!state.fuels.isEmpty() || state.iceCoolingRate != 0) {
             if (totalHeatRate > 0 && state.currentTemp < maxTemp) {
+                // 燃料加热：向上升温喵
                 state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
-            } else if (totalHeatRate < 0 && state.currentTemp > maxTemp) {
-                state.currentTemp = Math.max(state.currentTemp + totalHeatRate * 0.1, maxTemp);
+            } else if (totalHeatRate < 0) {
+                // 冰冷却：直接降温，不设下限（可低于室温），由反向散热逻辑负责回升到室温喵
+                state.currentTemp += totalHeatRate * 0.1;
             }
         }
     }
