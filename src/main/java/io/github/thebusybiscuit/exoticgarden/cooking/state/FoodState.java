@@ -1,5 +1,5 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.state;
 
 public enum FoodState {
-    WHOLE, SLICED, DICED, SAUCE
+    WHOLE, SLICED, JULIENNED, DICED, SAUCE
 }

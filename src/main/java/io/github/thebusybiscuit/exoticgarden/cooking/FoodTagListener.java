@@ -505,11 +505,12 @@ public class FoodTagListener implements Listener {
     // 将食材状态枚举转为中文显示名喵
     private static String translateState(String state) {
         return switch (state) {
-            case "WHOLE"  -> "整块";
-            case "SLICED" -> "切片";
-            case "DICED"  -> "切丁";
-            case "SAUCE"  -> "酱料";
-            default       -> state;
+            case "WHOLE"     -> "整块";
+            case "SLICED"    -> "切片";
+            case "JULIENNED" -> "切条";
+            case "DICED"     -> "切丁";
+            case "SAUCE"     -> "酱料";
+            default          -> state;
         };
     }
 

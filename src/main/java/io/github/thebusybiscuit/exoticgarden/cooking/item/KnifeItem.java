@@ -185,8 +185,9 @@ public class KnifeItem extends SlimefunItem {
     private FoodState advanceState(FoodState current, PersistentDataContainer pdc,
                                    Map<String, IngredientConfig.IngredientData> ingredients) {
         return switch (current) {
-            case WHOLE  -> FoodState.SLICED;
-            case SLICED -> FoodState.DICED;
+            case WHOLE      -> FoodState.SLICED;
+            case SLICED     -> FoodState.JULIENNED;
+            case JULIENNED  -> FoodState.DICED;
             case DICED  -> {
                 // 从PDC读取食材ID，查sauce_creation配置喵
                 String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
@@ -211,10 +212,11 @@ public class KnifeItem extends SlimefunItem {
 
     private String stateDisplayName(FoodState state) {
         return switch (state) {
-            case WHOLE -> "完整";
-            case SLICED -> "切片";
-            case DICED -> "切丁";
-            case SAUCE -> "酱汁";
+            case WHOLE     -> "完整";
+            case SLICED    -> "切片";
+            case JULIENNED -> "切条";
+            case DICED     -> "切丁";
+            case SAUCE     -> "酱汁";
         };
     }
 
@@ -276,9 +278,10 @@ public class KnifeItem extends SlimefunItem {
 
     private static String translateState(String state) {
         return switch (state) {
-            case "WHOLE"  -> "整块";
-            case "SLICED" -> "切片";
-            case "DICED"  -> "切丁";
+            case "WHOLE"     -> "整块";
+            case "SLICED"    -> "切片";
+            case "JULIENNED" -> "切条";
+            case "DICED"     -> "切丁";
             case "SAUCE"  -> "酱料";
             default       -> state;
         };

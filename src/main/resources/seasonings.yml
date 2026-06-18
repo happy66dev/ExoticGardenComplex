@@ -1,4 +1,4 @@
-# config_version: 3
+# config_version: 4
 # ===== 基础调料 (has_doneness: false) =====
 slimefun:SALT:
   weight_grams: 1
@@ -744,3 +744,17 @@ slimefun:VINEGAR:
   category: seasoning
   container_return: none
   hint: ""
+
+# 水淀粉：需要热渗入勾芡，含水分，用于增稠汤汁喵
+slimefun:STARCH_WATER:
+  display_name: "水淀粉"
+  has_doneness: true
+  min_temp: 60
+  optimal_temp: 90
+  base_time_seconds: 20
+  weight_grams: 5
+  water_ml: 50
+  oil_ml: 0
+  category: seasoning
+  container_return: none
+  hint: "水淀粉勾芡 使汤汁变浓稠 需要加热才能完全糊化"

@@ -56,6 +56,12 @@ public final class FoodRegistry {
                 new ItemStack[]{new ItemStack(Material.BEETROOT_SEEDS), waterbottle, null, null, null, null, null, null, null})
                 .register(plugin);
 
+        // 水淀粉：淀粉+水合成，用于烹饪勾芡喵
+        new SlimefunItem(misc, new SlimefunItemStack("STARCH_WATER", Material.POTION, "&r水淀粉", "", "&7加入灶台后加热糊化 用于勾芡增稠"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{new ItemStack(Material.POTATO), waterbottle, null, null, null, null, null, null, null})
+                .register(plugin);
+
         new SlimefunItem(misc, new SlimefunItemStack("YEAST", "606be2df2122344bda479feece365ee0e9d5da276afa0e8ce8d848f373dd131", "&r酵母"), RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{new ItemStack(Material.SUGAR), waterbottle, null, null, null, null, null, null, null})
                 .register(plugin);
