@@ -265,7 +265,13 @@ public class DishGenerator {
             + "生成的菜肴参数准则:\n"
             + "1.品质系数需要严格判断\n"
             + "2.必须参考user发送的食材饱食度和饱和度 成品的饱食度饱和度参考:如果品质在普通偏差时可食用次数*饱和度/饱食度=总饱和度/饱食度 四舍五入 如果品质好则适当增加 差则减少 药水时间也这样考虑 等级的话只看食用次数和投料数量 比如投料多但是使用次数少=浓缩 等级提升\n"
-            + "3.品质过差可以适当增加debuff效果";
+            + "3.品质过差可以适当增加debuff效果\n"
+            + "4.食材种类数量与分数上限限制(硬性规则不可违反):\n"
+            + "  1种食材: qualityScore最高90\n"
+            + "  2种食材: qualityScore最高95\n"
+            + "  3种及以上食材: qualityScore无上限\n"
+            + "5.buff效果(effects)条件: 食材种类>=2 且 qualityScore>=90 才可考虑给正面buff 否则禁止给正面buff\n"
+            + "  buff强度参考qualityScore: 90~94=1级弱效果 短时长; 95~99=2级中等效果 中时长; 100=3级强效果 长时长";
 
         String userPrompt = gson.toJson(userContent);
 
