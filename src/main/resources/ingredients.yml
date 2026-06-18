@@ -903,6 +903,22 @@ slimefun:SWEET_POTATO:
   sauce_creation:
     clicks_required: 4
 
+minecraft:PUFFERFISH:
+  display_name: 河豚
+  weight_grams: 100
+  type: DUAL
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 110
+  base_cook_time_seconds: 30
+  flip_required: true
+  food_points: 1
+  saturation: 0.2
+  shelf_life_minutes: 8
+  hint: "河豚含有毒素，需要充分烹饪；若未充分处理会导致中毒"
+  sauce_creation:
+    clicks_required: 3
+
 # ===== 通用食物/药水保质期覆盖（可选）=====
 # 取消注释并填写 shelf_life_minutes 可覆盖 foods.yml 中的默认值喵~
 # _GENERIC_FOOD_:
