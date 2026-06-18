@@ -181,18 +181,30 @@ public class KnifeItem extends SlimefunItem {
         return best;
     }
 
-    // DICED→SAUCE需要按配置的clicks_required次数研磨，其余状态直接推进喵
+    // 喵~刀切推进状态，同时检查 states 配置允许的状态列表，不允许则返回当前状态喵
     private FoodState advanceState(FoodState current, PersistentDataContainer pdc,
                                    Map<String, IngredientConfig.IngredientData> ingredients) {
+        String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+        IngredientConfig.IngredientData data = ingId != null ? ingredients.get(ingId) : null;
+
         return switch (current) {
-            case WHOLE      -> FoodState.SLICED;
-            case SLICED     -> FoodState.JULIENNED;
-            case JULIENNED  -> FoodState.DICED;
+            case WHOLE -> {
+                // 喵~防御：目标状态 SLICED 不在 states 列表时无法切片喵
+                if (data != null && !data.states.contains("SLICED")) yield current;
+                yield FoodState.SLICED;
+            }
+            case SLICED -> {
+                // 喵~防御：目标状态 JULIENNED 不在 states 列表时无法切条喵
+                if (data != null && !data.states.contains("JULIENNED")) yield FoodState.DICED;
+                yield FoodState.JULIENNED;
+            }
+            case JULIENNED -> {
+                // 喵~防御：目标状态 DICED 不在 states 列表时无法切丁喵
+                if (data != null && !data.states.contains("DICED")) yield current;
+                yield FoodState.DICED;
+            }
             case DICED  -> {
                 // 从PDC读取食材ID，查sauce_creation配置喵
-                String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-                IngredientConfig.IngredientData data = ingId != null ? ingredients.get(ingId) : null;
-                // 无sauce_creation配置 → 无法制酱喵
                 if (data == null || data.sauceCreation == null) yield current;
                 int required = data.sauceCreation.clicksRequired;
                 // 读取当前计数，+1后写回PDC喵
