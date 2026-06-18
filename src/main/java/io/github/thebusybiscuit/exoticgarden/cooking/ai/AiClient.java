@@ -206,7 +206,18 @@ public class AiClient {
                     effects.add(el.getAsString());
                 }
             }
-            return new DishGenerator.DishResult(name, servings, quality, qualityScore, effects, description, hunger, saturation, shelfLifeMinutes, icon);
+            // 解析食用句子列表，可选字段，最多5句喵
+            java.util.List<String> flavorTexts = new java.util.ArrayList<>();
+            if (obj.has("flavorTexts") && obj.get("flavorTexts").isJsonArray()) {
+                for (JsonElement el : obj.getAsJsonArray("flavorTexts")) {
+                    String text = el.getAsString();
+                    // 喵~防御：空句子不加入喵
+                    if (text != null && !text.isBlank()) {
+                        flavorTexts.add(text);
+                    }
+                }
+            }
+            return new DishGenerator.DishResult(name, servings, quality, qualityScore, effects, description, hunger, saturation, shelfLifeMinutes, icon, flavorTexts);
         } catch (Exception e) {
             throw new RuntimeException("JSON解析失败，原始内容: " + content, e);
         }

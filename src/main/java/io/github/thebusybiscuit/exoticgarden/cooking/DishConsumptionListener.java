@@ -138,6 +138,22 @@ public class DishConsumptionListener implements Listener {
                     }
                 }
             }
+            // 喵~未过期时发送随机食用句子（如果有）喵
+            String flavorRaw = pdc.get(CookingKeys.DISH_FLAVOR_TEXTS, PersistentDataType.STRING);
+            if (flavorRaw != null && !flavorRaw.isEmpty()) {
+                String[] texts = flavorRaw.split("\\|");
+                // 喵~防御：随机选一句，空句子跳过喵
+                java.util.List<String> validTexts = new java.util.ArrayList<>();
+                for (String t : texts) {
+                    if (t != null && !t.isBlank()) validTexts.add(t);
+                }
+                if (!validTexts.isEmpty()) {
+                    String chosen = validTexts.get(
+                        validTexts.size() == 1 ? 0 :
+                        java.util.concurrent.ThreadLocalRandom.current().nextInt(validTexts.size()));
+                    player.sendMessage(chosen);
+                }
+            }
         }
 
         // 扣减剩余次数喵

@@ -33,6 +33,8 @@ public final class CookingKeys {
     public static final NamespacedKey INGREDIENT_HINT = new NamespacedKey(NS, "ingredient_hint");
     // 燃料配置中的 hint 提示词（可变，每次刷新覆写）喵
     public static final NamespacedKey FUEL_HINT = new NamespacedKey(NS, "fuel_hint");
+    // 菜肴食用句子列表，多句以 | 分隔，食用时随机选一句发送给玩家喵
+    public static final NamespacedKey DISH_FLAVOR_TEXTS = new NamespacedKey(NS, "dish_flavor_texts");
 
     private CookingKeys() {}
 }

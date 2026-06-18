@@ -197,6 +197,11 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                         pdc.set(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING,
                             String.join("|", result.effects));
                     }
+                    // 喵~食用句子：多句以 | 分隔存入 PDC 喵
+                    if (!result.flavorTexts.isEmpty()) {
+                        pdc.set(CookingKeys.DISH_FLAVOR_TEXTS, PersistentDataType.STRING,
+                            String.join("|", result.flavorTexts));
+                    }
                     dish.setItemMeta(meta);
                 }
 

@@ -70,10 +70,13 @@ public class DishGenerator {
         public final int shelfLifeMinutes;
         // 菜肴图标，原版 Material 名（如 COOKED_BEEF），缺省 SUSPICIOUS_STEW喵
         public final String icon;
+        // 食用句子列表，最多5句，每句≤35字，食用未过期菜肴时随机选一句发送给玩家喵
+        public final List<String> flavorTexts;
 
         public DishResult(String name, int servings, String quality, int qualityScore,
                           List<String> effects, String description,
-                          int hunger, double saturation, int shelfLifeMinutes, String icon) {
+                          int hunger, double saturation, int shelfLifeMinutes, String icon,
+                          List<String> flavorTexts) {
             this.name = name;
             this.servings = servings;
             this.quality = quality;
@@ -85,6 +88,7 @@ public class DishGenerator {
             this.saturation = saturation;
             this.shelfLifeMinutes = shelfLifeMinutes;
             this.icon = icon != null ? icon : "SUSPICIOUS_STEW";
+            this.flavorTexts = flavorTexts != null ? flavorTexts : new java.util.ArrayList<>();
         }
 
         // 将中文品质形容词转为系数，未知词汇默认1.0喵
@@ -253,6 +257,8 @@ public class DishGenerator {
             + "\"icon\":\"Minecraft物品材质名(如COOKED_BEEF、BREAD、MUSHROOM_STEW等，根据菜名选择最贴切的材质名，缺省SUSPICIOUS_STEW)\","
             + "\"description\":\"描述字符串（缺省用'无描述'）\"}\n"
             + "如有effects则加\"effects\":[\"SPEED:1:600\",\"REGENERATION:1:200\"], 可以多个, 无则省略该字段。\n"
+            + "如有食用句子则加\"flavorTexts\":[\"§e句子1\",\"§a句子2\"], 可以多句(1-5句), 无则省略该字段;\n"
+            + "  flavorTexts 规则: 每句必须包含§颜色符 每句严格不超过35字(含颜色符不算字数) 内容表达食物的风味/感受/故事/评价\n"
             + "icon 选材建议: 炖菜类→MUSHROOM_STEW/SUSPICIOUS_STEW 烧烤类→COOKED_BEEF/COOKED_PORKCHOP/COOKED_CHICKEN/COOKED_MUTTON "
             + "煎炒类→COOKED_COD/COOKED_SALMON 面包类→BREAD 汤类→BEETROOT_SOUP/RABBIT_STEW 甜点类→CAKE/COOKIE/PUMPKIN_PIE 生食类→APPLE/MELON_SLICE\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
