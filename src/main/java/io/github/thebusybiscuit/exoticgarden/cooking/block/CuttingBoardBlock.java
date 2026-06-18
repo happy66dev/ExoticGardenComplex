@@ -138,7 +138,10 @@ public class CuttingBoardBlock extends SlimefunItem {
         if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
             io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem =
                 io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
-            String id = sfItem != null ? sfItem.getId() : item.getType().name();
+            // 喵~与 ItemIdUtil.toKey() 格式保持一致：SF物品用 slimefun:ID，原版用 minecraft:MATERIAL 喵
+            String id = sfItem != null
+                ? "slimefun:" + sfItem.getId()
+                : "minecraft:" + item.getType().name();
             pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, id);
         }
         if (!pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
