@@ -194,8 +194,11 @@ public class KnifeItem extends SlimefunItem {
                 yield FoodState.SLICED;
             }
             case SLICED -> {
-                // 喵~防御：目标状态 JULIENNED 不在 states 列表时无法切条喵
-                if (data != null && !data.states.contains("JULIENNED")) yield FoodState.DICED;
+                // 喵~防御：优先切条，若无切条则尝试切丁，两者都没有则停在切片喵
+                if (data != null && !data.states.contains("JULIENNED")) {
+                    if (data.states.contains("DICED")) yield FoodState.DICED;
+                    yield current; // 连切丁也没有，停着喵
+                }
                 yield FoodState.JULIENNED;
             }
             case JULIENNED -> {
