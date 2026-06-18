@@ -175,6 +175,8 @@ public class CookingModule {
     private static Map<String, DonenessCalculator> buildCalculators() {
         Map<String, DonenessCalculator> calculators = new HashMap<>();
         calculators.put("standard", new StandardDonenessCalculator());
+        // 喵~冰系食材融化计算器（calculatorType="ice"）喵
+        calculators.put("ice", new io.github.thebusybiscuit.exoticgarden.cooking.calculator.IceDonenessCalculator());
         return calculators;
     }
 

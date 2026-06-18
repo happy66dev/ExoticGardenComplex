@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.hologram;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.CookingConstants;
 import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
@@ -85,7 +86,8 @@ public class StoveHologram {
             return sb.toString().trim();
         }
 
-        double maxTemp = 30;
+        double base = CookingConstants.BASE_AMBIENT_TEMP;
+        double maxTemp = base;
         double totalHeatRate = 0;
         for (FuelEntry fe : state.fuels) {
             FuelConfig.FuelData fd = fuels.get(fe.fuelId);
@@ -94,6 +96,9 @@ public class StoveHologram {
                 maxTemp += fd.tempGain;
             }
         }
+        // 冰食材等效冷却叠加到总加热速率喵
+        double iceRate = state.iceCoolingRate;
+        totalHeatRate += iceRate;
 
         sb.append(String.format("§6[灶台] §e温度: §a%.0f°C §7/ §f%.0f°C\n",
             state.currentTemp, maxTemp));
@@ -102,17 +107,27 @@ public class StoveHologram {
         sb.append(String.format("§b水量: §f%.0fml  §e油量: §f%.0fml\n",
             state.waterAmount, state.oilAmount));
 
-        if (!state.fuels.isEmpty()) {
+        if (!state.fuels.isEmpty() || iceRate != 0) {
             for (FuelEntry fe : state.fuels) {
                 double secs = fe.ticksRemaining / 20.0;
                 FuelConfig.FuelData fd = fuels.get(fe.fuelId);
                 String fuelName = fd != null ? fd.displayName : fe.fuelId;
                 sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fuelName, secs));
             }
-            sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
-            // 散热每秒 = (temp-30)*0.05*0.05*10 (每tick降coolRate*0.05，每秒10次tick)喵
-            double coolRatePerSec = Math.max(state.currentTemp - 30.0, 0) * 0.025;
-            sb.append(String.format("§3散热: -%.2f°C/s\n", coolRatePerSec));
+            // 喵~显示升温速率（含冰冷却效果）喵
+            if (totalHeatRate >= 0) {
+                sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
+            } else {
+                sb.append(String.format("§b降温: %.1f°C/s\n", totalHeatRate));
+            }
+            // 散热/反向散热速率显示喵
+            if (state.currentTemp > base) {
+                double coolRatePerSec = (state.currentTemp - base) * 0.025;
+                sb.append(String.format("§3散热: -%.2f°C/s\n", coolRatePerSec));
+            } else if (state.currentTemp < base) {
+                double warmRatePerSec = (base - state.currentTemp) * 0.025;
+                sb.append(String.format("§a回升: +%.2f°C/s\n", warmRatePerSec));
+            }
         } else {
             sb.append("§7无燃料\n");
         }

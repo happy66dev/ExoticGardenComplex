@@ -919,6 +919,99 @@ minecraft:PUFFERFISH:
   sauce_creation:
     clicks_required: 3
 
+# ===== 冰系食材（calculator_type: ice，融化即消失）=====
+minecraft:ICE:
+  display_name: 冰
+  weight_grams: 900
+  type: MAIN
+  states: [WHOLE]
+  calculator_type: ice
+  mature_ref_temp: 100
+  base_cook_time_seconds: 120
+  flip_required: false
+  food_points: 0
+  saturation: 0
+  shelf_life_minutes: 1
+  water_ml: 1000
+  hint: "冰块融化即消失 释放大量水分；存在时持续降低灶台温度"
+
+minecraft:SNOWBALL:
+  display_name: 雪球
+  weight_grams: 100
+  type: MAIN
+  states: [WHOLE]
+  calculator_type: ice
+  mature_ref_temp: 100
+  base_cook_time_seconds: 40
+  flip_required: false
+  food_points: 0
+  saturation: 0
+  shelf_life_minutes: 1
+  water_ml: 200
+  hint: "雪球融化即消失 释放少量水分；存在时轻微降低灶台温度"
+
+# ===== 面条系列（砧板加工流水线：面团→面饼→宽面→生面条）=====
+slimefun:DOUGH:
+  display_name: 面团
+  weight_grams: 200
+  type: MAIN
+  states: [WHOLE]
+  calculator_type: standard
+  mature_ref_temp: 180
+  base_cook_time_seconds: 160
+  flip_required: false
+  food_points: 0
+  saturation: 0
+  shelf_life_minutes: 30
+  hint: "面团需在砧板上擀制成面饼后方可烹饪"
+  transform_to: FLATBREAD_ITEM
+  sauce_creation:
+    clicks_required: 5
+
+slimefun:FLATBREAD_ITEM:
+  display_name: 面饼
+  weight_grams: 150
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 200
+  base_cook_time_seconds: 120
+  flip_required: true
+  food_points: 3
+  saturation: 2
+  shelf_life_minutes: 20
+  hint: "擀薄的面饼 可直接烤制或切成宽面"
+  transform_to: WIDE_NOODLES
+
+slimefun:WIDE_NOODLES:
+  display_name: 宽面
+  weight_grams: 100
+  type: MAIN
+  states: [WHOLE, SLICED]
+  calculator_type: standard
+  mature_ref_temp: 100
+  base_cook_time_seconds: 80
+  flip_required: false
+  food_points: 2
+  saturation: 1.5
+  shelf_life_minutes: 15
+  hint: "宽面条 切割后可得到细面条"
+  transform_to: RAW_NOODLES
+
+slimefun:RAW_NOODLES:
+  display_name: 生面条
+  weight_grams: 80
+  type: MAIN
+  states: [WHOLE]
+  calculator_type: standard
+  mature_ref_temp: 100
+  base_cook_time_seconds: 60
+  flip_required: false
+  food_points: 2
+  saturation: 1.5
+  shelf_life_minutes: 15
+  hint: "生面条 需煮熟后食用；煮熟后即为成品面条"
+
 # ===== 通用食物/药水保质期覆盖（可选）=====
 # 取消注释并填写 shelf_life_minutes 可覆盖 foods.yml 中的默认值喵~
 # _GENERIC_FOOD_:

@@ -201,6 +201,30 @@ public final class FoodRegistry {
                 5)
                 .register(plugin);
 
+        // 面条系列：面团(砧板加工原料)喵
+        new SlimefunItem(food, new SlimefunItemStack("DOUGH", Material.CLAY_BALL, "&r面团", "", "&7砧板+锅铲擀制→面饼"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.WHEAT_FLOUR, new ItemStack(Material.WATER_BUCKET), null, null, null, null, null, null, null})
+                .register(plugin);
+
+        // 面饼(面团擀制后产物，可直接烤或切宽面)喵
+        new SlimefunItem(food, new SlimefunItemStack("FLATBREAD_ITEM", Material.PAPER, "&r面饼", "", "&7砧板+刀切→宽面"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{getItem("DOUGH"), null, null, null, null, null, null, null, null})
+                .register(plugin);
+
+        // 宽面(面饼切制后产物)喵
+        new SlimefunItem(food, new SlimefunItemStack("WIDE_NOODLES", Material.STRING, "&r宽面", "", "&7砧板+刀切→生面条"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{getItem("FLATBREAD_ITEM"), null, null, null, null, null, null, null, null})
+                .register(plugin);
+
+        // 生面条(宽面切制后产物，可煮成熟面条)喵
+        new SlimefunItem(food, new SlimefunItemStack("RAW_NOODLES", Material.STRING, "&r生面条", "", "&7放入灶台煮熟→面条"),
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{getItem("WIDE_NOODLES"), null, null, null, null, null, null, null, null})
+                .register(plugin);
+
         new CustomFood(food, new SlimefunItemStack("BUTTERED_NOODLES", "9174b34c549eed8bafe727618bab6821afcb1787b5decd1eecd6c213e7e7c6d", "&r黄油面条", "", "&7&o恢复 &b&o" + "4.0" + " &7&o点饥饿值"),
                 new ItemStack[]{getItem("NOODLES"), SlimefunItems.BUTTER, null, null, null, null, null, null, null},
                 8)

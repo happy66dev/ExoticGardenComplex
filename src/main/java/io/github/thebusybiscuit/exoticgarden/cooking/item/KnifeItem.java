@@ -119,6 +119,20 @@ public class KnifeItem extends SlimefunItem {
                     return;
                 }
                 heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, next.name());
+                // 喵~检查是否需要转换为新物品（如面饼刀切→宽面，宽面刀切→生面条）喵
+                String ingIdForTransform = heldPdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+                IngredientConfig.IngredientData dataForTransform = ingIdForTransform != null ? ingredients.get(ingIdForTransform) : null;
+                if (dataForTransform != null && dataForTransform.transformTo != null && !dataForTransform.transformTo.isEmpty()) {
+                    ItemStack transformed = SpatulaItem.transformToItem(dataForTransform.transformTo, heldMeta, heldPdc);
+                    if (transformed != null) {
+                        refreshIngredientLore(transformed.getItemMeta(), next,
+                            transformed.getItemMeta().getPersistentDataContainer(), ingredients);
+                        transformed.setItemMeta(transformed.getItemMeta());
+                        CuttingBoardBlock.setStoredItem(boardLoc, transformed);
+                        player.sendMessage("§a食材状态: " + stateDisplayName(next) + "（已加工为" + dataForTransform.displayName + "）");
+                        return;
+                    }
+                }
                 // 同步刷新lore — 找到[烹饪食材]行替换，保留其余lore喵
                 refreshIngredientLore(heldMeta, next, heldPdc, ingredients);
                 held.setItemMeta(heldMeta);

@@ -109,7 +109,8 @@ public class DishGenerator {
             double waterMl, double oilMl,
             double totalWeight,
             List<String> waterSources,
-            List<org.bukkit.potion.PotionEffect> potionEffects) {
+            List<org.bukkit.potion.PotionEffect> potionEffects,
+            double currentTemp) {
         Gson gson = new Gson();
         JsonObject userContent = new JsonObject();
 
@@ -174,6 +175,8 @@ public class DishGenerator {
         // 删除 totalHunger 字段，只保留 totalWeight 喵
         userContent.addProperty("totalWeight", totalWeight);
         userContent.addProperty("language", "zh-CN");
+        // 当前灶台温度（°C），影响实际烹饪方式判断喵
+        userContent.addProperty("currentTemp", (int) currentTemp);
 
         // 药水效果：显式传给AI，格式[{effect:效果名, amplifier:等级, durationSeconds:持续秒}]喵
         if (potionEffects != null && !potionEffects.isEmpty()) {
@@ -211,7 +214,10 @@ public class DishGenerator {
             + "- waterSources: [\"水来源 可能蒸发了\"] 如[\"柠檬汁\",\"牛奶\",\"料酒\",\"水\"]等\n"
             + "- totalWeight: 食材+辅料总克重\n"
             + "- potionEffects(可选): [{effect:效果名,amplifier:等级,durationSeconds:持续秒}]\n"
+            + "- currentTemp: 当前灶台温度(°C)，影响实际烹饪方式判断\n"
             + "- 如有hint字段则表示该食材/调料的特殊属性或用途，应影响菜肴命名和描述\n"
+            + "- 冰系食材（ICE/SNOWBALL 等）的 doneness 表示融化程度(0~100%)，非烹饪熟度\n"
+            + "  其中 0%=完整未融 100%=完全融化消失；融化中的冰食材等效于持续冰镇作用\n"
             + "- 食材的fuelEffects字段说明: 该食材烹饪期间经历的燃料风味列表;\n"
             + "  数量1~2=少量风味 适当, 3=较多 品质略降, 3+超量则考虑降低品质;\n"
             + "  负面风味(如'岩浆淬炼'用于不适合高温的食材)越多品质越低\n"

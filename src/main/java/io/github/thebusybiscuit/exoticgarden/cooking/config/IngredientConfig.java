@@ -37,13 +37,16 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final double oilMl;
         // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
         public final String hint;
+        // 加工完成后变为的新 SF 物品 ID，null 表示不转换喵
+        // 例：面团(DOUGH) 搅拌后变为面饼(FLATBREAD_ITEM)，面饼刀切后变为宽面(WIDE_NOODLES)喵
+        public final String transformTo;
 
         public IngredientData(double matureRefTemp, double baseCookTimeSeconds,
                               boolean flipRequired, List<String> states,
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
                               double foodPoints, double saturation, int shelfLifeMinutes,
-                              double waterMl, double oilMl, String hint) {
+                              double waterMl, double oilMl, String hint, String transformTo) {
             this.matureRefTemp = matureRefTemp;
             this.baseCookTimeSeconds = baseCookTimeSeconds;
             this.flipRequired = flipRequired;
@@ -58,6 +61,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.waterMl = waterMl;
             this.oilMl = oilMl;
             this.hint = hint;
+            this.transformTo = transformTo;
         }
     }
 
@@ -85,7 +89,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getInt("shelf_life_minutes", 10),
             s.getDouble("water_ml", 0),
             s.getDouble("oil_ml", 0),
-            s.getString("hint", "")
+            s.getString("hint", ""),
+            s.getString("transform_to", null)  // 加工转换目标，null 表示不转换喵
         );
     }
 }

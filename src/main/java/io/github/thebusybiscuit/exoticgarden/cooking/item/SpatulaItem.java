@@ -127,6 +127,15 @@ public class SpatulaItem extends SlimefunItem {
                 if (clicks >= data.sauceCreation.clicksRequired) {
                     heldPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, FoodState.SAUCE.name());
                     heldPdc.remove(CookingKeys.SPATULA_CLICKS);
+                    // 喵~SAUCE 完成后，检查是否需要转换为新物品（如面团→面饼）喵
+                    if (data.transformTo != null && !data.transformTo.isEmpty()) {
+                        ItemStack transformed = transformToItem(data.transformTo, heldMeta, heldPdc);
+                        if (transformed != null) {
+                            CuttingBoardBlock.setStoredItem(boardLoc, transformed);
+                            player.sendMessage("§a已制成 §f" + data.displayName + "！");
+                            return;
+                        }
+                    }
                     player.sendMessage("§a已制成酱料！");
                 } else {
                     heldPdc.set(CookingKeys.SPATULA_CLICKS, PersistentDataType.INTEGER, clicks);
@@ -157,5 +166,34 @@ public class SpatulaItem extends SlimefunItem {
             if (d <= 9.0 && d < bestDist) { bestDist = d; best = bloc; }
         }
         return best;
+    }
+
+    /**
+     * 将砧板上的物品转换为新的 SF 物品喵~
+     * 整体思路：查找目标 SF 物品 → 克隆物品 → 写入新的 INGREDIENT_ID 和 FOOD_STATE 到 PDC。
+     * 输入：targetId-目标 SF 物品ID，oldMeta-旧物品的 ItemMeta（保留时间戳等 PDC），oldPdc-旧 PDC。
+     * 输出：转换后的 ItemStack，失败时返回 null。
+     */
+    static ItemStack transformToItem(String targetId, org.bukkit.inventory.meta.ItemMeta oldMeta,
+                                      PersistentDataContainer oldPdc) {
+        SlimefunItem sfTarget = SlimefunItem.getById(targetId);
+        // 喵~防御：目标 SF 物品不存在时返回 null 喵
+        if (sfTarget == null) return null;
+        ItemStack newItem = sfTarget.getItem().clone();
+        newItem.setAmount(1);
+        org.bukkit.inventory.meta.ItemMeta newMeta = newItem.getItemMeta();
+        if (newMeta == null) return newItem;
+        PersistentDataContainer newPdc = newMeta.getPersistentDataContainer();
+        // 写入新的食材 ID 喵
+        newPdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, "slimefun:" + targetId);
+        // 新物品从 WHOLE 状态开始喵
+        newPdc.set(CookingKeys.FOOD_STATE, PersistentDataType.STRING, FoodState.WHOLE.name());
+        // 保留旧物品的时间戳（如果有的话）喵
+        Long timestamp = oldPdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
+        if (timestamp != null) {
+            newPdc.set(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, timestamp);
+        }
+        newItem.setItemMeta(newMeta);
+        return newItem;
     }
 }

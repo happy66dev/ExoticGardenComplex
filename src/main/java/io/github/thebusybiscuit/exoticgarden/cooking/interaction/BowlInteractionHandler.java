@@ -117,7 +117,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         double totalWeightWithWater = totalWeight + state.waterAmount + state.oilAmount;
         String[] prompts = DishGenerator.buildPrompt(ingInfos, seaInfos,
             state.waterAmount, state.oilAmount, totalWeightWithWater, waterSrcs,
-            state.potionEffects);
+            state.potionEffects, state.currentTemp);
 
         // 喵~检查 AI 是否启用，未启用时发送调试提示词，启用时调用 AI 喵
         ExoticGarden pluginInst = ExoticGarden.getInstance();
