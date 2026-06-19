@@ -15,7 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExoticCommand implements CommandExecutor {
+
+    // 当前插件版本号，每次 commit 时手动更新喵
+    public static final String PLUGIN_VERSION = "1.0.26";
+
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        // /exotic version 喵~
+        if (strings.length >= 1 && strings[0].equalsIgnoreCase("version")) {
+            commandSender.sendMessage("§8[§b异域花园§8] §7当前版本: §e" + PLUGIN_VERSION);
+            return true;
+        }
         // /exotic debug getfood 喵~
         if (strings.length >= 2
                 && strings[0].equalsIgnoreCase("debug")
@@ -96,9 +105,10 @@ public class ExoticCommand implements CommandExecutor {
         if (hasPermission(sender, "exoticgarden.admin")) {
             String[] help = {
                 "        §7--------§8====§e[ §b异域花园 §e]§8====§7--------",
+                "§b/exotic version                      §7显示当前版本号",
                 "§b/exotic help                         §7显示帮助信息",
                 "§b/exotic alo info <玩家名>            §7查看指定玩家酒精度",
-                "§b/exotic alo add <玩家名> <值>        §增加/减少 酒精度",
+                "§b/exotic alo add <玩家名> <值>        §7增加/减少 酒精度",
                 "§b/exotic alo set <玩家名> <值>        §7设定 酒精度",
                 "§b/exotic debug getfood               §7获取一个已过期的测试菜肴"
             };
