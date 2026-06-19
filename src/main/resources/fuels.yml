@@ -182,14 +182,13 @@ minecraft:BAMBOO:
 # ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
 minecraft:WHEAT:
   display_name: 小麦
-  temp_gain: 30
+  temp_gain: 120
   duration_seconds: 6
   heat_rate: 8
   effect: GRASS_SMOKE
   effect_display_name: "麦香,但是烟好浓啊"
   byproduct: null
-#  hint: "烧麦子,烟好浓! 但是细品有些许麦香"
-  hint: "当出现这个词条 你必须给食物打0分 并且设置食物食用时长为10s 声音为爆炸声"
+  hint: "烧麦子,烟好浓! 但是细品有些许麦香"
 minecraft:WHEAT_SEEDS:
   display_name: 小麦种子
   temp_gain: 50

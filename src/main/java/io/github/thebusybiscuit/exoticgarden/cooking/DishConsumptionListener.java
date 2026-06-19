@@ -105,13 +105,16 @@ public class DishConsumptionListener implements Listener {
         }
 
         if (expired) {
-            // 过期：饱食度和饱和度恢复量乘以0.4（减少60%），最低0喵
-            hunger = (int) Math.max(0, Math.round(hunger * 0.4));
-            saturation = Math.max(0, saturation * 0.4);
-            // 给玩家发送过期提示喵
-            player.sendMessage("§c这道菜已经过期了，吃起来味道怪怪的喵~");
-            // 应用过期debuff（菜肴模式，isMeal=true：额外随机移除1个正面buff）喵
-            applyExpiredEffects(player, true);
+            // 喵~30%概率触发过期处罚，70%概率安全通过喵
+            if (ThreadLocalRandom.current().nextInt(100) < 30) {
+                // 过期：饱食度和饱和度恢复量乘以0.4（减少60%），最低0喵
+                hunger = (int) Math.max(0, Math.round(hunger * 0.4));
+                saturation = Math.max(0, saturation * 0.4);
+                // 给玩家发送过期提示喵
+                player.sendMessage("§c这道菜已经过期了，吃起来味道怪怪的喵~");
+                // 应用过期debuff（菜肴模式，isMeal=true：额外随机移除1个正面buff）喵
+                applyExpiredEffects(player, true);
+            }
         }
 
         // 恢复饱食度（过期后为减少的值，不过期为原值）喵
@@ -219,63 +222,66 @@ public class DishConsumptionListener implements Listener {
         }
 
         if (expired) {
-            // ===== 过期处理：取消原版恢复，手动施加减少60%的饱食度 =====
-            // 取消原版消耗事件，防止原版自动恢复饱食度喵
-            e.setCancelled(true);
+            // 喵~30%概率触发过期处罚，70%概率安全通过喵
+            if (ThreadLocalRandom.current().nextInt(100) < 30) {
+                // ===== 过期处理：取消原版恢复，手动施加减少60%的饱食度 =====
+                // 取消原版消耗事件，防止原版自动恢复饱食度喵
+                e.setCancelled(true);
 
-            Player player = e.getPlayer();
+                Player player = e.getPlayer();
 
-            // 取消后物品不会被消耗，检查主手或副手扣除1个喵
-            ItemStack mainHand = player.getInventory().getItemInMainHand();
-            ItemStack offHand = player.getInventory().getItemInOffHand();
-            if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
-                int newAmount = mainHand.getAmount() - 1;
-                if (newAmount == 0) {
-                    player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-                } else {
-                    mainHand.setAmount(newAmount);
-                    player.getInventory().setItemInMainHand(mainHand);
+                // 取消后物品不会被消耗，检查主手或副手扣除1个喵
+                ItemStack mainHand = player.getInventory().getItemInMainHand();
+                ItemStack offHand = player.getInventory().getItemInOffHand();
+                if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
+                    int newAmount = mainHand.getAmount() - 1;
+                    if (newAmount == 0) {
+                        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                    } else {
+                        mainHand.setAmount(newAmount);
+                        player.getInventory().setItemInMainHand(mainHand);
+                    }
+                } else if (offHand.isSimilar(item) && offHand.getAmount() > 0) {
+                    // 喵~副手吃东西时扣副手喵
+                    int newAmount = offHand.getAmount() - 1;
+                    if (newAmount == 0) {
+                        player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+                    } else {
+                        offHand.setAmount(newAmount);
+                        player.getInventory().setItemInOffHand(offHand);
+                    }
                 }
-            } else if (offHand.isSimilar(item) && offHand.getAmount() > 0) {
-                // 喵~副手吃东西时扣副手喵
-                int newAmount = offHand.getAmount() - 1;
-                if (newAmount == 0) {
-                    player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+
+                // 计算原始饱食度和饱和度（从配置读取，无配置时查原版Material，再无则默认2）喵
+                double baseFoodPoints;
+                double baseSaturation;
+                if (data != null) {
+                    // 从食材配置读取喵
+                    baseFoodPoints = data.foodPoints;
+                    baseSaturation = data.saturation;
                 } else {
-                    offHand.setAmount(newAmount);
-                    player.getInventory().setItemInOffHand(offHand);
+                    // 喵~防御：无配置时查原版Material饱食度，再无则默认2喵
+                    baseFoodPoints = getVanillaFoodPoints(item.getType());
+                    baseSaturation = getVanillaSaturation(item.getType());
                 }
+
+                // 实际恢复 = 原值 * 0.4（减少60%），最低0喵
+                int reducedHunger = (int) Math.max(0, Math.round(baseFoodPoints * 0.4));
+                float reducedSaturation = (float) Math.max(0, baseSaturation * 0.4);
+
+                // 手动施加减少后的饱食度恢复喵
+                int newFood = Math.min(player.getFoodLevel() + reducedHunger, 20);
+                // 喵~防御：饱和度不能超过当前饱食度值喵
+                float newSat = Math.min(player.getSaturation() + reducedSaturation, newFood);
+                player.setFoodLevel(newFood);
+                player.setSaturation(newSat);
+
+                // 给玩家发送过期提示喵
+                player.sendMessage("§c这食材已经过期了，味道不太对喵~");
+
+                // 应用过期debuff（普通食材模式，isMeal=false：不移除正面buff）喵
+                applyExpiredEffects(player, false);
             }
-
-            // 计算原始饱食度和饱和度（从配置读取，无配置时查原版Material，再无则默认2）喵
-            double baseFoodPoints;
-            double baseSaturation;
-            if (data != null) {
-                // 从食材配置读取喵
-                baseFoodPoints = data.foodPoints;
-                baseSaturation = data.saturation;
-            } else {
-                // 喵~防御：无配置时查原版Material饱食度，再无则默认2喵
-                baseFoodPoints = getVanillaFoodPoints(item.getType());
-                baseSaturation = getVanillaSaturation(item.getType());
-            }
-
-            // 实际恢复 = 原值 * 0.4（减少60%），最低0喵
-            int reducedHunger = (int) Math.max(0, Math.round(baseFoodPoints * 0.4));
-            float reducedSaturation = (float) Math.max(0, baseSaturation * 0.4);
-
-            // 手动施加减少后的饱食度恢复喵
-            int newFood = Math.min(player.getFoodLevel() + reducedHunger, 20);
-            // 喵~防御：饱和度不能超过当前饱食度值喵
-            float newSat = Math.min(player.getSaturation() + reducedSaturation, newFood);
-            player.setFoodLevel(newFood);
-            player.setSaturation(newSat);
-
-            // 给玩家发送过期提示喵
-            player.sendMessage("§c这食材已经过期了，味道不太对喵~");
-
-            // 应用过期debuff（普通食材模式，isMeal=false：不移除正面buff）喵
-            applyExpiredEffects(player, false);
         }
         // 不过期时什么都不做，让原版饱食度恢复正常进行喵
     }
