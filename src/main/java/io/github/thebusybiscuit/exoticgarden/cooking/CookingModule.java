@@ -48,12 +48,19 @@ public class CookingModule {
     private static StoveBlock stoveInstance;
     // 保存食材配置 map，供 CuttingBoardBlock 取回时刷新 lore 使用喵
     private static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> ingredientsMap;
+    // 保存调料配置 map，供 DishConsumptionListener 查询保质期使用喵
+    private static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasoningsMap;
     // 保存 foods.yml 配置，供 ExoticGardenFruit 等外部类查询保质期覆盖喵
     private static FoodsConfig foodsConfigInstance;
 
     /** 获取食材配置 map，用于刷新 lore 等场景喵 */
     public static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> getIngredients() {
         return ingredientsMap;
+    }
+
+    /** 获取调料配置 map，用于查询保质期等场景喵 */
+    public static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> getSeasonings() {
+        return seasoningsMap;
     }
 
     /** 获取 foods.yml 配置，用于查询逐物品保质期覆盖喵 */
@@ -66,6 +73,7 @@ public class CookingModule {
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
         ingredientsMap = ingredients; // 保存引用供外部访问喵
         Map<String, SeasoningConfig.SeasoningData> seasonings = loadSeasonings(plugin);
+        seasoningsMap = seasonings; // 保存引用供外部查询调料保质期喵
         FoodsConfig foodsConfig = loadFoods(plugin);
         foodsConfigInstance = foodsConfig; // 保存引用供外部查询保质期覆盖喵
 
