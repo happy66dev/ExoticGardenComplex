@@ -21,12 +21,17 @@ public class DishGenerator {
         public final String hint;
         public final List<String> fuelEffects;
         public final boolean isExpired;
+        // 过期时间（分钟），isExpired=true时有效；-1表示未过期或无时间戳喵
+        public final long expiredMinutes;
+        // 食材保质期（分钟），0表示无保质期配置喵
+        public final int shelfLifeMinutes;
 
         public IngredientInfo(String name, String state, int doneness,
                               int frontDoneness, int backDoneness,
                               double weight,
                               double foodPoints, double saturation, String hint,
-                              List<String> fuelEffects, boolean isExpired) {
+                              List<String> fuelEffects, boolean isExpired,
+                              long expiredMinutes, int shelfLifeMinutes) {
             this.name = name;
             this.state = state;
             this.doneness = doneness;
@@ -38,6 +43,8 @@ public class DishGenerator {
             this.hint = hint != null ? hint : "";
             this.fuelEffects = fuelEffects != null ? fuelEffects : new java.util.ArrayList<>();
             this.isExpired = isExpired;
+            this.expiredMinutes = expiredMinutes;
+            this.shelfLifeMinutes = shelfLifeMinutes;
         }
     }
 
@@ -49,14 +56,21 @@ public class DishGenerator {
         public final String hint;
         // 调料是否已过期，影响菜肴品质和命名风格喵
         public final boolean isExpired;
+        // 过期时间（分钟），isExpired=true时有效；-1表示未过期或无时间戳喵
+        public final long expiredMinutes;
+        // 调料保质期（分钟），0表示无保质期配置喵
+        public final int shelfLifeMinutes;
 
-        public SeasoningInfo(String name, Integer progress, double mlAmount, String hint, boolean isExpired) {
+        public SeasoningInfo(String name, Integer progress, double mlAmount, String hint, boolean isExpired,
+                             long expiredMinutes, int shelfLifeMinutes) {
             this.name = name;
             this.progress = progress;
             this.mlAmount = mlAmount;
             // 喵~防御：hint 为 null 时存为空字符串，避免 NPE 喵
             this.hint = hint != null ? hint : "";
             this.isExpired = isExpired;
+            this.expiredMinutes = expiredMinutes;
+            this.shelfLifeMinutes = shelfLifeMinutes;
         }
     }
 
@@ -147,7 +161,13 @@ public class DishGenerator {
                 obj.add("fuelEffects", fxArr);
             }
             // 食材过期时传给 AI，影响品质判断和猎奇名喵
-            if (info.isExpired) obj.addProperty("expired", true);
+            if (info.isExpired) {
+                obj.addProperty("expired", true);
+                // 已过期多久（分钟），-1表示无时间戳喵
+                if (info.expiredMinutes >= 0) obj.addProperty("expiredMinutes", info.expiredMinutes);
+                // 食材保质期（分钟），供AI判断腐败程度喵
+                if (info.shelfLifeMinutes > 0) obj.addProperty("shelfLifeMinutes", info.shelfLifeMinutes);
+            }
             ingArr.add(obj);
         }
         userContent.add("ingredients", ingArr);
@@ -167,7 +187,11 @@ public class DishGenerator {
                 obj.addProperty("hint", si.hint);
             }
             // 调料过期时传给 AI，影响品质和命名风格喵
-            if (si.isExpired) obj.addProperty("expired", true);
+            if (si.isExpired) {
+                obj.addProperty("expired", true);
+                if (si.expiredMinutes >= 0) obj.addProperty("expiredMinutes", si.expiredMinutes);
+                if (si.shelfLifeMinutes > 0) obj.addProperty("shelfLifeMinutes", si.shelfLifeMinutes);
+            }
             seaArr.add(obj);
         }
         userContent.add("seasonings", seaArr);
@@ -213,8 +237,13 @@ public class DishGenerator {
             + "果类0~50%可以 50~100%熟了 100%~150%烂了 150%+焦了),"
             + "weight:克,foodPoints:饱食度,saturation:饱和度,"
             + "hint(可选):该食材的特殊属性或用途,fuelEffects:烹饪期间经历的燃料风味（可为空）,"
-            + "expired(可选):true表示食材放入灶台前已过期，会影响菜肴品质和命名风格}]\n"
-            + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美,200%变味了),mlAmount:液体毫升量,hint(可选):该调料的特殊属性或用途,expired(可选):true表示该调料放入灶台前已过期 影响菜肴品质}]\n"
+            + "expired(可选):true表示食材放入灶台前已过期 会影响菜肴品质和命名风格;"
+            + "expiredMinutes(可选,expired=true时存在):已过期多少分钟(以盛菜时为准);"
+            + "shelfLifeMinutes(可选,expired=true时存在):该食材的保质期分钟数 可用于推断腐败程度(过期时间/保质期=腐败倍率)}]\n"
+            + "- seasonings: [{name:\"调料名\",progress:渗入度百分比(0-200,100=完美,200%变味了),mlAmount:液体毫升量,hint(可选):该调料的特殊属性或用途,"
+            + "expired(可选):true表示该调料放入灶台前已过期 影响菜肴品质;"
+            + "expiredMinutes(可选,expired=true时存在):已过期多少分钟(以盛菜时为准);"
+            + "shelfLifeMinutes(可选,expired=true时存在):该调料的保质期分钟数}]\n"
             + "  可用调料参考(玩家实际投料在上方seasonings列表中): 盐 白糖 红糖 料酒 醋 黑胡椒碎 葱花 花生碎 香菜碎 咖喱叶 茶叶 蜂蜜 黄油(辅料) 淡奶油(辅料) 植物油(油类) 味精 "
             + "各类果汁(柠檬汁/橙汁/苹果汁/葡萄汁/草莓汁/樱桃汁/梅子汁/桃子汁/梨汁/石榴汁/火龙果汁/菠萝汁/椰奶/番茄汁/胡萝卜汁/南瓜汁等) "
             + "特殊调料(恶魔瓜丁/地狱果片/药水) 肉类碎料(培根碎/炸鸡碎/鸡块碎/薯条碎/洋葱圈碎/芝士碎) 酱料(烤肉酱/蛋黄酱/芥末/肉汁)\n"

@@ -61,6 +61,8 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
         // 读取物品已有的切割状态（WHOLE/SLICED/DICED），默认 WHOLE 喵
         FoodState foodState = FoodState.WHOLE;
         boolean isExpired = false;
+        long foodTimestamp = 0L;
+        int ingredientShelfLife = 0;
         if (handItem.getItemMeta() != null) {
             PersistentDataContainer pdc = handItem.getItemMeta().getPersistentDataContainer();
             String rawState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
@@ -76,12 +78,17 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
                 int shelfLife = data2 != null ? data2.shelfLifeMinutes : 10;
                 long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
                 isExpired = diffMinutes >= shelfLife;
+                // 喵~记录时间戳和保质期，盛菜时用于计算已过期多少分钟喵
+                foodTimestamp = timestamp;
+                ingredientShelfLife = shelfLife;
             }
         }
 
         // 将食材放入空槽，并同步灶台物理槽位显示喵
         IngredientSlot slot = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
         slot.isExpired = isExpired;
+        slot.foodTimestamp = foodTimestamp;
+        slot.shelfLifeMinutes = ingredientShelfLife;
 
         // 收集当前灶台已有燃料的 hint（AI提示词），非空时加入食材的 fuelEffects 喵
         for (FuelEntry fe : state.fuels) {

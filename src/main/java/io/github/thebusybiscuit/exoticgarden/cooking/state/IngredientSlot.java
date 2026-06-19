@@ -17,6 +17,10 @@ public class IngredientSlot {
     public List<String> fuelEffects;
     // 食材放入灶台时是否已过期喵
     public boolean isExpired;
+    // 食材的时间戳（毫秒），用于盛菜时计算过期分钟数喵
+    public long foodTimestamp;
+    // 食材的保质期（分钟），用于盛菜时传给AI判断腐败程度喵
+    public int shelfLifeMinutes;
 
     public IngredientSlot(String ingredientId, FoodState state, double frontDoneness,
                           double backDoneness, ActiveFace currentFace, double charSeconds) {
@@ -31,5 +35,7 @@ public class IngredientSlot {
         // 喵~防御：初始化为空列表，避免 NPE 喵
         this.fuelEffects = new ArrayList<>();
         this.isExpired = false;
+        this.foodTimestamp = 0L;
+        this.shelfLifeMinutes = 0;
     }
 }

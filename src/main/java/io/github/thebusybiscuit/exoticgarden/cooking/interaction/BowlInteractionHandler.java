@@ -71,6 +71,8 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         List<DishGenerator.SeasoningInfo> seaInfos = new ArrayList<>();
         double totalWeight = 0;
 
+        long now = System.currentTimeMillis();
+
         for (IngredientSlot slot : state.slots) {
             if (slot == null) continue;
             IngredientConfig.IngredientData data = ingredients.get(slot.ingredientId);
@@ -83,10 +85,17 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             int sat = data != null ? (int) data.saturation : 0;
             String hint = data != null ? data.hint : "";
             totalWeight += weight;
+            // 喵~以盛菜时为准，计算食材已过期多少分钟（foodTimestamp>0才有效）喵
+            long ingExpiredMinutes = -1;
+            if (slot.isExpired && slot.foodTimestamp > 0 && slot.shelfLifeMinutes > 0) {
+                long diffMin = (now - slot.foodTimestamp) / 60000L;
+                ingExpiredMinutes = Math.max(0, diffMin - slot.shelfLifeMinutes);
+            }
             ingInfos.add(new DishGenerator.IngredientInfo(
                 displayName, foodStateDisplay(slot.state),
                 doneness, frontDoneness, backDoneness,
-                weight, foodPts, sat, hint, slot.fuelEffects, slot.isExpired));
+                weight, foodPts, sat, hint, slot.fuelEffects, slot.isExpired,
+                ingExpiredMinutes, slot.shelfLifeMinutes));
         }
 
         for (SeasoningEntry se : state.seasonings) {
@@ -98,16 +107,19 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
             totalWeight += se.weight;
             int progress = sd != null && sd.hasDoneness ? (int) Math.round(se.progress * 100) : -1;
             double mlAmt = sd != null ? sd.waterMl + sd.oilMl : 0;
-            // 喵~判断调料是否过期（addedTimestamp>0 且 shelfLifeMinutes>0）喵
+            // 喵~判断调料是否过期（addedTimestamp>0 且 shelfLifeMinutes>0），以盛菜时为准喵
             boolean seaExpired = false;
-            if (sd != null && sd.shelfLifeMinutes > 0 && se.addedTimestamp > 0) {
-                long diffMin = (System.currentTimeMillis() - se.addedTimestamp) / 60000L;
-                seaExpired = diffMin >= sd.shelfLifeMinutes;
+            long seaExpiredMinutes = -1;
+            int seaShelfLife = sd != null ? sd.shelfLifeMinutes : 0;
+            if (seaShelfLife > 0 && se.addedTimestamp > 0) {
+                long diffMin = (now - se.addedTimestamp) / 60000L;
+                seaExpired = diffMin >= seaShelfLife;
+                if (seaExpired) seaExpiredMinutes = Math.max(0, diffMin - seaShelfLife);
             }
             seaInfos.add(new DishGenerator.SeasoningInfo(
                 displayName,
                 sd != null && sd.hasDoneness ? progress : null,
-                mlAmt, hint, seaExpired));
+                mlAmt, hint, seaExpired, seaExpiredMinutes, seaShelfLife));
         }
 
         // 喵~fuelEffects 已绑定到各食材 slot.fuelEffects，不需要全局 fxList 喵
