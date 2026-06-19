@@ -97,6 +97,11 @@ public class StoveHologram {
             }
         }
 
+        // 喵~热容系数：与 tickTemperature 保持一致，显示实际有效速率喵
+        double liquidTotal = state.waterAmount + state.oilAmount;
+        double heatCapacityFactor = io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState.BASE_LIQUID_ML
+            / (io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState.BASE_LIQUID_ML + liquidTotal);
+
         sb.append(String.format("§6[灶台] §e温度: §a%.0f°C §7/ §f%.0f°C\n",
             state.currentTemp, maxTemp));
 
@@ -111,18 +116,19 @@ public class StoveHologram {
                 String fuelName = fd != null ? fd.displayName : fe.fuelId;
                 sb.append(String.format("§b燃料: §f%s §7%.0fs\n", fuelName, secs));
             }
-            // 喵~升温/降温速率（冰燃料 totalHeatRate 为负）喵
+            // 喵~升温/降温速率乘以热容系数后的实际值（每tick*10=每秒）喵
+            double effectiveHeatRate = totalHeatRate * heatCapacityFactor;
             if (totalHeatRate >= 0) {
-                sb.append(String.format("§b升温: +%.1f°C/s\n", totalHeatRate));
+                sb.append(String.format("§b升温: +%.2f°C/s\n", effectiveHeatRate));
             } else {
-                sb.append(String.format("§b降温: %.1f°C/s\n", totalHeatRate));
+                sb.append(String.format("§b降温: %.2f°C/s\n", effectiveHeatRate));
             }
-            // 散热/反向散热速率显示喵
+            // 散热/反向散热速率也乘以热容系数显示真实值喵
             if (state.currentTemp > base) {
-                double coolRatePerSec = (state.currentTemp - base) * 0.025;
+                double coolRatePerSec = (state.currentTemp - base) * 0.025 * heatCapacityFactor;
                 sb.append(String.format("§3散热: -%.2f°C/s\n", coolRatePerSec));
             } else if (state.currentTemp < base) {
-                double warmRatePerSec = (base - state.currentTemp) * 0.025;
+                double warmRatePerSec = (base - state.currentTemp) * 0.025 * heatCapacityFactor;
                 sb.append(String.format("§a回升: +%.2f°C/s\n", warmRatePerSec));
             }
         } else {
