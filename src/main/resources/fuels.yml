@@ -142,33 +142,33 @@ minecraft:BLAZE_POWDER:
   hint: ""
 minecraft:LAVA_BUCKET:
   display_name: 岩浆桶
-  temp_gain: 1500
+  temp_gain: 3000
   duration_seconds: 600
-  heat_rate: 20
+  heat_rate: 40
   effect: LAVA_INFUSED
-  effect_display_name: "岩浆淬炼"
+  effect_display_name: "岩浆淬炼,如果你会烹饪,那么可能这不是个好选择"
   byproduct: null
   hint: "岩浆烧食物?"
 minecraft:MAGMA_BLOCK:
   display_name: 岩浆块
-  temp_gain: 600
-  duration_seconds: 300
-  heat_rate: 7
+  temp_gain: 400
+  duration_seconds: 3600
+  heat_rate: 5
   effect: MAGMATIC
-  effect_display_name: "岩浆块烘烤"
+  effect_display_name: "岩浆块烧烤,不错"
   byproduct: null
   hint: ""
 
 # ===== 速燃类 - 低热, 短燃烧 =====
 minecraft:STICK:
   display_name: 木棍
-  temp_gain: 50
-  duration_seconds: 10
+  temp_gain: 180
+  duration_seconds: 8
   heat_rate: 4
   effect: LIGHT_SMOKE
-  effect_display_name: "木棍轻烟"
+  effect_display_name: "小燃料,控火不错,有一点点烟"
   byproduct: null
-  hint: ""
+  hint: "轻微的木烟"
 minecraft:BAMBOO:
   display_name: 竹子
   temp_gain: 80
@@ -177,7 +177,7 @@ minecraft:BAMBOO:
   effect: LIGHT_SMOKE
   effect_display_name: "竹香"
   byproduct: null
-  hint: ""
+  hint: "很香的竹香"
 
 # ===== 草本速燃类 - 升温极快, 瞬息即逝 =====
 minecraft:WHEAT:

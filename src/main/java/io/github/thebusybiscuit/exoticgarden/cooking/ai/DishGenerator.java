@@ -111,7 +111,9 @@ public class DishGenerator {
             this.icon = icon != null ? icon : "SUSPICIOUS_STEW";
             this.flavorTexts = flavorTexts != null ? flavorTexts : new java.util.ArrayList<>();
             // 喵~防御：eatSound 为 null 或空时用标准音效喵
-            this.eatSound = (eatSound != null && !eatSound.isBlank()) ? eatSound : "entity.generic.eat";
+            String rawSound = (eatSound != null && !eatSound.isBlank()) ? eatSound.trim() : "entity.generic.eat";
+            // 喵~防御：Adventure Key.key() 必须是 namespace:value 格式，裸名缺省补 minecraft: 前缀喵
+            this.eatSound = rawSound.contains(":") ? rawSound : "minecraft:" + rawSound;
             // 喵~防御：consumeSeconds <=0 时回退默认值1.6s喵
             this.consumeSeconds = consumeSeconds > 0 ? consumeSeconds : 1.6;
         }
