@@ -87,13 +87,17 @@ public class DishGenerator {
         public final int shelfLifeMinutes;
         // 菜肴图标，原版 Material 名（如 COOKED_BEEF），缺省 SUSPICIOUS_STEW喵
         public final String icon;
-        // 食用句子列表，最多5句，每句≤35字，食用未过期菜肴时随机选一句发送给玩家喵
+        // 食用句子列表，最多5句，每句≤35字，食用未过期菜肴时按顺序展示给玩家喵
         public final List<String> flavorTexts;
+        // 进食音效，Minecraft声音ID（如 entity.generic.eat），缺省标准进食音效喵
+        public final String eatSound;
+        // 进食耗时（秒），默认1.6s，特殊食材可调整喵
+        public final double consumeSeconds;
 
         public DishResult(String name, int servings, String quality, int qualityScore,
                           List<String> effects, String description,
                           int hunger, double saturation, int shelfLifeMinutes, String icon,
-                          List<String> flavorTexts) {
+                          List<String> flavorTexts, String eatSound, double consumeSeconds) {
             this.name = name;
             this.servings = servings;
             this.quality = quality;
@@ -106,6 +110,10 @@ public class DishGenerator {
             this.shelfLifeMinutes = shelfLifeMinutes;
             this.icon = icon != null ? icon : "SUSPICIOUS_STEW";
             this.flavorTexts = flavorTexts != null ? flavorTexts : new java.util.ArrayList<>();
+            // 喵~防御：eatSound 为 null 或空时用标准音效喵
+            this.eatSound = (eatSound != null && !eatSound.isBlank()) ? eatSound : "entity.generic.eat";
+            // 喵~防御：consumeSeconds <=0 时回退默认值1.6s喵
+            this.consumeSeconds = consumeSeconds > 0 ? consumeSeconds : 1.6;
         }
 
         // 将中文品质形容词转为系数，未知词汇默认1.0喵
@@ -293,6 +301,11 @@ public class DishGenerator {
             + "  flavorTexts 说明: 玩家每吃一口会按顺序收到对应句子，句子描述从第一口到最后一口的感受，类似吃东西时脑子里的OS或旁白。\n"
             + "  flavorTexts 规则: 每句必须包含§颜色符 每句严格不超过35字(含颜色符不算字数) 句子数量必须与servings完全一致\n"
             + "  flavorTexts 风格示例: §e第一口下去满是烟熏香  §a越吃越停不下来  §6吃到最后一口 有点舍不得\n"
+            + "eatSound(可选): 进食音效Minecraft声音ID，缺省不填即使用标准进食音效(entity.generic.eat);\n"
+            + "  只在食材特殊时才设置，如食物成焦炭 汤类 腐败等\n"
+            + "  参考音效: entity.generic.eat(标准) entity.generic.drink(喝) entity.zombie.ambient(僵尸的声音) entity.generic.explode(爆炸) item.bottle.fill(液体装瓶)\n"
+            + "consumeSeconds(可选): 进食耗时秒数(浮点,缺省不填即1.6s);\n"
+            + "  只在食材特殊时才设置，如大块食材→3.0 液体/果汁→0.8 过期劣质食材→0.5(迫不及待吞下) 精心料理→2.5\n"
             + "icon 选材建议(不要完全参考): 炖菜类→MUSHROOM_STEW/SUSPICIOUS_STEW 烧烤类→COOKED_BEEF/COOKED_PORKCHOP/COOKED_CHICKEN/COOKED_MUTTON "
             + "煎炒类→COOKED_COD/COOKED_SALMON 面包类→BREAD 汤类→BEETROOT_SOUP/RABBIT_STEW 甜点类→COOKIE/PUMPKIN_PIE 生食类→APPLE/MELON_SLICE\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"

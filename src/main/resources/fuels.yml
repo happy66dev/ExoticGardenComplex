@@ -21,123 +21,123 @@
 # ===== 木材类 - 热值中等, 短燃烧, 产木炭 =====
 minecraft:OAK_LOG:
   display_name: 橡木原木
-  temp_gain: 300
-  duration_seconds: 80
-  heat_rate: 6
+  temp_gain: 260
+  duration_seconds: 40
+  heat_rate: 5
   effect: WOOD_SMOKE
   effect_display_name: "橡木烟熏"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "橡木烟熏,不是很浓"
 minecraft:BIRCH_LOG:
   display_name: 桦木原木
-  temp_gain: 280
-  duration_seconds: 75
-  heat_rate: 6
+  temp_gain: 300
+  duration_seconds: 35
+  heat_rate: 7
   effect: WOOD_SMOKE
-  effect_display_name: "桦木烟熏"
+  effect_display_name: "桦液清爽,火候略猛"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "具有桦液清爽之感,微烟"
 minecraft:SPRUCE_LOG:
   display_name: 云杉原木
-  temp_gain: 290
-  duration_seconds: 78
-  heat_rate: 6
+  temp_gain: 220
+  duration_seconds: 60
+  heat_rate: 4
   effect: WOOD_SMOKE
-  effect_display_name: "云杉烟熏"
+  effect_display_name: "坚果味道,火候温和"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "具有轻微坚果香味,微烟"
 minecraft:JUNGLE_LOG:
   display_name: 丛林原木
   temp_gain: 310
   duration_seconds: 82
   heat_rate: 6
   effect: WOOD_SMOKE
-  effect_display_name: "丛林木烟熏"
+  effect_display_name: "略微泥土的味道"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "微微丛林泥泞的味道,中烟"
 minecraft:ACACIA_LOG:
   display_name: 金合欢原木
-  temp_gain: 270
-  duration_seconds: 72
-  heat_rate: 6
+  temp_gain: 330
+  duration_seconds: 30
+  heat_rate: 8
   effect: WOOD_SMOKE
-  effect_display_name: "金合欢烟熏"
+  effect_display_name: "草原大自然的味道,烟很浓"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "带有微微草原的味到,重烟"
 minecraft:DARK_OAK_LOG:
   display_name: 深色橡木原木
-  temp_gain: 320
-  duration_seconds: 85
-  heat_rate: 6
+  temp_gain: 260
+  duration_seconds: 45
+  heat_rate: 5
   effect: WOOD_SMOKE
   effect_display_name: "深色橡木烟熏"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "橡木烟熏,不是很浓"
 minecraft:MANGROVE_LOG:
   display_name: 红树原木
-  temp_gain: 290
-  duration_seconds: 78
-  heat_rate: 6
+  temp_gain: 210
+  duration_seconds: 90
+  heat_rate: 3
   effect: WOOD_SMOKE
-  effect_display_name: "红树烟熏"
+  effect_display_name: "泥泞沼泽的味道,可能不适合用来做饭"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "泥泞沼泽的味道"
 minecraft:CHERRY_LOG:
   display_name: 樱花原木
   temp_gain: 300
-  duration_seconds: 80
-  heat_rate: 7
+  duration_seconds: 30
+  heat_rate: 6
   effect: FRUIT_WOOD
-  effect_display_name: "樱花果木香"
+  effect_display_name: "樱花香!"
   byproduct: CHARCOAL
-  hint: ""
+  hint: "微微樱花果木的味道"
 
 # ===== 炭类 - 高热, 长燃烧 =====
 minecraft:CHARCOAL:
   display_name: 木炭
-  temp_gain: 400
-  duration_seconds: 180
+  temp_gain: 450
+  duration_seconds: 120
   heat_rate: 4
   effect: SMOKY
-  effect_display_name: "木炭温火"
+  effect_display_name: "具有浓烟,可能污染食物"
   byproduct: null
   hint: ""
 minecraft:COAL:
   display_name: 煤炭
-  temp_gain: 500
-  duration_seconds: 240
+  temp_gain: 600
+  duration_seconds: 300
   heat_rate: 5
   effect: SMOKY
-  effect_display_name: "煤炭炭火"
+  effect_display_name: "无烟炭,万能燃料"
   byproduct: null
   hint: ""
 minecraft:COAL_BLOCK:
   display_name: 煤炭块
-  temp_gain: 900
-  duration_seconds: 900
+  temp_gain: 600
+  duration_seconds: 1200
   heat_rate: 8
   effect: INTENSE_SMOKE
-  effect_display_name: "煤炭块浓烟"
+  effect_display_name: "无烟炭捆,很适合长期烹饪"
   byproduct: null
   hint: ""
 
 # ===== 高效燃料 - 超高温 =====
 minecraft:BLAZE_ROD:
   display_name: 烈焰棒
-  temp_gain: 700
-  duration_seconds: 120
-  heat_rate: 12
+  temp_gain: 900
+  duration_seconds: 60
+  heat_rate: 16
   effect: BLAZING
-  effect_display_name: "烈焰灼烧"
+  effect_display_name: "烈火,可能烧到食物"
   byproduct: null
-  hint: ""
+  hint: "火直接烧到食物上了"
 minecraft:BLAZE_POWDER:
   display_name: 烈焰粉
-  temp_gain: 500
+  temp_gain: 600
   duration_seconds: 60
-  heat_rate: 15
+  heat_rate: 8
   effect: BLAZING
-  effect_display_name: "烈焰灼烧"
+  effect_display_name: "文火,不错的燃料,没有任何污染物"
   byproduct: null
   hint: ""
 minecraft:LAVA_BUCKET:
@@ -148,7 +148,7 @@ minecraft:LAVA_BUCKET:
   effect: LAVA_INFUSED
   effect_display_name: "岩浆淬炼"
   byproduct: null
-  hint: ""
+  hint: "岩浆烧食物?"
 minecraft:MAGMA_BLOCK:
   display_name: 岩浆块
   temp_gain: 600

@@ -217,7 +217,11 @@ public class AiClient {
                     }
                 }
             }
-            return new DishGenerator.DishResult(name, servings, quality, qualityScore, effects, description, hunger, saturation, shelfLifeMinutes, icon, flavorTexts);
+            // 解析进食音效，可选字段，缺省由 DishResult 兜底喵
+            String eatSound = obj.has("eatSound") ? obj.get("eatSound").getAsString() : null;
+            // 解析进食耗时，可选字段，缺省由 DishResult 兜底为1.6s喵
+            double consumeSeconds = obj.has("consumeSeconds") ? obj.get("consumeSeconds").getAsDouble() : 0;
+            return new DishGenerator.DishResult(name, servings, quality, qualityScore, effects, description, hunger, saturation, shelfLifeMinutes, icon, flavorTexts, eatSound, consumeSeconds);
         } catch (Exception e) {
             throw new RuntimeException("JSON解析失败，原始内容: " + content, e);
         }

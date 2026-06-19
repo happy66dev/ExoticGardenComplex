@@ -221,6 +221,16 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                     dish.setItemMeta(meta);
                 }
 
+                // 喵~在物品上直接写入 CONSUMABLE 数据组件，让原版处理进食耗时和音效喵
+                // 必须在 setItemMeta 之后再调用 setData，否则 meta 会覆盖组件喵
+                io.papermc.paper.datacomponent.item.Consumable consumable =
+                    io.papermc.paper.datacomponent.item.Consumable.consumable()
+                        .consumeSeconds((float) result.consumeSeconds)
+                        .sound(net.kyori.adventure.key.Key.key(result.eatSound))
+                        .animation(io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation.EAT)
+                        .build();
+                dish.setData(io.papermc.paper.datacomponent.DataComponentTypes.CONSUMABLE, consumable);
+
                 // 喵~放入玩家背包，背包满则掉落在玩家位置喵
                 if (p != null) {
                     java.util.Map<Integer, ItemStack> leftover = p.getInventory().addItem(dish);

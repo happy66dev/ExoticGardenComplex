@@ -37,6 +37,10 @@ public final class CookingKeys {
     public static final NamespacedKey DISH_FLAVOR_TEXTS = new NamespacedKey(NS, "dish_flavor_texts");
     // 下一次食用时应展示的 flavorTexts 索引（0起），每食用一次 +1 喵
     public static final NamespacedKey DISH_FLAVOR_INDEX = new NamespacedKey(NS, "dish_flavor_index");
+    // 进食音效 Minecraft 声音 ID，缺省 entity.generic.eat 喵
+    public static final NamespacedKey DISH_EAT_SOUND = new NamespacedKey(NS, "dish_eat_sound");
+    // 进食耗时（秒 * 100 存为整数，避免 float 精度问题），缺省 160=1.6s 喵
+    public static final NamespacedKey DISH_CONSUME_TICKS = new NamespacedKey(NS, "dish_consume_ticks");
 
     private CookingKeys() {}
 }

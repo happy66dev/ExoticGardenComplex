@@ -32,7 +32,6 @@ blacklist:
   - minecraft:FERMENTED_SPIDER_EYE
   - minecraft:POISONOUS_POTATO
   - minecraft:GLISTERING_MELON_SLICE
-  - minecraft:PUFFERFISH
 
 # overrides:
 #   minecraft:COOKIE:
