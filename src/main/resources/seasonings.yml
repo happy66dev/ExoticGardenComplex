@@ -1,4 +1,4 @@
-# config_version: 5
+# config_version: 6
 # ============================================================
 # seasonings.yml - 烹饪调料配置
 # ============================================================
@@ -36,6 +36,7 @@ slimefun:SALT:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 minecraft:SUGAR:
   weight_grams: 1
   water_ml: 0
@@ -46,6 +47,7 @@ minecraft:SUGAR:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 料酒 (has_doneness: true, 热渗入) =====
 slimefun:RICE_WINE:
@@ -61,6 +63,7 @@ slimefun:RICE_WINE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 水类 (不计入调料槽) =====
 minecraft:WATER_BOTTLE:
@@ -73,6 +76,7 @@ minecraft:WATER_BOTTLE:
   container_return: GLASS_BOTTLE
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 minecraft:WATER_BUCKET:
   display_name: "水(桶)"
   has_doneness: false
@@ -83,6 +87,7 @@ minecraft:WATER_BUCKET:
   container_return: BUCKET
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 minecraft:MILK_BUCKET:
   display_name: "牛奶(桶)"
   has_doneness: false
@@ -93,6 +98,7 @@ minecraft:MILK_BUCKET:
   container_return: BUCKET
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 minecraft:HONEY_BOTTLE:
   display_name: "蜂蜜"
   has_doneness: false
@@ -103,6 +109,7 @@ minecraft:HONEY_BOTTLE:
   container_return: GLASS_BOTTLE
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 油类 (不计入调料槽) =====
 slimefun:BUTTER:
@@ -115,6 +122,7 @@ slimefun:BUTTER:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:HEAVY_CREAM:
   display_name: "淡奶油"
   has_doneness: false
@@ -125,6 +133,7 @@ slimefun:HEAVY_CREAM:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:VEGETABLE_OIL:
   display_name: "植物油"
   has_doneness: false
@@ -135,6 +144,7 @@ slimefun:VEGETABLE_OIL:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 原版药水 (has_doneness: true, 通用渗入) =====
 _POTION_:
@@ -150,6 +160,7 @@ _POTION_:
   container_return: GLASS_BOTTLE
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 香料/装饰 (has_doneness: false, 纯增味) =====
 slimefun:CILANTRO:
@@ -162,6 +173,7 @@ slimefun:CILANTRO:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CURRY_LEAF:
   weight_grams: 1
   water_ml: 0
@@ -172,6 +184,7 @@ slimefun:CURRY_LEAF:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:TEA_LEAF:
   weight_grams: 1
   water_ml: 0
@@ -182,6 +195,7 @@ slimefun:TEA_LEAF:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BLACK_PEPPER:
   weight_grams: 1
   water_ml: 0
@@ -192,6 +206,7 @@ slimefun:BLACK_PEPPER:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:LEEK:
   weight_grams: 1
   water_ml: 0
@@ -202,6 +217,7 @@ slimefun:LEEK:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PEANUT:
   weight_grams: 1
   water_ml: 0
@@ -212,6 +228,7 @@ slimefun:PEANUT:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:DEVIL_MELON:
   weight_grams: 1
   water_ml: 0
@@ -222,6 +239,7 @@ slimefun:DEVIL_MELON:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:INFERNOFRUIT:
   weight_grams: 1
   water_ml: 0
@@ -232,6 +250,7 @@ slimefun:INFERNOFRUIT:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 柑橘类果汁 (has_doneness: true, 酸性强-快速渗入) =====
 slimefun:LEMON_JUICE:
@@ -247,6 +266,7 @@ slimefun:LEMON_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:LIME_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -260,6 +280,7 @@ slimefun:LIME_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ORANGE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -273,6 +294,7 @@ slimefun:ORANGE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 浆果类果汁 (has_doneness: true, 中快速渗入) =====
 slimefun:APPLE_JUICE:
@@ -288,6 +310,7 @@ slimefun:APPLE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MELON_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -301,6 +324,7 @@ slimefun:MELON_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:SWEET_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -314,6 +338,7 @@ slimefun:SWEET_BERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:GLOW_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -327,6 +352,7 @@ slimefun:GLOW_BERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:GRAPE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -340,6 +366,7 @@ slimefun:GRAPE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BLUEBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -353,6 +380,7 @@ slimefun:BLUEBERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:RASPBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -366,6 +394,7 @@ slimefun:RASPBERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BLACKBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -379,6 +408,7 @@ slimefun:BLACKBERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CRANBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -392,6 +422,7 @@ slimefun:CRANBERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:STRAWBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -405,6 +436,7 @@ slimefun:STRAWBERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 核果类果汁 (has_doneness: true, 中速渗入) =====
 slimefun:PEACH_JUICE:
@@ -420,6 +452,7 @@ slimefun:PEACH_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PLUM_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -433,6 +466,7 @@ slimefun:PLUM_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PEAR_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -446,6 +480,7 @@ slimefun:PEAR_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CHERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -459,6 +494,7 @@ slimefun:CHERRY_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:POMEGRANATE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -472,6 +508,7 @@ slimefun:POMEGRANATE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:DRAGON_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -485,6 +522,7 @@ slimefun:DRAGON_FRUIT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:OAK_APPLE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -498,6 +536,7 @@ slimefun:OAK_APPLE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 浓郁类果汁 (has_doneness: true, 慢渗入) =====
 slimefun:COCONUT_MILK:
@@ -513,6 +552,7 @@ slimefun:COCONUT_MILK:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PINEAPPLE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -526,6 +566,7 @@ slimefun:PINEAPPLE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:TOMATO_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -539,6 +580,7 @@ slimefun:TOMATO_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 根茎/大果类果汁 (has_doneness: true, 最慢渗入) =====
 slimefun:PUMPKIN_JUICE:
@@ -554,6 +596,7 @@ slimefun:PUMPKIN_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -567,6 +610,7 @@ slimefun:CARROT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 异域特调果汁 (has_doneness: true, 中速渗入) =====
 slimefun:BREADFRUIT_JUICE:
@@ -582,6 +626,7 @@ slimefun:BREADFRUIT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ALIEN_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -595,6 +640,7 @@ slimefun:ALIEN_FRUIT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PUNCH_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -608,6 +654,7 @@ slimefun:PUNCH_FRUIT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:JACKFRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -621,6 +668,7 @@ slimefun:JACKFRUIT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BIG_CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -634,6 +682,7 @@ slimefun:BIG_CARROT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BIG_WHEAT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -647,6 +696,7 @@ slimefun:BIG_WHEAT_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:AMARANTH_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -660,6 +710,7 @@ slimefun:AMARANTH_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:DEVIL_MELON_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -673,6 +724,7 @@ slimefun:DEVIL_MELON_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ACORN_SQUASH_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -686,6 +738,7 @@ slimefun:ACORN_SQUASH_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 烹饪成品辅料 (has_doneness: false, 纯topping) =====
 slimefun:BACON:
@@ -698,6 +751,7 @@ slimefun:BACON:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CHEESE:
   weight_grams: 1
   water_ml: 0
@@ -708,6 +762,7 @@ slimefun:CHEESE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:FRIED_CHICKEN:
   weight_grams: 1
   water_ml: 0
@@ -718,6 +773,7 @@ slimefun:FRIED_CHICKEN:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:FRIES:
   weight_grams: 1
   water_ml: 0
@@ -728,6 +784,7 @@ slimefun:FRIES:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:HASHBROWN:
   weight_grams: 1
   water_ml: 0
@@ -738,6 +795,7 @@ slimefun:HASHBROWN:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ONION_RINGS:
   weight_grams: 1
   water_ml: 0
@@ -748,6 +806,7 @@ slimefun:ONION_RINGS:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:CHICKEN_NUGGETS:
   weight_grams: 1
   water_ml: 0
@@ -758,6 +817,7 @@ slimefun:CHICKEN_NUGGETS:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BROWN_SUGAR:
   weight_grams: 1
   water_ml: 0
@@ -768,6 +828,7 @@ slimefun:BROWN_SUGAR:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:COUNTRY_GRAVY:
   weight_grams: 1
   water_ml: 0
@@ -778,6 +839,7 @@ slimefun:COUNTRY_GRAVY:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MAYO:
   weight_grams: 1
   water_ml: 0
@@ -788,6 +850,7 @@ slimefun:MAYO:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BBQ_SAUCE:
   weight_grams: 1
   water_ml: 0
@@ -798,6 +861,7 @@ slimefun:BBQ_SAUCE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MUSTARD:
   weight_grams: 1
   water_ml: 0
@@ -808,6 +872,7 @@ slimefun:MUSTARD:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== 新增调料 =====
 
@@ -822,6 +887,7 @@ slimefun:MSG:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # 醋：酸性调料，需要热渗入，含少量水分，min_temp 较低喵
 slimefun:VINEGAR:
@@ -837,6 +903,7 @@ slimefun:VINEGAR:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # 水淀粉：需要热渗入勾芡，含水分，用于增稠汤汁喵
 slimefun:STARCH_WATER:
@@ -852,6 +919,7 @@ slimefun:STARCH_WATER:
   container_return: none
   hint: "水淀粉勾芡 使汤汁变浓稠 需要加热才能完全糊化"
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== BEFoodRegistry 新增汁类（普通）=====
 slimefun:ALOE_JUICE:
@@ -867,6 +935,7 @@ slimefun:ALOE_JUICE:
   container_return: none
   hint: "芦荟凝冻质地 低温溶入感更佳"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:INFERNOFRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -880,6 +949,7 @@ slimefun:INFERNOFRUIT_JUICE:
   container_return: none
   hint: "极辛辣的地狱果提炼 高温下辣味会进一步激发"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MANDRAKE_ROOT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -893,6 +963,7 @@ slimefun:MANDRAKE_ROOT_JUICE:
   container_return: none
   hint: "神秘根茎榨取 含微量魔法成分"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MEXICO_CHILI_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -906,6 +977,7 @@ slimefun:MEXICO_CHILI_JUICE:
   container_return: none
   hint: "异域辣椒榨汁 充分加热后辣味转化为鲜甜"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:OTHER_PEANUT_JUICE:
   weight_grams: 1
   water_ml: 150
@@ -919,6 +991,7 @@ slimefun:OTHER_PEANUT_JUICE:
   container_return: none
   hint: "香浓花生研磨 含油脂 适合增添坚果香"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PURPLE_FLOWER_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -932,6 +1005,7 @@ slimefun:PURPLE_FLOWER_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PURPLE_ROSE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -945,6 +1019,7 @@ slimefun:PURPLE_ROSE_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:REED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -958,6 +1033,7 @@ slimefun:REED_JUICE:
   container_return: none
   hint: "甘甜多汁 天然糖分 可提鲜增甜"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ROSE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -971,6 +1047,7 @@ slimefun:ROSE_JUICE:
   container_return: none
   hint: "花香清雅 适合甜点或茶饮类菜肴"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:SAKURA_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -984,6 +1061,7 @@ slimefun:SAKURA_JUICE:
   container_return: none
   hint: "轻盈花香 适合点缀甜品风味"
   lore_hint: ""
+  shelf_life_minutes: 0
 
 # ===== BEFoodRegistry 冰沙系（ICED_JUICE，冷泡风味，min_temp 低）=====
 slimefun:ACORN_SQUASH_ICED_JUICE:
@@ -999,6 +1077,7 @@ slimefun:ACORN_SQUASH_ICED_JUICE:
   container_return: none
   hint: "冰镇后南瓜甜味更突出"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ALIEN_FRUIT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1012,6 +1091,7 @@ slimefun:ALIEN_FRUIT_ICED_JUICE:
   container_return: none
   hint: "冰镇异星风味 神秘清凉"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ALOE_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1025,6 +1105,7 @@ slimefun:ALOE_ICED_JUICE:
   container_return: none
   hint: "冰镇芦荟 凝冻质感更明显 清凉入味"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:AMARANTH_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1038,6 +1119,7 @@ slimefun:AMARANTH_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BIG_CARROT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1051,6 +1133,7 @@ slimefun:BIG_CARROT_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BIG_WHEAT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1064,6 +1147,7 @@ slimefun:BIG_WHEAT_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:BREADFRUIT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1077,6 +1161,7 @@ slimefun:BREADFRUIT_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:DEVIL_MELON_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1090,6 +1175,7 @@ slimefun:DEVIL_MELON_ICED_JUICE:
   container_return: none
   hint: "冰镇后恶魔气息反而更加沁凉"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:INFERNOFRUIT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1103,6 +1189,7 @@ slimefun:INFERNOFRUIT_ICED_JUICE:
   container_return: none
   hint: "冰与火的碰撞 极度刺激的风味体验"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:JACKFRUIT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1116,6 +1203,7 @@ slimefun:JACKFRUIT_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MANDRAKE_ROOT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1129,6 +1217,7 @@ slimefun:MANDRAKE_ROOT_ICED_JUICE:
   container_return: none
   hint: "冰镇神秘根茎汁 魔法成分更稳定"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:MEXICO_CHILI_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1142,6 +1231,7 @@ slimefun:MEXICO_CHILI_ICED_JUICE:
   container_return: none
   hint: "辣味被冰镇锁住 入热锅后瞬间爆发"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PEANUT_ICED_JUICE:
   weight_grams: 1
   water_ml: 150
@@ -1155,6 +1245,7 @@ slimefun:PEANUT_ICED_JUICE:
   container_return: none
   hint: "冰镇花生香更醇厚"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PUNCH_FRUIT_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1168,6 +1259,7 @@ slimefun:PUNCH_FRUIT_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PURPLE_FLOWER_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1181,6 +1273,7 @@ slimefun:PURPLE_FLOWER_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PURPLE_ROSE_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1194,6 +1287,7 @@ slimefun:PURPLE_ROSE_ICED_JUICE:
   container_return: none
   hint: ""
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:REED_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1207,6 +1301,7 @@ slimefun:REED_ICED_JUICE:
   container_return: none
   hint: "冰镇甘蔗 清甜沁凉"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:ROSE_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1220,6 +1315,7 @@ slimefun:ROSE_ICED_JUICE:
   container_return: none
   hint: "冰镇玫瑰 花香清冽"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:SAKURA_ICED_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -1233,6 +1329,7 @@ slimefun:SAKURA_ICED_JUICE:
   container_return: none
   hint: "冰镇樱花 轻盈花香更清透"
   lore_hint: ""
+  shelf_life_minutes: 0
 
 slimefun:PISTACHIO_JUICE:
   weight_grams: 1
@@ -1247,6 +1344,7 @@ slimefun:PISTACHIO_JUICE:
   container_return: none
   hint: "开心果香浓 含油脂 适合增添坚果风味"
   lore_hint: ""
+  shelf_life_minutes: 0
 slimefun:PISTACHIO_ICED_JUICE:
   weight_grams: 1
   water_ml: 150
@@ -1260,3 +1358,4 @@ slimefun:PISTACHIO_ICED_JUICE:
   container_return: none
   hint: "冰镇开心果 坚果香更醇厚"
   lore_hint: ""
+  shelf_life_minutes: 0

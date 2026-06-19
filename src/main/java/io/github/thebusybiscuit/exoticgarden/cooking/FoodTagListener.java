@@ -223,26 +223,22 @@ public class FoodTagListener implements Listener {
     }
 
     /**
-     * 为调料物品打 [辅料] 标签，并清除旧版本可能遗留的食物 PDC/lore 喵~
-     * 整体思路：用 ItemIdUtil.toKey() 在 seasonings map 里查，命中则写 [辅料] 行，
-     * 同时清理旧的 INGREDIENT_ID/FOOD_STATE/FOOD_TIMESTAMP PDC 和保质期/生产日期 lore 行。
+     * 为调料物品打 [辅料] 标签，写 SEASONING_ID 和 FOOD_TIMESTAMP，清除旧食材 PDC/lore 喵~
      * 输入：ItemStack（可为null）
      * 输出：是否是调料（true=是调料已处理，false=不是调料跳过）
      */
     private boolean tagIfSeasoning(ItemStack item) {
         // 喵~防御：null 或空气直接跳过喵
         if (item == null || item.getType().isAir()) return false;
-        // 用带命名空间的 key 在 seasonings 配置里查找喵
         String itemKey = ItemIdUtil.toKey(item);
         if (itemKey == null || !seasonings.containsKey(itemKey)) return false;
 
-        // 是调料，开始处理喵
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) return true; // 是调料但无法修改，返回true阻止后续食物检查喵
+        if (meta == null) return true;
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         boolean changed = false;
 
-        // 喵~清除旧版本可能错误写入的食材PDC（旧PDC导致下次扫描绕过调料检查）喵
+        // 喵~清除旧版本可能错误写入的食材PDC喵
         if (pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
             pdc.remove(CookingKeys.INGREDIENT_ID);
             changed = true;
@@ -251,12 +247,26 @@ public class FoodTagListener implements Listener {
             pdc.remove(CookingKeys.FOOD_STATE);
             changed = true;
         }
-        if (pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
-            pdc.remove(CookingKeys.FOOD_TIMESTAMP);
+
+        // 喵~写入调料 ID，供过期检查使用喵
+        if (!pdc.has(CookingKeys.SEASONING_ID, PersistentDataType.STRING)) {
+            pdc.set(CookingKeys.SEASONING_ID, PersistentDataType.STRING, itemKey);
             changed = true;
         }
 
-        // 更新 lore：移除旧食物/食材/保质期/生产日期行，确保有且仅有 [辅料] 行喵
+        // 喵~写入时间戳（首次），供过期计算使用；不再删除旧时间戳喵
+        if (!pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
+            pdc.set(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG, System.currentTimeMillis());
+            changed = true;
+        }
+
+        // 获取保质期，用于 lore 展示喵
+        io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData sd
+            = seasonings.get(itemKey);
+        int shelfLife = sd != null ? sd.shelfLifeMinutes : 0;
+        long nowMs = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
+
+        // 更新 lore：移除旧食物/食材行，保留或写入 [辅料] + 保质期喵
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         String seasoningLine = "§7[辅料]";
         boolean hasSeasoningLine = false;
@@ -264,28 +274,52 @@ public class FoodTagListener implements Listener {
         java.util.Iterator<String> it = lore.iterator();
         while (it.hasNext()) {
             String line = it.next();
-            // 喵~移除旧的食物/食材标签及保质期信息喵
-            if (line.startsWith("§7[食物]") || line.startsWith("§7[烹饪食材]")
-                    || line.startsWith("§8保质期:") || line.startsWith("§8生产日期:")) {
+            if (line.startsWith("§7[食物]") || line.startsWith("§7[烹饪食材]")) {
                 it.remove();
                 changed = true;
             } else if (line.equals(seasoningLine)) {
-                // 已有 [辅料] 行，记录一下喵
                 hasSeasoningLine = true;
             }
         }
 
         if (!hasSeasoningLine) {
-            // 首次打 [辅料] 标签喵
             lore.add(seasoningLine);
             changed = true;
+        }
+
+        // 喵~有保质期的调料显示保质期和生产日期喵
+        if (shelfLife > 0) {
+            String shelfLifeLine = "§8保质期: " + formatShelfLife(shelfLife);
+            boolean hasShelfLine = false;
+            for (int i = 0; i < lore.size(); i++) {
+                if (lore.get(i).startsWith("§8保质期:")) {
+                    if (!lore.get(i).equals(shelfLifeLine)) { lore.set(i, shelfLifeLine); changed = true; }
+                    hasShelfLine = true; break;
+                }
+            }
+            if (!hasShelfLine) { lore.add(shelfLifeLine); changed = true; }
+
+            boolean hasProductionLine = lore.stream().anyMatch(l -> l.startsWith("§8生产日期:"));
+            if (!hasProductionLine) { lore.add("§8生产日期: " + formatTimestamp(nowMs)); changed = true; }
+
+            // 喵~过期标记喵
+            long diffMin = (System.currentTimeMillis() - nowMs) / 60000L;
+            boolean expired = diffMin >= shelfLife;
+            String expiredMark = "§c已过期";
+            boolean hasExpiredMark = !lore.isEmpty() && lore.get(0).equals(expiredMark);
+            if (expired && !hasExpiredMark) { lore.add(0, expiredMark); changed = true; }
+            else if (!expired && hasExpiredMark) { lore.remove(0); changed = true; }
+        } else {
+            // 无保质期：清除旧保质期行喵
+            if (lore.removeIf(l -> l.startsWith("§8保质期:") || l.startsWith("§8生产日期:") || l.equals("§c已过期"))) {
+                changed = true;
+            }
         }
 
         if (changed) {
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
-        // 返回true表示"是调料"，阻止后续走食物/燃料检查喵
         return true;
     }
 

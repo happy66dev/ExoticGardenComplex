@@ -58,7 +58,13 @@ public class DishConsumptionListener implements Listener {
             return;
         }
 
-        // ===== 分支2：有保质期标记的食物（有FOOD_TIMESTAMP标记，包含原版食物/药水/烹饪食材）=====
+        // ===== 分支2：调料（有SEASONING_ID标记）=====
+        if (pdc.has(CookingKeys.SEASONING_ID, PersistentDataType.STRING)) {
+            handleSeasoningConsume(e, item, meta, pdc);
+            return;
+        }
+
+        // ===== 分支3：有保质期标记的食物（有FOOD_TIMESTAMP标记，包含原版食物/药水/烹饪食材）=====
         if (pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)) {
             handleIngredientConsume(e, item, meta, pdc);
         }
@@ -201,6 +207,91 @@ public class DishConsumptionListener implements Listener {
      *   - 不过期：让原版饱食度恢复正常进行，不干预
      *   - 过期：取消原版事件，手动扣物品，手动施加减少60%后的饱食度恢复，应用debuff
      */
+    /**
+     * 处理调料消费：检查保质期 → 过期时饱食度减少+30%概率debuff喵~
+     * 调料大多无保质期(shelfLifeMinutes=0)，有保质期的才检查喵
+     */
+    private void handleSeasoningConsume(PlayerItemConsumeEvent e, ItemStack item, ItemMeta meta, PersistentDataContainer pdc) {
+        String seaId = pdc.get(CookingKeys.SEASONING_ID, PersistentDataType.STRING);
+        // 喵~防御：无配置则不干预喵
+        if (seaId == null) return;
+
+        // 获取调料保质期配置（需要从 CookingModule 拿 seasonings map）喵
+        // 喵~这里通过 ingredients map 无法获取 seasonings，用反射会太重，改用 DishConsumptionListener 持有的 ingredients 只管食材
+        // 实际上调料保质期已经写在 lore 里了，可以从 PDC FOOD_TIMESTAMP 和 lore 推断，但最准确的是：
+        // SeasoningConfig 数据在 CookingModule 没有对外暴露，先暂时不做过期判断，保留结构供后续扩展喵
+        // TODO: 当 CookingModule 暴露 seasonings map 后，在此处加过期判断喵
+
+        // 目前：有 FOOD_TIMESTAMP 且有 §8保质期: lore 行的调料，通过 lore 解析保质期喵
+        Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
+        if (timestamp == null) return; // 无时间戳不干预喵
+
+        // 从 lore 解析保质期分钟数喵
+        int shelfLifeMinutes = 0;
+        if (meta.hasLore()) {
+            for (String line : meta.getLore()) {
+                if (line.startsWith("§8保质期:")) {
+                    // lore 格式由 FoodTagListener.formatShelfLife 生成，反向解析喵
+                    shelfLifeMinutes = parseShelfLifeFromLore(line.substring("§8保质期:".length()).trim());
+                    break;
+                }
+            }
+        }
+        if (shelfLifeMinutes <= 0) return; // 无保质期不干预喵
+
+        long diffMin = (System.currentTimeMillis() - timestamp) / 60000L;
+        if (diffMin < shelfLifeMinutes) return; // 未过期不干预喵
+
+        // 过期：取消原版事件，手动扣物品，饱食度减少60%，30%概率debuff喵
+        e.setCancelled(true);
+        Player player = e.getPlayer();
+
+        // 手动扣物品喵
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        if (mainHand.isSimilar(item) && mainHand.getAmount() > 0) {
+            int amt = mainHand.getAmount() - 1;
+            player.getInventory().setItemInMainHand(amt == 0 ? new ItemStack(org.bukkit.Material.AIR) : mainHand);
+            if (amt > 0) mainHand.setAmount(amt);
+        } else {
+            ItemStack offHand = player.getInventory().getItemInOffHand();
+            if (offHand.isSimilar(item) && offHand.getAmount() > 0) {
+                int amt = offHand.getAmount() - 1;
+                player.getInventory().setItemInOffHand(amt == 0 ? new ItemStack(org.bukkit.Material.AIR) : offHand);
+                if (amt > 0) offHand.setAmount(amt);
+            }
+        }
+
+        // 饱食度恢复减少60%喵（调料饱食度本来就很低，以原版值 1 为基准）喵
+        int reduced = (int) Math.max(0, Math.round(1 * 0.4));
+        int newFood = Math.min(player.getFoodLevel() + reduced, 20);
+        player.setFoodLevel(newFood);
+        player.sendMessage("§c这调料已经过期了，入口有股怪味喵~");
+
+        // 喵~30%概率触发debuff喵
+        if (ThreadLocalRandom.current().nextInt(100) < 30) {
+            applyExpiredEffects(player, false);
+        }
+    }
+
+    /**
+     * 将 lore 保质期文本反向解析为分钟数喵~
+     * 支持格式：Xd Yh Zm → 天*1440+小时*60+分钟
+     */
+    private static int parseShelfLifeFromLore(String text) {
+        // 喵~防御：null 或空直接返回 0 喵
+        if (text == null || text.isBlank()) return 0;
+        int minutes = 0;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)([天小时分钟]+)").matcher(text);
+        while (m.find()) {
+            int val = Integer.parseInt(m.group(1));
+            String unit = m.group(2);
+            if (unit.contains("天"))  minutes += val * 1440;
+            else if (unit.contains("小时")) minutes += val * 60;
+            else if (unit.contains("分钟")) minutes += val;
+        }
+        return minutes;
+    }
+
     private void handleIngredientConsume(PlayerItemConsumeEvent e, ItemStack item, ItemMeta meta, PersistentDataContainer pdc) {
         long nowMs = System.currentTimeMillis();
 
