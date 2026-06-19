@@ -63,42 +63,6 @@ public class BEFoodRegistry {
         (new Juice(ExoticGarden.instance.drinksItemGroup, new SlimefunItemStack("DEVIL_MELON_JUICE", new CustomPotion("&2异域恶魔瓜酱", Color.GREEN, new PotionEffect(PotionEffectType.SATURATION, 6, 0), "", "&7&o恢复 &b&o3.0 &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{getItem("DEVIL_MELON"), null, null, null, null, null, null, null, null})).register(plugin);
         (new Juice(ExoticGarden.instance.drinksItemGroup, new SlimefunItemStack("DEVIL_MELON_ICED_JUICE", new CustomPotion("&d冰镇异域恶魔瓜汁", Color.GREEN, new PotionEffect(PotionEffectType.SATURATION, 10, 0), "", "&7&o恢复 &b&o5.0 &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{getItem("DEVIL_MELON"), getItem("ICE_CUBE"), null, null, null, null, null, null, null})).register(plugin);
         (new CustomFood(ExoticGarden.instance.foodItemGroup, new SlimefunItemStack("BE_FRIED_POTETO", "6a82e11d5a64c6d653f3a1c53c9420a153818e67dbd8e93442c35c627e0c631", "&r薯条", "", "&7&o恢复 &b&o4.0 &7&o点饥饿值"), new ItemStack[]{new ItemStack(SlimefunItems.WHEAT_FLOUR), new ItemStack(Material.POTATO), new ItemStack(Material.POTATO), null, null, null, null, null, null}, 8)).register(plugin);
-
-        // ===== 面条系列：砧板加工流水线食材注册 =====
-        // 面团：3个小麦合成，砧板锅铲5次→面饼（transform_to: FLATBREAD_ITEM）喵
-        (new CustomFood(ExoticGarden.instance.foodItemGroup,
-            new SlimefunItemStack("DOUGH", Material.CLAY_BALL,
-                "&f面团", "&7砧板 + 锅铲×5 → 面饼"),
-            RecipeType.ENHANCED_CRAFTING_TABLE,
-            new ItemStack[]{
-                new ItemStack(Material.WHEAT), new ItemStack(Material.WHEAT), new ItemStack(Material.WHEAT),
-                null, null, null,
-                null, null, null
-            }, 0)).register(plugin);
-
-        // 面饼：仅可由砧板加工获得（面团锅铲→），刀切→宽面（transform_to: WIDE_NOODLES）喵
-        (new CustomFood(ExoticGarden.instance.foodItemGroup,
-            new SlimefunItemStack("FLATBREAD_ITEM", Material.BREAD,
-                "&f面饼", "&7由面团在砧板上擀制而成", "&7刀切 → 宽面"),
-            RecipeType.ENHANCED_CRAFTING_TABLE,
-            new ItemStack[]{null, null, null, null, null, null, null, null, null},
-            3)).register(plugin);
-
-        // 宽面：仅可由砧板加工获得（面饼刀切→），刀切→生面条（transform_to: RAW_NOODLES）喵
-        (new CustomFood(ExoticGarden.instance.foodItemGroup,
-            new SlimefunItemStack("WIDE_NOODLES", Material.PAPER,
-                "&f宽面", "&7由面饼切割而成", "&7再切 → 生面条"),
-            RecipeType.ENHANCED_CRAFTING_TABLE,
-            new ItemStack[]{null, null, null, null, null, null, null, null, null},
-            2)).register(plugin);
-
-        // 生面条：仅可由砧板加工获得（宽面刀切→），灶台煮熟后为成品喵
-        (new CustomFood(ExoticGarden.instance.foodItemGroup,
-            new SlimefunItemStack("RAW_NOODLES", Material.STRING,
-                "&f生面条", "&7由宽面切割而成", "&7需放入灶台煮熟食用"),
-            RecipeType.ENHANCED_CRAFTING_TABLE,
-            new ItemStack[]{null, null, null, null, null, null, null, null, null},
-            2)).register(plugin);
     }
 
     @Nullable
