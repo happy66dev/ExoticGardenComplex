@@ -223,10 +223,17 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
 
                 // 喵~在物品上直接写入 CONSUMABLE 数据组件，让原版处理进食耗时和音效喵
                 // 必须在 setItemMeta 之后再调用 setData，否则 meta 会覆盖组件喵
+                net.kyori.adventure.key.Key soundKey;
+                try {
+                    // 喵~防御：Key.key() 要求 namespace:value 格式，格式非法时回退标准音效喵
+                    soundKey = net.kyori.adventure.key.Key.key(result.eatSound);
+                } catch (Exception keyEx) {
+                    soundKey = net.kyori.adventure.key.Key.key("minecraft:entity.generic.eat");
+                }
                 io.papermc.paper.datacomponent.item.Consumable consumable =
                     io.papermc.paper.datacomponent.item.Consumable.consumable()
                         .consumeSeconds((float) result.consumeSeconds)
-                        .sound(net.kyori.adventure.key.Key.key(result.eatSound))
+                        .sound(soundKey)
                         .animation(io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation.EAT)
                         .build();
                 dish.setData(io.papermc.paper.datacomponent.DataComponentTypes.CONSUMABLE, consumable);
