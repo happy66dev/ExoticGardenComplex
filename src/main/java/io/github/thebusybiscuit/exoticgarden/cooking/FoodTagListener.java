@@ -78,7 +78,7 @@ public class FoodTagListener implements Listener {
         if (e.getEntity().getType() != org.bukkit.entity.EntityType.PLAYER) return;
         ItemStack item = e.getItem().getItemStack();
         // 喵~防御：修改后写回 Item 实体，防止 getItemStack 返回快照时 PDC 标签丢失喵
-        if (tagIfIngredient(item)) {
+        if (updateItem(item)) {
             e.getItem().setItemStack(item);
         }
     }
@@ -94,7 +94,7 @@ public class FoodTagListener implements Listener {
                     ItemStack it = player.getInventory().getItem(i);
                     if (it == null || it.getType().isAir()) continue;
                     ItemStack copy = it.clone();
-                    if (tagIfIngredient(copy)) player.getInventory().setItem(i, copy);
+                    if (updateItem(copy)) player.getInventory().setItem(i, copy);
                 }
             }, 1L);
     }
@@ -107,7 +107,7 @@ public class FoodTagListener implements Listener {
         if (target == null || target.getType().isAir()) return;
         // 喵~防御：是食材则原地更新时间戳/lore，不是食材静默跳过喵
         ItemStack copy = target.clone();
-        if (tagIfIngredient(copy)) {
+        if (updateItem(copy)) {
             e.getPlayer().getInventory().setItem(e.getNewSlot(), copy);
         }
     }
@@ -126,7 +126,7 @@ public class FoodTagListener implements Listener {
                     ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
                     if (live == null || live.getType().isAir()) return;
                     ItemStack copy = live.clone();
-                    if (tagIfIngredient(copy)) inv.setItem(rawSlot, copy);
+                    if (updateItem(copy)) inv.setItem(rawSlot, copy);
                 }, 1L);
         }
 
@@ -139,7 +139,7 @@ public class FoodTagListener implements Listener {
                     ItemStack cursor = p.getItemOnCursor();
                     if (cursor == null || cursor.getType().isAir()) return;
                     ItemStack copy = cursor.clone();
-                    if (tagIfIngredient(copy)) p.setItemOnCursor(copy);
+                    if (updateItem(copy)) p.setItemOnCursor(copy);
                 }, 1L);
         }
 
