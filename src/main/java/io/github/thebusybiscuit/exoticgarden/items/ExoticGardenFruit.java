@@ -60,11 +60,13 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
                 // 喵~检查物品是否已过期喵
                 if (isExpired(e.getItem())) {
                     Player p = e.getPlayer();
-                    // 过期：饱食度恢复减少60%喵
+                    // 喵~过期：饱食度100%减少60%，30%概率额外触发debuff喵
                     int reduced = (int) Math.max(0, Math.round(getFoodValue() * 0.4));
                     p.setFoodLevel(Math.min(p.getFoodLevel() + reduced, 20));
                     p.sendMessage("§c这食物已经过期了，味道怪怪的喵~");
-                    io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener.applyExpiredEffectsStatic(p, false);
+                    if (java.util.concurrent.ThreadLocalRandom.current().nextInt(100) < 30) {
+                        io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener.applyExpiredEffectsStatic(p, false);
+                    }
                     ItemUtils.consumeItem(e.getItem(), false);
                 } else {
                     restoreHunger(e.getPlayer());

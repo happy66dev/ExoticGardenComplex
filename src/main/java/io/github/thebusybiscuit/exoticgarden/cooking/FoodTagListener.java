@@ -123,6 +123,8 @@ public class FoodTagListener implements Listener {
             org.bukkit.Bukkit.getScheduler().runTaskLater(
                 io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
                 () -> {
+                    // 喵~防御：合成台/工作台格子不写标签，防止lore变化破坏配方匹配喵
+                    if (isCraftingInventory(inv)) return;
                     ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
                     if (live == null || live.getType().isAir()) return;
                     ItemStack copy = live.clone();
@@ -168,6 +170,23 @@ public class FoodTagListener implements Listener {
         org.bukkit.Bukkit.getScheduler().runTaskLater(
             io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
             () -> scanPlayerInventory(player), 1L);
+    }
+
+    /**
+     * 判断背包是否是合成类容器（工作台/玩家合成台/SF合成台），是则不写标签防止lore污染配方匹配喵~
+     */
+    private boolean isCraftingInventory(org.bukkit.inventory.Inventory inv) {
+        if (inv == null) return false;
+        org.bukkit.event.inventory.InventoryType type = inv.getType();
+        // 喵~原版工作台和玩家背包内置合成格喵
+        if (type == org.bukkit.event.inventory.InventoryType.CRAFTING
+                || type == org.bukkit.event.inventory.InventoryType.WORKBENCH) return true;
+        // 喵~SF合成台：持有者类名包含 Menu/BlockMenu/Preset 且含 slimefun 喵
+        org.bukkit.inventory.InventoryHolder holder = inv.getHolder();
+        if (holder == null) return false;
+        String className = holder.getClass().getName().toLowerCase(java.util.Locale.ENGLISH);
+        return className.contains("slimefun")
+            && (className.contains("blockmenu") || className.contains("menu") || className.contains("preset"));
     }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
