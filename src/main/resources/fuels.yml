@@ -209,7 +209,7 @@ minecraft:SHORT_GRASS:
   hint: "微微野草的味道"
 minecraft:TALL_GRASS:
   display_name: 高草
-  temp_gain: 30
+  temp_gain: 180
   duration_seconds: 5
   heat_rate: 7
   effect: GRASS_SMOKE
@@ -218,52 +218,52 @@ minecraft:TALL_GRASS:
   hint: "微微野草的味道"
 minecraft:FERN:
   display_name: 蕨
-  temp_gain: 25
-  duration_seconds: 5
-  heat_rate: 6
+  temp_gain: 120
+  duration_seconds: 3
+  heat_rate: 10
   effect: GRASS_SMOKE
-  effect_display_name: "蕨草烟熏"
+  effect_display_name: "废物利用? 天哪太好烧了"
   byproduct: null
-  hint: ""
+  hint: "微微野草的味道"
 minecraft:LARGE_FERN:
   display_name: 大型蕨
-  temp_gain: 40
-  duration_seconds: 8
-  heat_rate: 7
+  temp_gain: 200
+  duration_seconds: 9
+  heat_rate: 9
   effect: GRASS_SMOKE
-  effect_display_name: "蕨草烟熏"
+  effect_display_name: "我超 火控不住了"
   byproduct: null
-  hint: ""
+  hint: "微微野草的味道"
 minecraft:DEAD_BUSH:
   display_name: 枯萎的灌木
-  temp_gain: 35
-  duration_seconds: 6
-  heat_rate: 8
+  temp_gain: 140
+  duration_seconds: 12
+  heat_rate: 7
   effect: GRASS_SMOKE
-  effect_display_name: "枯木烟熏"
+  effect_display_name: "枯木烟熏,这真的有人会喜欢吗"
   byproduct: null
-  hint: ""
+  hint: "枯木的烟味,可能受众很小"
 minecraft:SUGAR_CANE:
   display_name: 甘蔗
-  temp_gain: 25
-  duration_seconds: 6
-  heat_rate: 6
+  temp_gain: 50
+  duration_seconds: 150
+  heat_rate: 1
   effect: SWEET_SMOKE
-  effect_display_name: "甘蔗甜烟"
+  effect_display_name: "甘蔗甜烟,作为燃料太不合格了"
   byproduct: null
-  hint: ""
+  hint: "甘蔗香甜的味道"
 minecraft:VINE:
   display_name: 藤蔓
-  temp_gain: 20
+  temp_gain: 120
   duration_seconds: 4
-  heat_rate: 5
+  heat_rate: 4
   effect: GRASS_SMOKE
-  effect_display_name: "草香烟熏"
+  effect_display_name: "丛林的味道"
   byproduct: null
-  hint: ""
+  hint: "微微丛林的味道"
 minecraft:TWISTING_VINES:
   display_name: 扭曲藤蔓
-  temp_gain: 30
+  temp_gain: 140
   duration_seconds: 5
   heat_rate: 6
   effect: GRASS_SMOKE
