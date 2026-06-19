@@ -1,4 +1,4 @@
-# config_version: 4
+# config_version: 5
 # ============================================================
 # seasonings.yml - 烹饪调料配置
 # ============================================================
@@ -851,4 +851,385 @@ slimefun:STARCH_WATER:
   category: seasoning
   container_return: none
   hint: "水淀粉勾芡 使汤汁变浓稠 需要加热才能完全糊化"
+  lore_hint: ""
+
+# ===== BEFoodRegistry 新增汁类（普通）=====
+slimefun:ALOE_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "芦荟汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 50
+  base_time_seconds: 12
+  category: seasoning
+  container_return: none
+  hint: "芦荟凝冻质地 低温溶入感更佳"
+  lore_hint: ""
+slimefun:INFERNOFRUIT_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "地狱果汁"
+  has_doneness: true
+  min_temp: 60
+  optimal_temp: 100
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "极辛辣的地狱果提炼 高温下辣味会进一步激发"
+  lore_hint: ""
+slimefun:MANDRAKE_ROOT_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "曼德拉根汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "神秘根茎榨取 含微量魔法成分"
+  lore_hint: ""
+slimefun:MEXICO_CHILI_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "墨西哥辣椒汁"
+  has_doneness: true
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 12
+  category: seasoning
+  container_return: none
+  hint: "异域辣椒榨汁 充分加热后辣味转化为鲜甜"
+  lore_hint: ""
+slimefun:OTHER_PEANUT_JUICE:
+  weight_grams: 1
+  water_ml: 150
+  oil_ml: 50
+  display_name: "花生泥"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 70
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "香浓花生研磨 含油脂 适合增添坚果香"
+  lore_hint: ""
+slimefun:PURPLE_FLOWER_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "紫花汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 50
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:PURPLE_ROSE_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "紫色玫瑰汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 50
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:REED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "甘蔗汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 60
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "甘甜多汁 天然糖分 可提鲜增甜"
+  lore_hint: ""
+slimefun:ROSE_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "玫瑰汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 50
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "花香清雅 适合甜点或茶饮类菜肴"
+  lore_hint: ""
+slimefun:SAKURA_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "樱花汁"
+  has_doneness: true
+  min_temp: 30
+  optimal_temp: 50
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "轻盈花香 适合点缀甜品风味"
+  lore_hint: ""
+
+# ===== BEFoodRegistry 冰沙系（ICED_JUICE，冷泡风味，min_temp 低）=====
+slimefun:ACORN_SQUASH_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇橡子南瓜汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇后南瓜甜味更突出"
+  lore_hint: ""
+slimefun:ALIEN_FRUIT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇外星果汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇异星风味 神秘清凉"
+  lore_hint: ""
+slimefun:ALOE_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇芦荟汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 12
+  category: seasoning
+  container_return: none
+  hint: "冰镇芦荟 凝冻质感更明显 清凉入味"
+  lore_hint: ""
+slimefun:AMARANTH_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇苋菜汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:BIG_CARROT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇萝卜汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:BIG_WHEAT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇大麦汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:BREADFRUIT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇面包果汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:DEVIL_MELON_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇恶魔瓜汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇后恶魔气息反而更加沁凉"
+  lore_hint: ""
+slimefun:INFERNOFRUIT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇地狱果汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 50
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰与火的碰撞 极度刺激的风味体验"
+  lore_hint: ""
+slimefun:JACKFRUIT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇菠萝蜜汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:MANDRAKE_ROOT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇曼德拉根汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇神秘根茎汁 魔法成分更稳定"
+  lore_hint: ""
+slimefun:MEXICO_CHILI_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇墨西哥辣椒汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 50
+  base_time_seconds: 12
+  category: seasoning
+  container_return: none
+  hint: "辣味被冰镇锁住 入热锅后瞬间爆发"
+  lore_hint: ""
+slimefun:PEANUT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 150
+  oil_ml: 50
+  display_name: "冰镇花生汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇花生香更醇厚"
+  lore_hint: ""
+slimefun:PUNCH_FRUIT_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇潘趣果汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:PURPLE_FLOWER_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇紫花汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:PURPLE_ROSE_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇紫色玫瑰汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: ""
+  lore_hint: ""
+slimefun:REED_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇甘蔗汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "冰镇甘蔗 清甜沁凉"
+  lore_hint: ""
+slimefun:ROSE_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇玫瑰汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "冰镇玫瑰 花香清冽"
+  lore_hint: ""
+slimefun:SAKURA_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 200
+  oil_ml: 0
+  display_name: "冰镇樱花汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 10
+  category: seasoning
+  container_return: none
+  hint: "冰镇樱花 轻盈花香更清透"
   lore_hint: ""

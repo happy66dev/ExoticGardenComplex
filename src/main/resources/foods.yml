@@ -20,11 +20,10 @@
 # ============================================================
 
 defaults:
-  generic_food_shelf_life: 10
-  generic_potion_shelf_life: 5
+  generic_food_shelf_life: 720
+  generic_potion_shelf_life: 1440
 
 blacklist:
-  - minecraft:GOLDEN_APPLE
   - minecraft:ENCHANTED_GOLDEN_APPLE
   - minecraft:CAKE
   - minecraft:ROTTEN_FLESH
@@ -33,6 +32,6 @@ blacklist:
   - minecraft:POISONOUS_POTATO
   - minecraft:GLISTERING_MELON_SLICE
 
-# overrides:
-#   minecraft:COOKIE:
-#     shelf_life_minutes: 20
+overrides:
+  minecraft:GOLDEN_APPLE:
+     shelf_life_minutes: 10080

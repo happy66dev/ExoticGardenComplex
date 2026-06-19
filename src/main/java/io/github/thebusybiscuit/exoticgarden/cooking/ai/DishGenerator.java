@@ -308,7 +308,7 @@ public class DishGenerator {
             + "  只在食材特殊时才设置，如食物成焦炭 汤类 腐败等\n"
             + "  参考音效(你也可以自己从自己知识内选择一个): entity.generic.eat(标准) entity.generic.drink(喝) entity.generic.explode(爆炸) item.bottle.fill(液体装瓶) block.anvil.place(铁砧) block.stone.break(石头) block.grass.break(草)\n"
             + "consumeSeconds(可选): 进食耗时秒数(浮点,缺省不填即1.6s);\n"
-            + "最低0.6s 原版值为1.6s 根据食物大小判断 可用范围:0.6s~5s\n"
+            + "最低0.6s 原版值为1.6s 根据食物大小判断 推荐往大于原版数值靠(除非食物每份分量小) 可用范围:0.6s~5s\n"
             + "icon 选材建议(不要完全参考): 炖菜类→MUSHROOM_STEW/SUSPICIOUS_STEW 烧烤类→COOKED_BEEF/COOKED_PORKCHOP/COOKED_CHICKEN/COOKED_MUTTON "
             + "煎炒类→COOKED_COD/COOKED_SALMON 面包类→BREAD 汤类→BEETROOT_SOUP/RABBIT_STEW 甜点类→COOKIE/PUMPKIN_PIE 生食类→APPLE/MELON_SLICE\n"
             + "description 书写规范: 不使用中文标点符号(逗号用空格代替 句号省略 其他符号用英文符号如!?-)\n"
