@@ -1233,3 +1233,30 @@ slimefun:SAKURA_ICED_JUICE:
   container_return: none
   hint: "冰镇樱花 轻盈花香更清透"
   lore_hint: ""
+
+slimefun:PISTACHIO_JUICE:
+  weight_grams: 1
+  water_ml: 150
+  oil_ml: 50
+  display_name: "开心果汁"
+  has_doneness: true
+  min_temp: 40
+  optimal_temp: 70
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "开心果香浓 含油脂 适合增添坚果风味"
+  lore_hint: ""
+slimefun:PISTACHIO_ICED_JUICE:
+  weight_grams: 1
+  water_ml: 150
+  oil_ml: 50
+  display_name: "冰镇开心果汁"
+  has_doneness: true
+  min_temp: 20
+  optimal_temp: 40
+  base_time_seconds: 15
+  category: seasoning
+  container_return: none
+  hint: "冰镇开心果 坚果香更醇厚"
+  lore_hint: ""
