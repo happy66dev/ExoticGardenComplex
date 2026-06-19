@@ -17,7 +17,7 @@ import java.util.List;
 public class ExoticCommand implements CommandExecutor {
 
     // 当前插件版本号，每次 commit 时手动更新喵
-    public static final String PLUGIN_VERSION = "1.0.37";
+    public static final String PLUGIN_VERSION = "1.0.38";
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         // /exotic version 喵~
