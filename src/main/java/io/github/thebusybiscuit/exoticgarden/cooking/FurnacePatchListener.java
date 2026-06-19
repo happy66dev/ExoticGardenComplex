@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil;
 
 /**
  * 熔炉补丁监听器：防止菜肴被丢进任何熔炉类设备烹饪喵~
@@ -31,8 +32,8 @@ public class FurnacePatchListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onFurnaceSmelt(FurnaceSmeltEvent e) {
-        // 检查冶炼原料是否是菜肴喵
-        if (isDish(e.getSource())) {
+        // 检查冶炼原料是否是菜肴或过期食材喵
+        if (isFurnaceBlocked(e.getSource())) {
             e.setCancelled(true);
         }
     }
@@ -49,10 +50,10 @@ public class FurnacePatchListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInventoryClick(InventoryClickEvent e) {
-        // 喵~检查光标（正在移动的物品），它是菜肴才处理喵
+        // 喵~检查光标（正在移动的物品），是菜肴或过期食材才处理喵
         ItemStack cursor = e.getCursor();
         if (cursor == null || cursor.getType().isAir()) return;
-        if (!isDish(cursor)) return;
+        if (!isFurnaceBlocked(cursor)) return;
 
         // 获取被点击的 slot 索引喵
         int rawSlot = e.getRawSlot();
@@ -80,7 +81,7 @@ public class FurnacePatchListener implements Listener {
         e.setCancelled(true);
         // 喵~提示玩家菜肴不能放入机器喵
         if (e.getWhoClicked() instanceof org.bukkit.entity.Player player) {
-            player.sendMessage("§c菜肴不能放入机器烹饪喵~");
+            player.sendMessage("§c菜肴或过期食材不能放入机器喵~");
         }
     }
 
@@ -90,8 +91,8 @@ public class FurnacePatchListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInventoryMove(InventoryMoveItemEvent e) {
-        // 检查被移动的物品是否是菜肴喵
-        if (isDish(e.getItem())) {
+        // 检查被移动的物品是否是菜肴或过期食材喵
+        if (isFurnaceBlocked(e.getItem())) {
             // 检查目标背包是否是机器类（避免干扰漏斗→箱子的正常传输）喵
             Inventory dest = e.getDestination();
             if (isMachineInventory(dest)) {
@@ -164,5 +165,39 @@ public class FurnacePatchListener implements Listener {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         // 有 DISH_HUNGER 标记的就是菜肴喵
         return pdc.has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER);
+    }
+
+    /**
+     * 判断物品是否为已过期的烹饪食材/调料喵~
+     * 依据：lore 首行或任意行含 "§c已过期" 标记（由 FoodTagListener 写入）喵
+     * 同时要求物品带有 FOOD_TIMESTAMP 或 INGREDIENT_ID 或 SEASONING_ID PDC，
+     * 避免误判原版带红色 lore 的物品喵
+     */
+    private boolean isExpiredCookingItem(ItemStack item) {
+        // 喵~防御：null 或 air 直接返回 false 喵
+        if (item == null || item.getType().isAir()) return false;
+        ItemMeta meta = item.getItemMeta();
+        // 喵~防御：meta 为 null 时无法检查喵
+        if (meta == null) return false;
+        // 喵~防御：没有 lore 直接跳过喵
+        if (!meta.hasLore()) return false;
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        // 必须有烹饪系统的 PDC 标记才视为烹饪食材/调料，避免误判原版物品喵
+        boolean isCookingItem = pdc.has(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG)
+                || pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)
+                || pdc.has(CookingKeys.SEASONING_ID, PersistentDataType.STRING);
+        if (!isCookingItem) return false;
+        // 检查 lore 中是否有"已过期"标记行喵
+        for (String line : meta.getLore()) {
+            if ("§c已过期".equals(line)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断物品是否不应放入熔炉：菜肴 OR 已过期烹饪食材喵~
+     */
+    private boolean isFurnaceBlocked(ItemStack item) {
+        return isDish(item) || isExpiredCookingItem(item);
     }
 }

@@ -17,10 +17,19 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.items.food.Juice;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 
 public class BEFoodRegistry {
 
     public static void register(@Nonnull ExoticGarden plugin) {
+        // 喵~注册食盐物品：材质与 SF SALT(Material.SUGAR)相同，洗矿机 1x粗盐 → 1x食盐喵
+        // 不可食用，作为烹饪调料使用（seasonings.yml 中 exoticgarden:EG_FOOD_SALT）喵
+        (new SlimefunItem(
+            ExoticGarden.instance.miscItemGroup,
+            new SlimefunItemStack("EG_FOOD_SALT", new CustomItemStack(Material.SUGAR, "&r食盐", "", "&7细腻的精制食盐，用于烹饪调味")),
+            RecipeType.ORE_WASHER,
+            new ItemStack[]{ SlimefunItems.SALT, null, null, null, null, null, null, null, null }
+        )).register(plugin);
         (new Juice(ExoticGarden.instance.drinksItemGroup, new SlimefunItemStack("BREADFRUIT_JUICE", new CustomPotion("&2异域面包果酱", Color.GREEN, new PotionEffect(PotionEffectType.SATURATION, 6, 0), "", "&7&o恢复 &b&o3.0 &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{getItem("BREADFRUIT"), null, null, null, null, null, null, null, null})).register(plugin);
         (new Juice(ExoticGarden.instance.drinksItemGroup, new SlimefunItemStack("BREADFRUIT_ICED_JUICE", new CustomPotion("&d冰镇异域面包果汁", Color.GREEN, new PotionEffect(PotionEffectType.SATURATION, 10, 0), "", "&7&o恢复 &b&o5.0 &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{getItem("BREADFRUIT"), getItem("ICE_CUBE"), null, null, null, null, null, null, null})).register(plugin);
         (new Juice(ExoticGarden.instance.drinksItemGroup, new SlimefunItemStack("BIG_CARROT_JUICE", new CustomPotion("&4萝卜酱", Color.RED, new PotionEffect(PotionEffectType.SATURATION, 6, 0), "", "&7&o恢复 &b&o3.0 &7&o点饥饿值")), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{getItem("BIG_CARROT"), null, null, null, null, null, null, null, null})).register(plugin);
