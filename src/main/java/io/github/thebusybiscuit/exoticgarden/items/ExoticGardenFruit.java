@@ -11,6 +11,9 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -54,8 +57,19 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
             }
 
             if (edible && e.getPlayer().getFoodLevel() < 20) {
-                restoreHunger(e.getPlayer());
-                ItemUtils.consumeItem(e.getItem(), false);
+                // 喵~检查物品是否已过期喵
+                if (isExpired(e.getItem())) {
+                    Player p = e.getPlayer();
+                    // 过期：饱食度恢复减少60%喵
+                    int reduced = (int) Math.max(0, Math.round(getFoodValue() * 0.4));
+                    p.setFoodLevel(Math.min(p.getFoodLevel() + reduced, 20));
+                    p.sendMessage("§c这食物已经过期了，味道怪怪的喵~");
+                    io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener.applyExpiredEffectsStatic(p, false);
+                    ItemUtils.consumeItem(e.getItem(), false);
+                } else {
+                    restoreHunger(e.getPlayer());
+                    ItemUtils.consumeItem(e.getItem(), false);
+                }
             }
         };
     }
@@ -94,6 +108,38 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
 
     protected int getFoodValue() {
         return 2;
+    }
+
+    /**
+     * 判断物品是否已过期：读取PDC的FOOD_TIMESTAMP和INGREDIENT_ID，查询保质期喵~
+     * 无时间戳视为未过期（未经烹饪系统标记的物品）喵
+     */
+    protected boolean isExpired(ItemStack item) {
+        // 喵~防御：null或无meta视为未过期喵
+        if (item == null || !item.hasItemMeta()) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        // 无时间戳的物品不参与过期机制喵
+        Long timestamp = pdc.get(
+            io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.FOOD_TIMESTAMP,
+            PersistentDataType.LONG);
+        if (timestamp == null) return false;
+        // 读取配置保质期，无配置时默认10分钟喵
+        String ingId = pdc.get(
+            io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.INGREDIENT_ID,
+            PersistentDataType.STRING);
+        int shelfLife = 10;
+        if (ingId != null) {
+            io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData data
+                = io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getIngredients() != null
+                ? io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getIngredients().get(ingId)
+                : null;
+            if (data != null) shelfLife = data.shelfLifeMinutes;
+        }
+        long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
+        // 喵~防御：时钟回拨（diffMinutes为负）视为未过期喵
+        return diffMinutes >= shelfLife;
     }
 
     private void restoreHunger(@Nonnull Player p) {
