@@ -416,16 +416,22 @@ public class FoodTagListener implements Listener {
                 replaceLoreLineOrAdd(lore, "§7推荐温度:", tempLine);
             }
 
-            // 喵~可变：hint 非空时替换/追加，为空时删除旧提示行喵
-            if (data != null && !data.hint.isEmpty()) {
-                String hintLine = "§8食材提示: §7" + data.hint;
-                pdc.set(CookingKeys.INGREDIENT_HINT, PersistentDataType.STRING, data.hint);
+            // 喵~可变：loreHint 非空时替换/追加，为空时删除旧提示行喵
+            if (data != null && !data.loreHint.isEmpty()) {
+                String hintLine = "§8食材提示: §7" + data.loreHint;
+                pdc.set(CookingKeys.INGREDIENT_HINT, PersistentDataType.STRING, data.loreHint);
                 replaceLoreLineOrAdd(lore, "§8食材提示:", hintLine);
             } else {
-                // hint 为空时删除已有的提示行喵
+                // loreHint 为空时删除已有的提示行喵
                 lore.removeIf(line -> line.startsWith("§8食材提示:"));
                 pdc.remove(CookingKeys.INGREDIENT_HINT);
             }
+            // [已废弃] hint 现改为传给 AI 的提示词，不再写入物品 lore 喵
+            // if (data != null && !data.hint.isEmpty()) {
+            //     String hintLine = "§8食材提示: §7" + data.hint;
+            //     pdc.set(CookingKeys.INGREDIENT_HINT, PersistentDataType.STRING, data.hint);
+            //     replaceLoreLineOrAdd(lore, "§8食材提示:", hintLine);
+            // }
         }
 
         // 检查lore中是否已有对应类型行，有则替换，没有则追加喵
@@ -748,12 +754,12 @@ public class FoodTagListener implements Listener {
         String fuelLine = "§7[燃料] §f" + data.effectDisplayName;
         replaceLoreLineOrAdd(lore, "§7[燃料]", fuelLine);
 
-        // 喵~可变：hint 非缺省才操作，缺省时保留现有 lore 不变喵
-        if (!data.hint.isEmpty()) {
-            pdc.set(CookingKeys.FUEL_HINT, PersistentDataType.STRING, data.hint);
-            String hintLine = "§8燃料提示: §7" + data.hint;
-            replaceLoreLineOrAdd(lore, "§8燃料提示:", hintLine);
-        }
+        // [已废弃] hint 现改为传给 AI 的提示词，不再写入物品 lore 喵
+        // if (!data.hint.isEmpty()) {
+        //     pdc.set(CookingKeys.FUEL_HINT, PersistentDataType.STRING, data.hint);
+        //     String hintLine = "§8燃料提示: §7" + data.hint;
+        //     replaceLoreLineOrAdd(lore, "§8燃料提示:", hintLine);
+        // }
 
         meta.setLore(lore);
         item.setItemMeta(meta);

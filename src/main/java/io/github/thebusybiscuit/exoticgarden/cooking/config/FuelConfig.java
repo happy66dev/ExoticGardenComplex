@@ -15,9 +15,12 @@ public class FuelConfig extends YamlConfigLoader<FuelConfig.FuelData> {
         public final String byproduct;
         public final String displayName;
         // 燃料风味效果的中文显示名（如 "橡木烟熏"），来自 fuels.yml 的 effect_display_name 字段喵
+        // 仅用于物品 lore 显示，不传给 AI 喵
         // 若未配置则回退为 effect 字段原值喵
         public final String effectDisplayName;
-        // 燃料提示词，显示在物品 lore 中，供服主自定义描述喵
+        // 燃料 AI 提示词，来自 fuels.yml 的 hint 字段喵
+        // 会加入食材的 fuelEffects 列表传给 AI，帮助 AI 理解燃料风味对菜肴的影响喵
+        // 不再写入物品 lore 喵
         public final String hint;
 
         public FuelData(double tempGain, double durationSeconds, double heatRate,

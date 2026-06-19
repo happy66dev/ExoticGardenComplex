@@ -83,15 +83,15 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
         IngredientSlot slot = new IngredientSlot(ingId, foodState, 0, 0, ActiveFace.FRONT, 0);
         slot.isExpired = isExpired;
 
-        // 收集当前灶台已有燃料的 effectDisplayName，非空时加入食材的 fuelEffects 喵
+        // 收集当前灶台已有燃料的 hint（AI提示词），非空时加入食材的 fuelEffects 喵
         for (FuelEntry fe : state.fuels) {
             FuelConfig.FuelData fd = fuels.get(fe.fuelId);
-            // 喵~防御：fd 为 null 时跳过，effectDisplayName 为空时也跳过喵
+            // 喵~防御：fd 为 null 时跳过，hint 为空时也跳过喵
             if (fd == null) continue;
-            String displayName = fd.effectDisplayName;
-            if (displayName != null && !displayName.isEmpty() && !slot.fuelEffects.contains(displayName)) {
+            String fuelHint = fd.hint;
+            if (fuelHint != null && !fuelHint.isEmpty() && !slot.fuelEffects.contains(fuelHint)) {
                 // 避免重复添加同一种风味喵
-                slot.fuelEffects.add(displayName);
+                slot.fuelEffects.add(fuelHint);
             }
         }
 

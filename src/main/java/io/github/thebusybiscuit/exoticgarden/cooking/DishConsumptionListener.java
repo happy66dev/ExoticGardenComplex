@@ -138,20 +138,23 @@ public class DishConsumptionListener implements Listener {
                     }
                 }
             }
-            // 喵~未过期时发送随机食用句子（如果有）喵
+            // 喵~按顺序展示食用句子：读取当前索引，展示对应句，索引+1写回喵
             String flavorRaw = pdc.get(CookingKeys.DISH_FLAVOR_TEXTS, PersistentDataType.STRING);
             if (flavorRaw != null && !flavorRaw.isEmpty()) {
                 String[] texts = flavorRaw.split("\\|");
-                // 喵~防御：随机选一句，空句子跳过喵
-                java.util.List<String> validTexts = new java.util.ArrayList<>();
+                // 过滤空句子喵
+                List<String> validTexts = new ArrayList<>();
                 for (String t : texts) {
                     if (t != null && !t.isBlank()) validTexts.add(t);
                 }
                 if (!validTexts.isEmpty()) {
-                    String chosen = validTexts.get(
-                        validTexts.size() == 1 ? 0 :
-                        java.util.concurrent.ThreadLocalRandom.current().nextInt(validTexts.size()));
-                    player.sendMessage(chosen);
+                    // 读取当前索引，默认0喵
+                    int idx = pdc.getOrDefault(CookingKeys.DISH_FLAVOR_INDEX, PersistentDataType.INTEGER, 0);
+                    // 喵~防御：索引越界时从0开始循环喵
+                    if (idx < 0 || idx >= validTexts.size()) idx = 0;
+                    player.sendMessage(validTexts.get(idx));
+                    // 索引+1写回，下一次食用时展示下一句喵
+                    pdc.set(CookingKeys.DISH_FLAVOR_INDEX, PersistentDataType.INTEGER, idx + 1);
                 }
             }
         }

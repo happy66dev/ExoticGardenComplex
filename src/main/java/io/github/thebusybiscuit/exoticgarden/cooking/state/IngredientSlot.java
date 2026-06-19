@@ -13,7 +13,7 @@ public class IngredientSlot {
     // 已向灶台释放的水/油累计量，防止重复释放喵
     public double releasedWaterMl;
     public double releasedOilMl;
-    // 该食材烹饪期间经历的燃料风味效果列表（中文显示名），可配置喵
+    // 该食材烹饪期间经历的燃料 AI 提示词列表（来自 fuels.yml 的 hint 字段），会传给 AI 喵
     public List<String> fuelEffects;
     // 食材放入灶台时是否已过期喵
     public boolean isExpired;

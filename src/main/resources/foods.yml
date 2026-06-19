@@ -1,4 +1,24 @@
 # config_version: 1
+# ============================================================
+# foods.yml - 食物保质期与黑名单配置
+# ============================================================
+#
+# 【字段说明】
+# defaults:
+#   generic_food_shelf_life   - 通用食物默认保质期（单位：分钟）
+#   generic_potion_shelf_life - 通用药水默认保质期（单位：分钟）
+#
+# blacklist:
+#   - 被列入黑名单的物品不会参与烹饪系统的保质期机制
+#   - 格式为命名空间:物品ID（如 minecraft:GOLDEN_APPLE）
+#
+# overrides:（可选，取消注释启用）
+#   - 针对特定物品单独设置保质期，覆盖 defaults 中的默认值
+#   格式示例:
+#   minecraft:COOKIE:
+#     shelf_life_minutes: 20    # 该物品的自定义保质期（分钟）
+# ============================================================
+
 defaults:
   generic_food_shelf_life: 10
   generic_potion_shelf_life: 5

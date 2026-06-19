@@ -40,16 +40,16 @@ public class FuelInteractionHandler implements StoveInteractionHandler {
         state.fuels.add(new FuelEntry(fuelId, (int)(fd.durationSeconds * 20)));
         handItem.setAmount(handItem.getAmount() - 1);
 
-        // 新燃料加入后，将其 effectDisplayName 追加到所有已有食材的 fuelEffects 喵
-        String newDisplayName = fd.effectDisplayName;
-        if (newDisplayName != null && !newDisplayName.isEmpty()) {
+        // 新燃料加入后，将其 hint（AI提示词）追加到所有已有食材的 fuelEffects 喵
+        String newHint = fd.hint;
+        if (newHint != null && !newHint.isEmpty()) {
             // 主人注意：遍历所有食材槽，最多4格，O(n)可接受喵
             for (io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot slot : state.slots) {
                 // 喵~防御：跳过空槽喵
                 if (slot == null) continue;
                 // 喵~防御：避免重复添加同一种风味喵
-                if (!slot.fuelEffects.contains(newDisplayName)) {
-                    slot.fuelEffects.add(newDisplayName);
+                if (!slot.fuelEffects.contains(newHint)) {
+                    slot.fuelEffects.add(newHint);
                 }
             }
         }

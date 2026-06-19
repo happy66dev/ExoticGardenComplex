@@ -1,4 +1,30 @@
 # config_version: 4
+# ============================================================
+# seasonings.yml - 烹饪调料配置
+# ============================================================
+#
+# 【字段说明】（每个调料物品包含以下字段）
+# display_name       - 调料显示名称
+# has_doneness       - 是否有“渗入熟度”（true=需要时间+温度才能渗入食材，false=直接生效）
+# weight_grams       - 调料重量（克），影响 AI 生成菜肴的份量估算
+# water_ml           - 含水量（毫升），加入灶台后增加水量，影响烹饪方式判断
+# oil_ml             - 含油量（毫升），加入灶台后增加油量，影响烹饪方式判断
+# category           - 调料分类：
+#                      seasoning=调料（计入调料槽）
+#                      water=水类（不计入调料槽，仅增加水量）
+#                      oil=油类（不计入调料槽，仅增加油量）
+#                      potion=药水类（特殊处理）
+# container_return   - 使用后返还的容器物品：BUCKET=铁桶 / GLASS_BOTTLE=玻璃瓶 / none=不返还
+# hint               - 传给 AI 的调料提示信息（仅传给 AI，不写入物品 lore）
+# lore_hint          - 物品 lore 显示用的调料提示（仅写入 lore，不传给 AI）
+#
+# 【has_doneness=true 时额外字段】（渗入型调料需要温度+时间才能生效）
+#   min_temp         - 最低生效温度（°C），低于此温度不开始渗入
+#   optimal_temp     - 最佳渗入温度（°C），在此温度下渗入速度最快
+#   base_time_seconds- 基础渗入时间（秒），完全渗入所需时间
+#
+# ============================================================
+
 # ===== 基础调料 (has_doneness: false) =====
 slimefun:SALT:
   weight_grams: 1
@@ -9,6 +35,7 @@ slimefun:SALT:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 minecraft:SUGAR:
   weight_grams: 1
   water_ml: 0
@@ -18,6 +45,7 @@ minecraft:SUGAR:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 料酒 (has_doneness: true, 热渗入) =====
 slimefun:RICE_WINE:
@@ -32,6 +60,7 @@ slimefun:RICE_WINE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 水类 (不计入调料槽) =====
 minecraft:WATER_BOTTLE:
@@ -43,6 +72,7 @@ minecraft:WATER_BOTTLE:
   category: water
   container_return: GLASS_BOTTLE
   hint: ""
+  lore_hint: ""
 minecraft:WATER_BUCKET:
   display_name: "水(桶)"
   has_doneness: false
@@ -52,6 +82,7 @@ minecraft:WATER_BUCKET:
   category: water
   container_return: BUCKET
   hint: ""
+  lore_hint: ""
 minecraft:MILK_BUCKET:
   display_name: "牛奶(桶)"
   has_doneness: false
@@ -61,6 +92,7 @@ minecraft:MILK_BUCKET:
   category: seasoning
   container_return: BUCKET
   hint: ""
+  lore_hint: ""
 minecraft:HONEY_BOTTLE:
   display_name: "蜂蜜"
   has_doneness: false
@@ -70,6 +102,7 @@ minecraft:HONEY_BOTTLE:
   category: seasoning
   container_return: GLASS_BOTTLE
   hint: ""
+  lore_hint: ""
 
 # ===== 油类 (不计入调料槽) =====
 slimefun:BUTTER:
@@ -81,6 +114,7 @@ slimefun:BUTTER:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:HEAVY_CREAM:
   display_name: "淡奶油"
   has_doneness: false
@@ -90,6 +124,7 @@ slimefun:HEAVY_CREAM:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:VEGETABLE_OIL:
   display_name: "植物油"
   has_doneness: false
@@ -99,6 +134,7 @@ slimefun:VEGETABLE_OIL:
   category: oil
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 原版药水 (has_doneness: true, 通用渗入) =====
 _POTION_:
@@ -113,6 +149,7 @@ _POTION_:
   category: potion
   container_return: GLASS_BOTTLE
   hint: ""
+  lore_hint: ""
 
 # ===== 香料/装饰 (has_doneness: false, 纯增味) =====
 slimefun:CILANTRO:
@@ -124,6 +161,7 @@ slimefun:CILANTRO:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CURRY_LEAF:
   weight_grams: 1
   water_ml: 0
@@ -133,6 +171,7 @@ slimefun:CURRY_LEAF:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:TEA_LEAF:
   weight_grams: 1
   water_ml: 0
@@ -142,6 +181,7 @@ slimefun:TEA_LEAF:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BLACK_PEPPER:
   weight_grams: 1
   water_ml: 0
@@ -151,6 +191,7 @@ slimefun:BLACK_PEPPER:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:LEEK:
   weight_grams: 1
   water_ml: 0
@@ -160,6 +201,7 @@ slimefun:LEEK:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:PEANUT:
   weight_grams: 1
   water_ml: 0
@@ -169,6 +211,7 @@ slimefun:PEANUT:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:DEVIL_MELON:
   weight_grams: 1
   water_ml: 0
@@ -178,6 +221,7 @@ slimefun:DEVIL_MELON:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:INFERNOFRUIT:
   weight_grams: 1
   water_ml: 0
@@ -187,6 +231,7 @@ slimefun:INFERNOFRUIT:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 柑橘类果汁 (has_doneness: true, 酸性强-快速渗入) =====
 slimefun:LEMON_JUICE:
@@ -201,6 +246,7 @@ slimefun:LEMON_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:LIME_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -213,6 +259,7 @@ slimefun:LIME_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:ORANGE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -225,6 +272,7 @@ slimefun:ORANGE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 浆果类果汁 (has_doneness: true, 中快速渗入) =====
 slimefun:APPLE_JUICE:
@@ -239,6 +287,7 @@ slimefun:APPLE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:MELON_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -251,6 +300,7 @@ slimefun:MELON_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:SWEET_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -263,6 +313,7 @@ slimefun:SWEET_BERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:GLOW_BERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -275,6 +326,7 @@ slimefun:GLOW_BERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:GRAPE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -287,6 +339,7 @@ slimefun:GRAPE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BLUEBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -299,6 +352,7 @@ slimefun:BLUEBERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:RASPBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -311,6 +365,7 @@ slimefun:RASPBERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BLACKBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -323,6 +378,7 @@ slimefun:BLACKBERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CRANBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -335,6 +391,7 @@ slimefun:CRANBERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:STRAWBERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -347,6 +404,7 @@ slimefun:STRAWBERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 核果类果汁 (has_doneness: true, 中速渗入) =====
 slimefun:PEACH_JUICE:
@@ -361,6 +419,7 @@ slimefun:PEACH_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:PLUM_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -373,6 +432,7 @@ slimefun:PLUM_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:PEAR_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -385,6 +445,7 @@ slimefun:PEAR_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CHERRY_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -397,6 +458,7 @@ slimefun:CHERRY_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:POMEGRANATE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -409,6 +471,7 @@ slimefun:POMEGRANATE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:DRAGON_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -421,6 +484,7 @@ slimefun:DRAGON_FRUIT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:OAK_APPLE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -433,6 +497,7 @@ slimefun:OAK_APPLE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 浓郁类果汁 (has_doneness: true, 慢渗入) =====
 slimefun:COCONUT_MILK:
@@ -447,6 +512,7 @@ slimefun:COCONUT_MILK:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:PINEAPPLE_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -459,6 +525,7 @@ slimefun:PINEAPPLE_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:TOMATO_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -471,6 +538,7 @@ slimefun:TOMATO_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 根茎/大果类果汁 (has_doneness: true, 最慢渗入) =====
 slimefun:PUMPKIN_JUICE:
@@ -485,6 +553,7 @@ slimefun:PUMPKIN_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -497,6 +566,7 @@ slimefun:CARROT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 异域特调果汁 (has_doneness: true, 中速渗入) =====
 slimefun:BREADFRUIT_JUICE:
@@ -511,6 +581,7 @@ slimefun:BREADFRUIT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:ALIEN_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -523,6 +594,7 @@ slimefun:ALIEN_FRUIT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:PUNCH_FRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -535,6 +607,7 @@ slimefun:PUNCH_FRUIT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:JACKFRUIT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -547,6 +620,7 @@ slimefun:JACKFRUIT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BIG_CARROT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -559,6 +633,7 @@ slimefun:BIG_CARROT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BIG_WHEAT_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -571,6 +646,7 @@ slimefun:BIG_WHEAT_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:AMARANTH_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -583,6 +659,7 @@ slimefun:AMARANTH_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:DEVIL_MELON_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -595,6 +672,7 @@ slimefun:DEVIL_MELON_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:ACORN_SQUASH_JUICE:
   weight_grams: 1
   water_ml: 200
@@ -607,6 +685,7 @@ slimefun:ACORN_SQUASH_JUICE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 烹饪成品辅料 (has_doneness: false, 纯topping) =====
 slimefun:BACON:
@@ -618,6 +697,7 @@ slimefun:BACON:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CHEESE:
   weight_grams: 1
   water_ml: 0
@@ -627,6 +707,7 @@ slimefun:CHEESE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:FRIED_CHICKEN:
   weight_grams: 1
   water_ml: 0
@@ -636,6 +717,7 @@ slimefun:FRIED_CHICKEN:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:FRIES:
   weight_grams: 1
   water_ml: 0
@@ -645,6 +727,7 @@ slimefun:FRIES:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:HASHBROWN:
   weight_grams: 1
   water_ml: 0
@@ -654,6 +737,7 @@ slimefun:HASHBROWN:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:ONION_RINGS:
   weight_grams: 1
   water_ml: 0
@@ -663,6 +747,7 @@ slimefun:ONION_RINGS:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:CHICKEN_NUGGETS:
   weight_grams: 1
   water_ml: 0
@@ -672,6 +757,7 @@ slimefun:CHICKEN_NUGGETS:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BROWN_SUGAR:
   weight_grams: 1
   water_ml: 0
@@ -681,6 +767,7 @@ slimefun:BROWN_SUGAR:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:COUNTRY_GRAVY:
   weight_grams: 1
   water_ml: 0
@@ -690,6 +777,7 @@ slimefun:COUNTRY_GRAVY:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:MAYO:
   weight_grams: 1
   water_ml: 0
@@ -699,6 +787,7 @@ slimefun:MAYO:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:BBQ_SAUCE:
   weight_grams: 1
   water_ml: 0
@@ -708,6 +797,7 @@ slimefun:BBQ_SAUCE:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 slimefun:MUSTARD:
   weight_grams: 1
   water_ml: 0
@@ -717,6 +807,7 @@ slimefun:MUSTARD:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # ===== 新增调料 =====
 
@@ -730,6 +821,7 @@ slimefun:MSG:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # 醋：酸性调料，需要热渗入，含少量水分，min_temp 较低喵
 slimefun:VINEGAR:
@@ -744,6 +836,7 @@ slimefun:VINEGAR:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
 
 # 水淀粉：需要热渗入勾芡，含水分，用于增稠汤汁喵
 slimefun:STARCH_WATER:
@@ -758,3 +851,4 @@ slimefun:STARCH_WATER:
   category: seasoning
   container_return: none
   hint: "水淀粉勾芡 使汤汁变浓稠 需要加热才能完全糊化"
+  lore_hint: ""

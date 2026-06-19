@@ -35,8 +35,10 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
         public final double waterMl;
         // 烹饪时向灶台释放的油量（ml），0-50%熟度阶段缓慢释放喵
         public final double oilMl;
-        // 给 AI 的提示信息，帮助 AI 更准确识别食材风味和用途喵
+        // 给 AI 的提示信息，仅传给 AI，不写入物品 lore 喵
         public final String hint;
+        // 物品 lore 显示用的提示词，与 AI 无关喵
+        public final String loreHint;
         // 加工完成后变为的新 SF 物品 ID，null 表示不转换喵
         public final String transformTo;
         // 是否不分正反（水煮时双面同时加热，如面条类），优先于灶台水量检测喵
@@ -47,8 +49,8 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
                               SauceCreation sauceCreation, String calculatorType,
                               String displayName, double weightGrams,
                               double foodPoints, double saturation, int shelfLifeMinutes,
-                              double waterMl, double oilMl, String hint, String transformTo,
-                              boolean noFlipSide) {
+                              double waterMl, double oilMl, String hint, String loreHint,
+                              String transformTo, boolean noFlipSide) {
             this.matureRefTemp = matureRefTemp;
             this.baseCookTimeSeconds = baseCookTimeSeconds;
             this.flipRequired = flipRequired;
@@ -63,6 +65,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             this.waterMl = waterMl;
             this.oilMl = oilMl;
             this.hint = hint;
+            this.loreHint = loreHint;
             this.transformTo = transformTo;
             this.noFlipSide = noFlipSide;
         }
@@ -93,6 +96,7 @@ public class IngredientConfig extends YamlConfigLoader<IngredientConfig.Ingredie
             s.getDouble("water_ml", 0),
             s.getDouble("oil_ml", 0),
             s.getString("hint", ""),
+            s.getString("lore_hint", ""),
             s.getString("transform_to", null),
             s.getBoolean("no_flip_side", false)  // 不分正反（如面条类）喵
         );

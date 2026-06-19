@@ -1,4 +1,33 @@
 # config_version: 4
+# ============================================================
+# ingredients.yml - 烹饪食材配置
+# ============================================================
+#
+# 【字段说明】（每个食材物品包含以下字段）
+# display_name          - 食材显示名称
+# weight_grams          - 食材重量（克），影响 AI 生成菜肴的份量估算
+# type                  - 食材类型：MAIN=主食类 / DUAL=可作主食或配菜
+# states                - 允许的切割状态列表：WHOLE=整块, SLICED=切片, DICED=切丁
+# calculator_type       - 成熟度计算器类型（目前仅 standard）
+# mature_ref_temp       - 成熟参考温度（°C），在此温度时成熟速度为标准速度
+# base_cook_time_seconds- 基础烹饪时间（秒），用于计算成熟度进度
+# flip_required         - 是否需要翻面（true=需要用锅铲翻面才能均匀受热）
+# food_points           - 食用后恢复的饱食度（点）
+# saturation            - 食用后恢复的饱和度
+# shelf_life_minutes    - 保质期（分钟），从被标记开始计时，过期后食用效果减少60%
+# hint                  - 传给 AI 的食材提示信息（仅传给 AI，不写入物品 lore）
+# lore_hint             - 物品 lore 显示用的食材提示（仅写入 lore，不传给 AI）
+# transform_to          - 砧板加工后变成的新物品 ID（如面团→面饼），null=不转换
+# no_flip_side          - 是否不分正反（true=水煮时双面同时加热，如面条类）
+#
+# 【sauce_creation 子节点】（可选，配置后该食材可用锅铲搅拌制酱）
+#   clicks_required     - 制酱所需的搅拌点击次数
+#
+# 【通用保质期覆盖】（文件末尾可选）
+#   _GENERIC_FOOD_      - 覆盖 foods.yml 中通用食物的默认保质期
+#   _GENERIC_POTION_    - 覆盖 foods.yml 中通用药水的默认保质期
+# ============================================================
+
 # ===== DUAL: 原版肉类 (8种) - 翻面: true, 可制肉酱 =====
 minecraft:BEEF:
   display_name: 牛肉
@@ -13,6 +42,7 @@ minecraft:BEEF:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 5
 minecraft:PORKCHOP:
@@ -28,6 +58,7 @@ minecraft:PORKCHOP:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 5
 minecraft:CHICKEN:
@@ -43,6 +74,7 @@ minecraft:CHICKEN:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 
@@ -59,6 +91,7 @@ minecraft:APPLE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 minecraft:GOLDEN_APPLE:
@@ -74,6 +107,7 @@ minecraft:GOLDEN_APPLE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 5
 minecraft:GOLDEN_CARROT:
@@ -89,6 +123,7 @@ minecraft:GOLDEN_CARROT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 5
 minecraft:PUMPKIN:
@@ -104,6 +139,7 @@ minecraft:PUMPKIN:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 minecraft:DRIED_KELP:
@@ -119,6 +155,7 @@ minecraft:DRIED_KELP:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -136,6 +173,7 @@ minecraft:COCOA_BEANS:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 minecraft:BREAD:
@@ -151,6 +189,7 @@ minecraft:BREAD:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 minecraft:COD:
   display_name: 鳕鱼
   weight_grams: 150
@@ -164,6 +203,7 @@ minecraft:COD:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 minecraft:SALMON:
@@ -179,6 +219,7 @@ minecraft:SALMON:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 minecraft:MUTTON:
@@ -194,6 +235,7 @@ minecraft:MUTTON:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 5
 minecraft:RABBIT:
@@ -209,6 +251,7 @@ minecraft:RABBIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 minecraft:EGG:
@@ -224,6 +267,7 @@ minecraft:EGG:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -241,6 +285,7 @@ minecraft:POTATO:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 minecraft:CARROT:
@@ -256,6 +301,7 @@ minecraft:CARROT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 minecraft:BEETROOT:
@@ -271,6 +317,7 @@ minecraft:BEETROOT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 minecraft:BROWN_MUSHROOM:
@@ -286,6 +333,7 @@ minecraft:BROWN_MUSHROOM:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 minecraft:RED_MUSHROOM:
@@ -301,6 +349,7 @@ minecraft:RED_MUSHROOM:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -318,6 +367,7 @@ minecraft:MELON_SLICE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 minecraft:SWEET_BERRIES:
@@ -333,6 +383,7 @@ minecraft:SWEET_BERRIES:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 minecraft:GLOW_BERRIES:
@@ -348,6 +399,7 @@ minecraft:GLOW_BERRIES:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -365,6 +417,7 @@ slimefun:CORN:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:CABBAGE:
   display_name: 卷心菜
   weight_grams: 200
@@ -378,6 +431,7 @@ slimefun:CABBAGE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:LETTUCE:
   display_name: 生菜
   weight_grams: 100
@@ -391,6 +445,7 @@ slimefun:LETTUCE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:GARLIC:
   display_name: 大蒜
   weight_grams: 50
@@ -404,6 +459,7 @@ slimefun:GARLIC:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:BREADFRUIT:
   display_name: 面包果
   weight_grams: 200
@@ -417,6 +473,7 @@ slimefun:BREADFRUIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:ALIEN_FRUIT:
   display_name: 外星果实
   weight_grams: 200
@@ -430,6 +487,7 @@ slimefun:ALIEN_FRUIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:PUNCH_FRUIT:
   display_name: 潘趣果
   weight_grams: 200
@@ -443,6 +501,7 @@ slimefun:PUNCH_FRUIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:JACKFRUIT:
   display_name: 菠萝蜜
   weight_grams: 200
@@ -456,6 +515,7 @@ slimefun:JACKFRUIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:BIG_CARROT:
   display_name: 大萝卜
   weight_grams: 200
@@ -469,6 +529,7 @@ slimefun:BIG_CARROT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:ACORN_SQUASH:
   display_name: 橡子南瓜
   weight_grams: 300
@@ -482,6 +543,7 @@ slimefun:ACORN_SQUASH:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:GINSENGBABY:
   display_name: 人参果娃
   weight_grams: 80
@@ -495,6 +557,7 @@ slimefun:GINSENGBABY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:BIG_WHEAT:
   display_name: 异域大麦
   weight_grams: 150
@@ -508,6 +571,7 @@ slimefun:BIG_WHEAT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:AMARANTH:
   display_name: 苋菜
   weight_grams: 50
@@ -521,6 +585,7 @@ slimefun:AMARANTH:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 slimefun:TEQUILA:
   display_name: 龙舌兰
   weight_grams: 100
@@ -534,6 +599,7 @@ slimefun:TEQUILA:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
 
 # ===== DUAL: ExoticGarden 蔬菜 (3种) =====
 slimefun:TOMATO:
@@ -549,6 +615,7 @@ slimefun:TOMATO:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:ONION:
@@ -564,6 +631,7 @@ slimefun:ONION:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 slimefun:RED_BELL_PEPPER:
@@ -579,6 +647,7 @@ slimefun:RED_BELL_PEPPER:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 
@@ -596,6 +665,7 @@ slimefun:OAK_APPLE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:CHERRY:
@@ -611,6 +681,7 @@ slimefun:CHERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:POMEGRANATE:
@@ -626,6 +697,7 @@ slimefun:POMEGRANATE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:LEMON:
@@ -641,6 +713,7 @@ slimefun:LEMON:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:PLUM:
@@ -656,6 +729,7 @@ slimefun:PLUM:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:LIME:
@@ -671,6 +745,7 @@ slimefun:LIME:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:ORANGE:
@@ -686,6 +761,7 @@ slimefun:ORANGE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:PEACH:
@@ -701,6 +777,7 @@ slimefun:PEACH:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:PEAR:
@@ -716,6 +793,7 @@ slimefun:PEAR:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:DRAGON_FRUIT:
@@ -731,6 +809,7 @@ slimefun:DRAGON_FRUIT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:PINEAPPLE:
@@ -746,6 +825,7 @@ slimefun:PINEAPPLE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 slimefun:COCONUT:
@@ -761,6 +841,7 @@ slimefun:COCONUT:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 
@@ -778,6 +859,7 @@ slimefun:STRAWBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:GRAPE:
@@ -793,6 +875,7 @@ slimefun:GRAPE:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:BLUEBERRY:
@@ -808,6 +891,7 @@ slimefun:BLUEBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:RASPBERRY:
@@ -823,6 +907,7 @@ slimefun:RASPBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:BLACKBERRY:
@@ -838,6 +923,7 @@ slimefun:BLACKBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:CRANBERRY:
@@ -853,6 +939,7 @@ slimefun:CRANBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:ELDERBERRY:
@@ -868,6 +955,7 @@ slimefun:ELDERBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 slimefun:COWBERRY:
@@ -883,6 +971,7 @@ slimefun:COWBERRY:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -900,6 +989,7 @@ slimefun:SWEET_POTATO:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 
@@ -916,6 +1006,7 @@ minecraft:PUFFERFISH:
   saturation: 0.2
   shelf_life_minutes: 8
   hint: "河豚含有毒素，需要充分烹饪；若未充分处理会导致中毒"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 
@@ -933,6 +1024,7 @@ slimefun:DOUGH:
   saturation: 2
   shelf_life_minutes: 30
   hint: "面团需在砧板上擀制成面饼后方可烹饪"
+  lore_hint: ""
   transform_to: FLATBREAD_ITEM
   sauce_creation:
     clicks_required: 5
@@ -950,6 +1042,7 @@ slimefun:FLATBREAD_ITEM:
   saturation: 2
   shelf_life_minutes: 20
   hint: "擀薄的面饼 可直接烤制或切成宽面"
+  lore_hint: ""
   transform_to: WIDE_NOODLES
 
 slimefun:WIDE_NOODLES:
@@ -965,6 +1058,7 @@ slimefun:WIDE_NOODLES:
   saturation: 1.5
   shelf_life_minutes: 15
   hint: "宽面条 切割后可得到细面条"
+  lore_hint: ""
   transform_to: RAW_NOODLES
 
 slimefun:RAW_NOODLES:
@@ -981,6 +1075,7 @@ slimefun:RAW_NOODLES:
   saturation: 1.5
   shelf_life_minutes: 15
   hint: "生面条 需煮熟后食用；煮熟后即为成品面条"
+  lore_hint: ""
 
 # ===== 新增异域植物食材 =====
 # --- 彩虹果/红醋栗 ---
@@ -997,6 +1092,7 @@ slimefun:RAINBOW_FRUITS:
   saturation: 2
   shelf_life_minutes: 10
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1013,6 +1109,7 @@ slimefun:GOOSEBERRY:
   saturation: 2
   shelf_life_minutes: 8
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1030,6 +1127,7 @@ slimefun:MEXICO_CHILI:
   saturation: 2
   shelf_life_minutes: 10
   hint: "辛辣刺激的异域辣椒 充分加热后辣味会转化为鲜甜"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 
@@ -1046,6 +1144,7 @@ slimefun:MUSTARD_SEED:
   saturation: 1
   shelf_life_minutes: 20
   hint: "芥菜籽 研磨后可制成芥末 烹调中可直接作为辛香料使用"
+  lore_hint: ""
 
 # --- 异域根茎类 ---
 slimefun:MANDRAKE_ROOT:
@@ -1061,6 +1160,7 @@ slimefun:MANDRAKE_ROOT:
   saturation: 2
   shelf_life_minutes: 12
   hint: "神秘的异域根茎 传说具有魔法力量 充分烹调后安全食用"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 4
 
@@ -1078,6 +1178,7 @@ slimefun:ROSE:
   saturation: 1
   shelf_life_minutes: 8
   hint: "异域玫瑰 花瓣可食 适合制作甜点或茶饮"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1094,6 +1195,7 @@ slimefun:SAKURA:
   saturation: 1
   shelf_life_minutes: 8
   hint: "异域樱花 花瓣轻盈 适合点缀甜品或制作樱花盐腌食品"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1110,6 +1212,7 @@ slimefun:PURPLE_FLOWER:
   saturation: 1
   shelf_life_minutes: 8
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1126,6 +1229,7 @@ slimefun:PURPLE_ROSE:
   saturation: 1
   shelf_life_minutes: 8
   hint: ""
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1143,6 +1247,7 @@ slimefun:REED:
   saturation: 1.5
   shelf_life_minutes: 12
   hint: "异域甘蔗 味甜多汁 可榨汁或直接炖煮提鲜"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 2
 
@@ -1159,6 +1264,7 @@ slimefun:ALOE:
   saturation: 1.5
   shelf_life_minutes: 8
   hint: "异域芦荟 凝冻质地 低温烹调保留营养 高温则融化失去口感"
+  lore_hint: ""
   sauce_creation:
     clicks_required: 3
 

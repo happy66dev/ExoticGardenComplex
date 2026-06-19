@@ -22,8 +22,10 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
         // 容器返还类型：BUCKET/GLASS_BOTTLE/none，使用后返还对应容器喵
         public final String containerReturn;
 
-        // 给 AI 的提示信息，帮助 AI 更准确识别调料风味和用途喵
+        // 给 AI 的提示信息，仅传给 AI，不写入物品 lore 喵
         public final String hint;
+        // 物品 lore 显示用的提示词，与 AI 无关喵
+        public final String loreHint;
         // 调料保质期（分钟），0 表示不过期，默认 0 喵
         public final int shelfLifeMinutes;
 
@@ -31,7 +33,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
                              double optimalTemp, double baseTimeSeconds,
                              double weightGrams, double waterMl, double oilMl,
                              String category, String containerReturn, String hint,
-                             int shelfLifeMinutes) {
+                             String loreHint, int shelfLifeMinutes) {
             this.displayName = displayName;
             this.hasDoneness = hasDoneness;
             this.minTemp = minTemp;
@@ -43,6 +45,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             this.category = category;
             this.containerReturn = containerReturn;
             this.hint = hint;
+            this.loreHint = loreHint;
             this.shelfLifeMinutes = shelfLifeMinutes;
         }
     }
@@ -65,6 +68,7 @@ public class SeasoningConfig extends YamlConfigLoader<SeasoningConfig.SeasoningD
             s.getString("category", "seasoning"),
             s.getString("container_return", "none"),
             s.getString("hint", ""),
+            s.getString("lore_hint", ""),
             s.getInt("shelf_life_minutes", 0)  // 0=不过期 喵
         );
     }
