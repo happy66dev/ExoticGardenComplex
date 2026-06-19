@@ -101,9 +101,10 @@ public class StoveTickTask extends BukkitRunnable {
      *
      * 整体思路：
      *   1. 累计燃料的 maxTemp 和 totalHeatRate（冰燃料 heatRate 为负值）
-     *   2. 温度 > 室温时正常散热，< 室温时反向散热回升
-     *   3. 冰燃料降温需快于反向散热，保证温度实际下降
-     *   4. 最低温度限制 MIN_TEMP，不可低于 -20°C
+     *   2. 热容系数 = 200 / (200 + 灶台液体总量)，液体越多加热/散热越慢喵
+     *   3. 温度 > 室温时正常散热，< 室温时反向散热回升
+     *   4. 冰燃料降温需快于反向散热，保证温度实际下降
+     *   5. 最低温度限制 MIN_TEMP，不可低于 -50°C
      */
     private void tickTemperature(StoveState state) {
         double base = CookingConstants.BASE_AMBIENT_TEMP;
@@ -118,38 +119,41 @@ public class StoveTickTask extends BukkitRunnable {
             }
         }
 
-        // 喵~先计算反向散热量（低温时回升到室温的自然速率）喵
+        // 喵~热容系数：灶台假设热容等效200ml液体，液体越多升温/散热越慢喵
+        // heatCapacityFactor = 200 / (200 + 当前液体总量)，范围(0,1]喵
+        double liquidTotal = state.waterAmount + state.oilAmount;
+        double heatCapacityFactor = StoveState.BASE_LIQUID_ML / (StoveState.BASE_LIQUID_ML + liquidTotal);
+
+        // 喵~先计算反向散热量（低温时回升到室温的自然速率），也受热容系数影响喵
         double warmDelta = 0;
         if (state.currentTemp < base) {
             double warmRate = (base - state.currentTemp) * 0.05;
-            warmDelta = warmRate * 0.05; // 正值，代表每tick回升量喵
+            // 喵~反向散热同样乘以热容系数：液体多则回升更慢喵
+            warmDelta = warmRate * 0.05 * heatCapacityFactor;
         }
 
-        // 喵~散热（高温向室温回落）喵
+        // 喵~散热（高温向室温回落），乘以热容系数喵
         if (state.currentTemp > base) {
             double coolRate = (state.currentTemp - base) * 0.05;
-            state.currentTemp = Math.max(state.currentTemp - coolRate * 0.05, base);
+            double coolDelta = coolRate * 0.05 * heatCapacityFactor;
+            state.currentTemp = Math.max(state.currentTemp - coolDelta, base);
         } else if (state.currentTemp < base) {
-            // 喵~反向散热：低温回升到室温（warmDelta 正值）喵
-            // 冰燃料降温在下方叠加，需净效果 < 0 才能继续降温喵
+            // 喵~反向散热：低温回升到室温喵
             state.currentTemp = Math.min(state.currentTemp + warmDelta, base);
         }
 
-        // 喵~燃料效果（含冰燃料负 heatRate）喵
+        // 喵~燃料效果（含冰燃料负 heatRate），乘以热容系数喵
         if (!state.fuels.isEmpty()) {
             if (totalHeatRate > 0 && state.currentTemp < maxTemp) {
-                // 正常燃料加热喵
-                state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1, maxTemp);
+                // 正常燃料加热：速度 = 原速度 * 热容系数喵
+                state.currentTemp = Math.min(state.currentTemp + totalHeatRate * 0.1 * heatCapacityFactor, maxTemp);
             } else if (totalHeatRate < 0) {
-                // 冰燃料降温：每 tick 降温量需大于反向散热量，确保净效果是降温喵
-                // 降温量 = |totalHeatRate| * 0.1，反向散热量 = warmDelta（低于室温时）
-                // 净降温 = 降温量 - warmDelta（若为正则实际降温）喵
-                double coolingDelta = -totalHeatRate * 0.1; // 正值，代表降温量喵
-                double netCooling = coolingDelta - warmDelta; // 净降温喵
+                // 冰燃料降温，同样乘以热容系数喵
+                double coolingDelta = -totalHeatRate * 0.1 * heatCapacityFactor;
+                double netCooling = coolingDelta - warmDelta;
                 if (netCooling > 0) {
                     state.currentTemp = Math.max(state.currentTemp - netCooling, minTemp);
                 }
-                // 喵~若净降温 <= 0（冰效果弱于反向散热），则维持反向散热的结果，不额外降温喵
             }
         }
 
