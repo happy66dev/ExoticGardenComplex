@@ -1,4 +1,4 @@
-# config_version: 7
+# config_version: 8
 # ============================================================
 # seasonings.yml - 烹饪调料配置
 # ============================================================
@@ -26,7 +26,7 @@
 # ============================================================
 
 # ===== 基础调料 (has_doneness: false) =====
-exoticgarden:EG_FOOD_SALT:
+slimefun:EG_FOOD_SALT:
   weight_grams: 1
   water_ml: 0
   oil_ml: 0
@@ -35,6 +35,17 @@ exoticgarden:EG_FOOD_SALT:
   category: seasoning
   container_return: none
   hint: ""
+  lore_hint: ""
+  shelf_life_minutes: 0
+slimefun:SALT:
+  weight_grams: 1
+  water_ml: 0
+  oil_ml: 0
+  display_name: "粗盐"
+  has_doneness: false
+  category: seasoning
+  container_return: none
+  hint: "未经精制的粗盐，调味效果略逊于食盐"
   lore_hint: ""
   shelf_life_minutes: 0
 minecraft:SUGAR:
