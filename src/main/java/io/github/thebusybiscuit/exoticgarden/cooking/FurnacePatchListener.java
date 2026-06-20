@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil;
 
 /**
  * 熔炉补丁监听器：防止菜肴被丢进任何熔炉类设备烹饪喵~
@@ -50,7 +49,26 @@ public class FurnacePatchListener implements Listener {
      */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOW)
     public void onInventoryClick(InventoryClickEvent e) {
-        // 喵~检查光标（正在移动的物品），是菜肴或过期食材才处理喵
+        Inventory topInv = e.getView().getTopInventory();
+
+        // 喵~判断顶层背包是否是机器，不是则任何情况都不拦截喵
+        if (!isMachineInventory(topInv)) return;
+
+        // 喵~路径1：shift+click — currentItem 会被快速转移到顶层背包喵
+        if (e.isShiftClick()) {
+            ItemStack current = e.getCurrentItem();
+            if (current == null || current.getType().isAir()) return;
+            if (!isFurnaceBlocked(current)) return;
+            // 喵~shift+click 的 rawSlot 在玩家背包区域（>= topSize），目标是顶层背包喵
+            // isMachineInventory 已确认顶层是机器，直接拦截喵
+            e.setCancelled(true);
+            if (e.getWhoClicked() instanceof org.bukkit.entity.Player player) {
+                player.sendMessage("§c菜肴或过期食材不能放入机器喵~");
+            }
+            return;
+        }
+
+        // 喵~路径2：普通拖拽 — 检查光标上的物品喵
         ItemStack cursor = e.getCursor();
         if (cursor == null || cursor.getType().isAir()) return;
         if (!isFurnaceBlocked(cursor)) return;
@@ -61,14 +79,10 @@ public class FurnacePatchListener implements Listener {
         if (rawSlot < 0) return;
 
         // 喵~判断是否点击到了顶层背包（机器/容器）而非玩家背包喵
-        Inventory topInv = e.getView().getTopInventory();
         int topSize = topInv.getSize();
         boolean isTopSlot = rawSlot < topSize;
 
         if (!isTopSlot) return; // 点击的是玩家背包区域，不拦截喵
-
-        // 喵~判断目标背包是否像是"机器"而非普通存储容器喵
-        if (!isMachineInventory(topInv)) return;
 
         // 喵~对于熔炉类 GUI（3个槽：原料0/燃料1/产物2），只拦截原料槽(slot 0)
         // 对于 SF 自定义 GUI（槽位可能更多），slot 0 通常是输入槽，保守只拦截 slot 0 喵
@@ -79,7 +93,7 @@ public class FurnacePatchListener implements Listener {
         // 喵~其他机器（SF 电炉等自定义 GUI）：slot 0 通常是输入槽，拦截喵
 
         e.setCancelled(true);
-        // 喵~提示玩家菜肴不能放入机器喵
+        // 喵~提示玩家菜肴或过期食材不能放入机器喵
         if (e.getWhoClicked() instanceof org.bukkit.entity.Player player) {
             player.sendMessage("§c菜肴或过期食材不能放入机器喵~");
         }
