@@ -73,102 +73,24 @@ public class FoodTagListener implements Listener {
         this.genericPotionShelfLifeMinutes = foodsConfig.getGenericPotionShelfLife();
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onPickup(EntityPickupItemEvent e) {
-        if (e.getEntity().getType() != org.bukkit.entity.EntityType.PLAYER) return;
-        ItemStack item = e.getItem().getItemStack();
-        // 喵~防御：修改后写回 Item 实体，防止 getItemStack 返回快照时 PDC 标签丢失喵
-        if (updateItem(item)) {
-            e.getItem().setItemStack(item);
-        }
-    }
+    // [已禁用] 事件驱动触发已全部注释，改由定时扫描兜底喵~
+    // @EventHandler(ignoreCancelled = true)
+    // public void onPickup(EntityPickupItemEvent e) { ... }
 
-    // 创造模式取物：延迟扫描背包（不在事件里写回，避免虚空物品）喵
-    @EventHandler(ignoreCancelled = true)
-    public void onCreativeClick(InventoryCreativeEvent e) {
-        if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
-        org.bukkit.Bukkit.getScheduler().runTaskLater(
-            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-            () -> {
-                for (int i = 0; i < player.getInventory().getSize(); i++) {
-                    ItemStack it = player.getInventory().getItem(i);
-                    if (it == null || it.getType().isAir()) continue;
-                    ItemStack copy = it.clone();
-                    if (updateItem(copy)) player.getInventory().setItem(i, copy);
-                }
-            }, 1L);
-    }
+    // @EventHandler(ignoreCancelled = true)
+    // public void onCreativeClick(InventoryCreativeEvent e) { ... }
 
-    // 玩家切换主手槽位时，检查目标槽物品并更新时间戳喵
-    @EventHandler(ignoreCancelled = true)
-    public void onHeldItemChange(PlayerItemHeldEvent e) {
-        // 获取切换后目标槽的物品喵
-        ItemStack target = e.getPlayer().getInventory().getItem(e.getNewSlot());
-        if (target == null || target.getType().isAir()) return;
-        // 喵~防御：是食材则原地更新时间戳/lore，不是食材静默跳过喵
-        ItemStack copy = target.clone();
-        if (updateItem(copy)) {
-            e.getPlayer().getInventory().setItem(e.getNewSlot(), copy);
-        }
-    }
+    // @EventHandler(ignoreCancelled = true)
+    // public void onHeldItemChange(PlayerItemHeldEvent e) { ... }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent e) {
-        if (!(e.getWhoClicked() instanceof org.bukkit.entity.Player player)) return;
+    // @EventHandler(ignoreCancelled = true)
+    // public void onInventoryClick(InventoryClickEvent e) { ... }
 
-        // 喵~对点击的格子延迟1tick扫描写入，此时事件已完全结束不会造成虚空物品喵
-        if (e.getCurrentItem() != null && !e.getCurrentItem().getType().isAir()) {
-            final int rawSlot = e.getRawSlot();
-            final org.bukkit.inventory.Inventory inv = e.getInventory();
-            org.bukkit.Bukkit.getScheduler().runTaskLater(
-                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-                () -> {
-                    ItemStack live = rawSlot < inv.getSize() ? inv.getItem(rawSlot) : null;
-                    if (live == null || live.getType().isAir()) return;
-                    ItemStack copy = live.clone();
-                    if (updateItem(copy)) inv.setItem(rawSlot, copy);
-                }, 1L);
-        }
+    // @EventHandler(ignoreCancelled = true)
+    // public void onInventoryOpen(InventoryOpenEvent e) { ... }
 
-        // cursor 上的物品也延迟1tick扫描喵
-        if (e.getCursor() != null && !e.getCursor().getType().isAir()) {
-            final org.bukkit.entity.Player p = player;
-            org.bukkit.Bukkit.getScheduler().runTaskLater(
-                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-                () -> {
-                    ItemStack cursor = p.getItemOnCursor();
-                    if (cursor == null || cursor.getType().isAir()) return;
-                    ItemStack copy = cursor.clone();
-                    if (updateItem(copy)) p.setItemOnCursor(copy);
-                }, 1L);
-        }
-
-        // shift+click 会把物品转移到其他位置，延迟1tick扫背包所有格子喵
-        if (e.isShiftClick()) {
-            org.bukkit.Bukkit.getScheduler().runTaskLater(
-                io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-                () -> scanPlayerInventory(player), 1L);
-        }
-    }
-
-    // 喵~玩家与物品交互时扫背包（包括E键开包、右键等），比InventoryOpen更可靠喵
-    @EventHandler(ignoreCancelled = true)
-    public void onInventoryOpen(org.bukkit.event.inventory.InventoryOpenEvent e) {
-        if (!(e.getPlayer() instanceof org.bukkit.entity.Player player)) return;
-        // 喵~延迟2tick让背包完全渲染后再扫描喵
-        org.bukkit.Bukkit.getScheduler().runTaskLater(
-            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-            () -> scanPlayerInventory(player), 2L);
-    }
-
-    // 喵~玩家关闭背包时也扫一次（有可能是从箱子往背包移动了物品）喵
-    @EventHandler(ignoreCancelled = false)
-    public void onInventoryClose(org.bukkit.event.inventory.InventoryCloseEvent e) {
-        if (!(e.getPlayer() instanceof org.bukkit.entity.Player player)) return;
-        org.bukkit.Bukkit.getScheduler().runTaskLater(
-            io.github.thebusybiscuit.exoticgarden.ExoticGarden.getInstance(),
-            () -> scanPlayerInventory(player), 1L);
-    }
+    // @EventHandler(ignoreCancelled = false)
+    // public void onInventoryClose(InventoryCloseEvent e) { ... }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
         for (int i = 0; i < player.getInventory().getSize(); i++) {
@@ -347,16 +269,16 @@ public class FoodTagListener implements Listener {
     }
 
     /**
-     * 启动200tick定时扫描，兜底覆盖所有遗漏场景喵~
+     * 启动300tick定时扫描，兜底覆盖所有遗漏场景喵~
      * 需在插件初始化时调用一次喵
      */
     public void startPeriodicScan(org.bukkit.plugin.java.JavaPlugin plugin) {
-        // 喵~每200tick(10秒)扫描所有在线玩家背包+副手喵
+        // 喵~每300tick(15秒)扫描所有在线玩家背包+副手喵
         org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
                 scanPlayerInventory(p);
             }
-        }, 200L, 200L);
+        }, 300L, 300L);
     }
 
     /**
