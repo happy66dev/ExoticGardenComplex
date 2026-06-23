@@ -96,31 +96,38 @@ public class DishConsumptionListener implements Listener {
         Double saturationRaw = pdc.getOrDefault(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE, 0.0);
         double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
-        // ===== 过期检测：读取 DISH_SHELF_LIFE + FOOD_TIMESTAMP 判断 =====
-        boolean expired = false;
+        // ===== 保质期进度计算 =====
+        // shelfProgress: 0.0=新鲜，1.0=刚过期，3.0=过期3倍时间喵
         Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
         Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
-
-        // 喵~防御：无 DISH_SHELF_LIFE 字段视为不过期；无时间戳也视为不过期喵
-        if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes >= 0) {
-            long nowMs = System.currentTimeMillis();
-            long diffMinutes = (nowMs - timestamp) / 60000L;
-            expired = diffMinutes >= shelfLifeMinutes;
-        } else {
-            // 无字段时视为不过期喵
+        double shelfProgress = 0.0;
+        // 喵~防御：无 DISH_SHELF_LIFE 或保质期<=0 或无时间戳视为新鲜喵
+        if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes > 0) {
+            double diffMinutes = (System.currentTimeMillis() - timestamp) / 60000.0;
+            shelfProgress = diffMinutes / shelfLifeMinutes;
         }
 
-        if (expired) {
-            // 喵~30%概率触发过期处罚，70%概率安全通过喵
-            if (ThreadLocalRandom.current().nextInt(100) < 30) {
-                // 过期：饱食度和饱和度恢复量乘以0.4（减少60%），最低0喵
-                hunger = (int) Math.max(0, Math.round(hunger * 0.4));
-                saturation = Math.max(0, saturation * 0.4);
-                // 给玩家发送过期提示喵
-                player.sendMessage("§c这道菜已经过期了，吃起来味道怪怪的喵~");
-                // 应用过期debuff（菜肴模式，isMeal=true：额外随机移除1个正面buff）喵
+        // 饱食度倍率：0~75%不变 → 75~100%线性1.0降0.6 → 100~300%线性0.6降0喵
+        double hungerMult = calcHungerMult(shelfProgress);
+        // 饱和度倍率：0~100%线性1.0降0.6 → 100~150%线性0.6降0喵
+        double satMult = calcSatMult(shelfProgress);
+        // debuff触发概率：progress<1.0→0，1.0~3.0线性0到1.0喵
+        double debuffChance = calcDebuffChance(shelfProgress);
+
+        // 按倍率缩减恢复量，最低0喵
+        hunger = (int) Math.max(0, Math.round(hunger * hungerMult));
+        saturation = Math.max(0, saturation * satMult);
+
+        if (shelfProgress >= 1.0) {
+            // 已过期：发过期提示，按进度概率触发debuff喵
+            player.sendMessage("§c这道菜已经过期了，吃起来味道怪怪的喵~");
+            if (ThreadLocalRandom.current().nextDouble() < debuffChance) {
+                // 菜肴过期debuff：额外随机移除1个正面buff喵
                 applyExpiredEffects(player, true);
             }
+        } else if (shelfProgress > 0.75) {
+            // 接近过期（75%~100%）：口感下降但未过期，提示玩家喵
+            player.sendMessage("§e这道菜快过期了，口感有些差喵~");
         }
 
         // 恢复饱食度（过期后为减少的值，不过期为原值）喵
@@ -130,8 +137,8 @@ public class DishConsumptionListener implements Listener {
         player.setFoodLevel(newFood);
         player.setSaturation(newSat);
 
-        // 应用药水效果（只有不过期时正常应用，过期时跳过正面buff，因为已经被随机移除了）喵
-        if (!expired) {
+        // 应用药水效果：未过期(progress<1.0)时正常应用，过期后跳过正面buff喵
+        if (shelfProgress < 1.0) {
             // 不过期：正常应用菜肴自带的药水效果喵
             String effectsRaw = pdc.get(CookingKeys.DISH_EFFECTS, PersistentDataType.STRING);
             if (effectsRaw != null && !effectsRaw.isEmpty()) {
@@ -682,6 +689,77 @@ public class DishConsumptionListener implements Listener {
         // 喵~防御：过滤掉null值（旧版不存在某些效果时）喵
         list.removeIf(t -> t == null);
         return list;
+    }
+
+    /**
+     * 饱食度倍率计算喵~
+     * 0~75%  → 1.0（不变）
+     * 75~100% → 线性从1.0降到0.6
+     * 100~300% → 线性从0.6降到0.0
+     *
+     * @param p 保质期进度（0.0=新鲜，1.0=刚过期，3.0=过期3倍时长）喵
+     * @return 饱食度倍率 [0.0, 1.0] 喵
+     */
+    public static double calcHungerMult(double p) {
+        // 喵~防御：进度为负时（时钟回拨等异常）视为新鲜喵
+        if (p <= 0.75) return 1.0;
+        if (p <= 1.0) {
+            // 75%~100%：1.0 线性降到 0.6，斜率 = (0.6-1.0)/(1.0-0.75) = -1.6喵
+            return 1.0 + (p - 0.75) * (0.6 - 1.0) / (1.0 - 0.75);
+        }
+        if (p <= 3.0) {
+            // 100%~300%：0.6 线性降到 0.0，斜率 = (0.0-0.6)/(3.0-1.0) = -0.3喵
+            double val = 0.6 + (p - 1.0) * (0.0 - 0.6) / (3.0 - 1.0);
+            return Math.max(0.0, val);
+        }
+        // 超过300%：恢复量归零喵
+        return 0.0;
+    }
+
+    /**
+     * 饱和度倍率计算喵~
+     * 0~100%  → 线性从1.0降到0.6
+     * 100~150% → 线性从0.6降到0.0
+     *
+     * @param p 保质期进度喵
+     * @return 饱和度倍率 [0.0, 1.0] 喵
+     */
+    public static double calcSatMult(double p) {
+        // 喵~防御：进度为负时视为新鲜喵
+        if (p <= 0.0) return 1.0;
+        if (p <= 1.0) {
+            // 0~100%：1.0 线性降到 0.6喵
+            return 1.0 + p * (0.6 - 1.0);
+        }
+        if (p <= 1.5) {
+            // 100%~150%：0.6 线性降到 0.0，斜率 = (0.0-0.6)/(1.5-1.0) = -1.2喵
+            double val = 0.6 + (p - 1.0) * (0.0 - 0.6) / (1.5 - 1.0);
+            return Math.max(0.0, val);
+        }
+        // 超过150%：饱和度归零喵
+        return 0.0;
+    }
+
+    /**
+     * debuff触发概率计算喵~
+     * 0~100%：概率0
+     * 100~300%：线性从0.0升到1.0（即0%到100%概率）
+     * 超过300%：概率固定1.0（100%）
+     *
+     * 注意：返回值是概率 [0.0, 1.0]，用 ThreadLocalRandom.nextDouble() < 返回值 判断喵
+     *
+     * @param p 保质期进度喵
+     * @return debuff触发概率 [0.0, 1.0] 喵
+     */
+    public static double calcDebuffChance(double p) {
+        // 喵~防御：未过期时概率为0喵
+        if (p <= 1.0) return 0.0;
+        if (p <= 3.0) {
+            // 100%~300%：线性从0升到1.0喵
+            return (p - 1.0) / (3.0 - 1.0);
+        }
+        // 超过300%：必然触发debuff喵
+        return 1.0;
     }
 
     /**
