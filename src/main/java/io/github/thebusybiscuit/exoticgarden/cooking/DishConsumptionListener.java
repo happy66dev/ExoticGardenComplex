@@ -700,6 +700,55 @@ public class DishConsumptionListener implements Listener {
     }
 
     /**
+     * 构建品质/饱食/饱和/份量 lore 行，根据保质期进度显示当前值和减少量喵~
+     *
+     * 格式：§7品质: X  §7饱食: §fA§e(-B)  §7饱和: §fC.C§e(-D.D)  §7份量: §fN
+     * 减少量颜色：未过期黄色§e，已过期红色§c；减少量<0.05时不显示减少部分喵
+     *
+     * @param quality      品质字符串喵
+     * @param baseHunger   AI返回的原始饱食度喵
+     * @param baseSat      AI返回的原始饱和度喵
+     * @param servings     当前剩余份量喵
+     * @param shelfProgress 保质期进度（0=新鲜，1=刚过期，3=过期3倍）喵
+     * @return 格式化后的 lore 行喵
+     */
+    public static String buildNutritionLine(String quality, int baseHunger, double baseSat,
+                                            int servings, double shelfProgress) {
+        // 喵~防御：进度为负时视为新鲜喵
+        double safeProgress = Math.max(0.0, shelfProgress);
+        double hungerMult = calcHungerMult(safeProgress);
+        double satMult    = calcSatMult(safeProgress);
+
+        // 当前实际值 = 基础值 * 倍率喵
+        double currentHunger = baseHunger * hungerMult;
+        double currentSat    = baseSat    * satMult;
+        // 减少量 = 基础值 - 当前值，四舍五入到1位小数避免浮点误差显示喵
+        double reducedHunger = Math.round((baseHunger - currentHunger) * 10.0) / 10.0;
+        double reducedSat    = Math.round((baseSat    - currentSat)    * 10.0) / 10.0;
+
+        // 过期时减少量用红色，接近/未过期用黄色喵
+        String reductionColor = safeProgress >= 1.0 ? "§c" : "§e";
+
+        // 饱食度显示：当前值保留1位小数喵
+        String hungerStr = "§f" + String.format("%.1f", currentHunger);
+        if (reducedHunger >= 0.05) {
+            // 喵~有减少量才显示括号喵
+            hungerStr += reductionColor + "(-" + String.format("%.1f", reducedHunger) + ")";
+        }
+
+        // 饱和度显示：同样1位小数喵
+        String satStr = "§f" + String.format("%.1f", currentSat);
+        if (reducedSat >= 0.05) {
+            satStr += reductionColor + "(-" + String.format("%.1f", reducedSat) + ")";
+        }
+
+        return "§7品质: " + quality
+             + "  §7饱食: " + hungerStr
+             + "  §7饱和: " + satStr
+             + "  §7份量: §f" + servings;
+    }
+
+    /**
      * 饱食度倍率计算喵~
      * 0~75%  → 1.0（不变）
      * 75~100% → 线性从1.0降到0.6

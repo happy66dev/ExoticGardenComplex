@@ -192,10 +192,10 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                     long nowMs = System.currentTimeMillis();
                     // lore：品质行 + 保质期 + 生产日期 + description 换行展开喵
                     List<String> lore = new ArrayList<>();
-                    lore.add("§7品质: " + result.quality
-                        + "  §7饱食: §f" + result.hunger
-                        + "  §7饱和: §f" + String.format("%.1f", result.saturation)
-                        + "  §7份量: §f" + result.servings);
+                    // 喵~刚生成时progress=0，无减少量；定时扫描会随时间更新减少量显示喵
+                    lore.add(io.github.thebusybiscuit.exoticgarden.cooking.DishConsumptionListener
+                        .buildNutritionLine(result.quality, result.hunger, result.saturation,
+                            result.servings, 0.0));
                     lore.add("§8保质期: §f" + io.github.thebusybiscuit.exoticgarden.cooking.FoodTagListener.formatShelfLife(result.shelfLifeMinutes));
                     lore.add("§8生产日期: §f" + io.github.thebusybiscuit.exoticgarden.cooking.FoodTagListener.formatTimestamp(nowMs));
                     lore.addAll(DishGenerator.descriptionToLore(result.description));

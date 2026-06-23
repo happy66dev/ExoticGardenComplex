@@ -235,8 +235,10 @@ public class FoodTagListener implements Listener {
         Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
         if (timestamp == null || shelfLifeMinutes == null) return false;
 
-        long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
-        boolean expired = diffMinutes >= shelfLifeMinutes;
+        // 喵~计算保质期进度（0=新鲜，1=刚过期，>1=超过期）喵
+        double diffMinutes = (System.currentTimeMillis() - timestamp) / 60000.0;
+        double shelfProgress = shelfLifeMinutes > 0 ? diffMinutes / shelfLifeMinutes : 0.0;
+        boolean expired = shelfProgress >= 1.0;
 
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         String expiredMark = "§c已过期";
@@ -249,6 +251,34 @@ public class FoodTagListener implements Listener {
         } else if (!expired && hasExpiredMark) {
             lore.remove(0);
             changed = true;
+        }
+
+        // 喵~营养行：读取原始饱食/饱和/品质/份量，重新计算当前值+减少量并替换喵
+        Integer baseHunger = pdc.get(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER);
+        Double baseSat = pdc.get(CookingKeys.DISH_SATURATION, PersistentDataType.DOUBLE);
+        String quality = pdc.get(CookingKeys.DISH_QUALITY, PersistentDataType.STRING);
+        Integer servings = pdc.get(CookingKeys.DISH_SERVINGS_REMAINING, PersistentDataType.INTEGER);
+        if (baseHunger != null && baseSat != null && quality != null && servings != null) {
+            String newNutritionLine = DishConsumptionListener.buildNutritionLine(
+                quality, baseHunger, baseSat, servings, shelfProgress);
+            // 喵~找到§7品质:开头的行替换，找不到则追加喵
+            boolean found = false;
+            // 喵~过期标记占第0行时，品质行紧接其后，偏移1；否则从0开始找喵
+            for (int i = 0; i < lore.size(); i++) {
+                if (lore.get(i).startsWith("§7品质:")) {
+                    if (!lore.get(i).equals(newNutritionLine)) {
+                        lore.set(i, newNutritionLine);
+                        changed = true;
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                // 喵~防御：lore里没有品质行时追加喵
+                lore.add(newNutritionLine);
+                changed = true;
+            }
         }
 
         // 喵~displayName 加/移除"§7(过期)"后缀喵
