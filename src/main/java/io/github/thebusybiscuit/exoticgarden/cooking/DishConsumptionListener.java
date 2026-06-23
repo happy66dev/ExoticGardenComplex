@@ -111,18 +111,26 @@ public class DishConsumptionListener implements Listener {
         double hungerMult = calcHungerMult(shelfProgress);
         // 饱和度倍率：0~100%线性1.0降0.6 → 100~150%线性0.6降0喵
         double satMult = calcSatMult(shelfProgress);
-        // debuff触发概率：progress<1.0→0，1.0~3.0线性0到1.0喵
-        double debuffChance = calcDebuffChance(shelfProgress);
+        // debuff触发率：progress<1.0→0，1.0~3.0线性0.0到3.0；超过1.0代表多次触发喵
+        double debuffRate = calcDebuffRate(shelfProgress);
 
         // 按倍率缩减恢复量，最低0喵
         hunger = (int) Math.max(0, Math.round(hunger * hungerMult));
         saturation = Math.max(0, saturation * satMult);
 
         if (shelfProgress >= 1.0) {
-            // 已过期：发过期提示，按进度概率触发debuff喵
+            // 已过期：发过期提示，按进度触发debuff喵
             player.sendMessage("§c这道菜已经过期了，吃起来味道怪怪的喵~");
-            if (ThreadLocalRandom.current().nextDouble() < debuffChance) {
-                // 菜肴过期debuff：额外随机移除1个正面buff喵
+            // debuffRate整数部分=必定触发次数，小数部分=额外概率触发喵
+            // 例：rate=2.3 → 必定触发2次，再30%概率再触发1次喵
+            int guaranteed = (int) debuffRate;
+            double extra = debuffRate - guaranteed;
+            // 必定触发部分：循环guaranteed次喵
+            for (int i = 0; i < guaranteed; i++) {
+                applyExpiredEffects(player, true);
+            }
+            // 额外概率部分喵
+            if (ThreadLocalRandom.current().nextDouble() < extra) {
                 applyExpiredEffects(player, true);
             }
         } else if (shelfProgress > 0.75) {
@@ -741,25 +749,26 @@ public class DishConsumptionListener implements Listener {
     }
 
     /**
-     * debuff触发概率计算喵~
-     * 0~100%：概率0
-     * 100~300%：线性从0.0升到1.0（即0%到100%概率）
-     * 超过300%：概率固定1.0（100%）
+     * debuff触发率计算喵~
+     * 0~100%：触发率0
+     * 100~300%：线性从0.0升到3.0（对应0%到300%）
+     * 超过300%：固定3.0
      *
-     * 注意：返回值是概率 [0.0, 1.0]，用 ThreadLocalRandom.nextDouble() < 返回值 判断喵
+     * 整数部分 = 必触发次数，小数部分 = 额外一次的概率喵
+     * 例：rate=2.3 → 必定触发2次，再30%概率触发第3次喵
      *
      * @param p 保质期进度喵
-     * @return debuff触发概率 [0.0, 1.0] 喵
+     * @return debuff触发率 [0.0, 3.0] 喵
      */
-    public static double calcDebuffChance(double p) {
-        // 喵~防御：未过期时概率为0喵
+    public static double calcDebuffRate(double p) {
+        // 喵~防御：未过期时触发率为0喵
         if (p <= 1.0) return 0.0;
         if (p <= 3.0) {
-            // 100%~300%：线性从0升到1.0喵
-            return (p - 1.0) / (3.0 - 1.0);
+            // 100%~300%：线性从0升到3.0喵
+            return (p - 1.0) / (3.0 - 1.0) * 3.0;
         }
-        // 超过300%：必然触发debuff喵
-        return 1.0;
+        // 超过300%：最高触发率3.0喵
+        return 3.0;
     }
 
     /**
