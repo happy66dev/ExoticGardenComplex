@@ -732,14 +732,14 @@ public class DishConsumptionListener implements Listener {
         // 饱食度显示：当前值保留1位小数喵
         String hungerStr = "§f" + String.format("%.1f", currentHunger);
         if (reducedHunger >= 0.05) {
-            // 喵~有减少量才显示括号喵
-            hungerStr += reductionColor + "(-" + String.format("%.1f", reducedHunger) + ")";
+            // 喵~括号本身用§7灰色，括号内减少量用reductionColor，右括号恢复§7喵
+            hungerStr += "§7(" + reductionColor + "-" + String.format("%.1f", reducedHunger) + "§7)";
         }
 
         // 饱和度显示：同样1位小数喵
         String satStr = "§f" + String.format("%.1f", currentSat);
         if (reducedSat >= 0.05) {
-            satStr += reductionColor + "(-" + String.format("%.1f", reducedSat) + ")";
+            satStr += "§7(" + reductionColor + "-" + String.format("%.1f", reducedSat) + "§7)";
         }
 
         return "§7品质: " + quality
