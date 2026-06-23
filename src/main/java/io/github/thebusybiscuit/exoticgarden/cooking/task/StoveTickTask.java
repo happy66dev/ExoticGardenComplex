@@ -173,7 +173,8 @@ public class StoveTickTask extends BukkitRunnable {
 
             // 喵~根据 calculatorType 选择对应计算器喵
             DonenessCalculator calculator = calculators.getOrDefault(data.calculatorType, defaultCalculator);
-            CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0);
+            // 传入食材当前切割状态，用于应用成熟速度倍率喵
+            CookingContext ctx = new CookingContext(state.currentTemp, data, 0.1, state.spatulaBoostTicksLeft > 0, slot.state);
             double increment = calculator.calculate(ctx);
 
             // 喵~成熟系数>=2时（温度远超参考温度）开始焦化喵

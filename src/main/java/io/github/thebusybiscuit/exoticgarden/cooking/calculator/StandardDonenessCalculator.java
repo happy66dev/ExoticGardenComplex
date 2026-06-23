@@ -20,6 +20,8 @@ public class StandardDonenessCalculator implements DonenessCalculator {
         if (coefficient <= 0) return 0;
 
         double boost = ctx.hasSpatulaBoost ? 2.0 : 1.0;
-        return (1.0 / config.baseCookTimeSeconds) * ctx.deltaTime * coefficient * boost;
+        // 切割状态倍率：切割越细熟得越快（WHOLE×1.0 / SLICED×1.5 / JULIENNED×1.8 / DICED×2.0 / SAUCE×3.0）喵
+        double stateMultiplier = ctx.foodState != null ? ctx.foodState.getMultiplier() : 1.0;
+        return (1.0 / config.baseCookTimeSeconds) * ctx.deltaTime * coefficient * boost * stateMultiplier;
     }
 }

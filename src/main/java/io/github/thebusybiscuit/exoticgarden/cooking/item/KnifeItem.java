@@ -263,7 +263,22 @@ public class KnifeItem extends SlimefunItem {
 
         // 喵~可变：推荐温度/时间，每次切割后同步更新喵
         if (data != null) {
-            String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: §e" + (int) data.baseCookTimeSeconds + "s";
+            // 根据切割状态计算实际成熟时间：effectiveTime = baseCookTimeSeconds / 状态倍率喵
+            double multiplier = newState.getMultiplier();
+            double effectiveTime = data.baseCookTimeSeconds / multiplier;
+            // 保留一位小数喵
+            double effectiveTimeRounded = Math.round(effectiveTime * 10.0) / 10.0;
+            String cookTimeStr;
+            if (multiplier > 1.0) {
+                // 切割状态下：显示"实际时间(减少秒数)"格式喵
+                double reducedSeconds = data.baseCookTimeSeconds - effectiveTime;
+                double reducedRounded = Math.round(reducedSeconds * 10.0) / 10.0;
+                cookTimeStr = "§e" + effectiveTimeRounded + "s§7(-" + reducedRounded + "s)";
+            } else {
+                // WHOLE状态：无减少，直接显示原始时间喵
+                cookTimeStr = "§e" + effectiveTimeRounded + "s";
+            }
+            String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: " + cookTimeStr;
             replaceLoreLine(lore, "§7推荐温度:", tempLine);
         }
 
