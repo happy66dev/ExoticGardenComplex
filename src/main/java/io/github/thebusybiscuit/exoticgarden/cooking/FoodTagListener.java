@@ -396,9 +396,29 @@ public class FoodTagListener implements Listener {
             String currentState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
             ingredientLine = "§7[烹饪食材] §f" + translateState(currentState) + nutritionStr + weightStr;
 
-            // 喵~可变：推荐烹饪温度和时间，每次刷新喵
+            // 喵~可变：推荐烹饪温度和时间，按当前切割状态倍率计算实际时间，每次刷新喵
             if (data != null) {
-                String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: §e" + (int) data.baseCookTimeSeconds + "s";
+                // 从PDC读取当前切割状态，计算成熟速度倍率喵
+                String rawFoodState = pdc.get(CookingKeys.FOOD_STATE, PersistentDataType.STRING);
+                io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState foodState =
+                    io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState.WHOLE;
+                if (rawFoodState != null) {
+                    try { foodState = io.github.thebusybiscuit.exoticgarden.cooking.state.FoodState.valueOf(rawFoodState); }
+                    catch (IllegalArgumentException ignored) {}
+                }
+                double multiplier = foodState.getMultiplier();
+                // 实际成熟时间 = 基础时间 / 倍率，保留一位小数喵
+                double effectiveTime = Math.round(data.baseCookTimeSeconds / multiplier * 10.0) / 10.0;
+                String cookTimeStr;
+                if (multiplier > 1.0) {
+                    // 切割状态：显示"实际时间s(-减少秒数s)"，格式与KnifeItem一致喵
+                    double reducedSeconds = Math.round((data.baseCookTimeSeconds - effectiveTime) * 10.0) / 10.0;
+                    cookTimeStr = "§e" + effectiveTime + "s§7(-" + reducedSeconds + "s)";
+                } else {
+                    // WHOLE：无减少，直接显示原始时间喵
+                    cookTimeStr = "§e" + effectiveTime + "s";
+                }
+                String tempLine = "§7推荐温度: §e" + (int) data.matureRefTemp + "°C  §7烹饪时间: " + cookTimeStr;
                 replaceLoreLineOrAdd(lore, "§7推荐温度:", tempLine);
             }
 
