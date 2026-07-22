@@ -67,9 +67,9 @@ slimefun:RICE_WINE:
   oil_ml: 0
   display_name: "料酒"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
@@ -80,7 +80,7 @@ slimefun:RICE_WINE:
 minecraft:WATER_BOTTLE:
   display_name: "水"
   has_doneness: false
-  weight_grams: 0
+  weight_grams: 250
   water_ml: 250
   oil_ml: 0
   category: water
@@ -91,7 +91,7 @@ minecraft:WATER_BOTTLE:
 minecraft:WATER_BUCKET:
   display_name: "水(桶)"
   has_doneness: false
-  weight_grams: 0
+  weight_grams: 1000
   water_ml: 1000
   oil_ml: 0
   category: water
@@ -113,7 +113,7 @@ minecraft:MILK_BUCKET:
 minecraft:HONEY_BOTTLE:
   display_name: "蜂蜜"
   has_doneness: false
-  weight_grams: 20
+  weight_grams: 25
   water_ml: 25
   oil_ml: 0
   category: seasoning
@@ -126,9 +126,9 @@ minecraft:HONEY_BOTTLE:
 slimefun:BUTTER:
   display_name: "黄油"
   has_doneness: false
-  weight_grams: 20
+  weight_grams: 5
   water_ml: 0
-  oil_ml: 100
+  oil_ml: 5
   category: seasoning
   container_return: none
   hint: ""
@@ -137,9 +137,9 @@ slimefun:BUTTER:
 slimefun:HEAVY_CREAM:
   display_name: "淡奶油"
   has_doneness: false
-  weight_grams: 20
-  water_ml: 50
-  oil_ml: 50
+  weight_grams: 25
+  water_ml: 20
+  oil_ml: 5
   category: seasoning
   container_return: none
   hint: ""
@@ -148,9 +148,9 @@ slimefun:HEAVY_CREAM:
 slimefun:VEGETABLE_OIL:
   display_name: "植物油"
   has_doneness: false
-  weight_grams: 0
+  weight_grams: 20
   water_ml: 0
-  oil_ml: 100
+  oil_ml: 20
   category: oil
   container_return: none
   hint: ""
@@ -159,14 +159,14 @@ slimefun:VEGETABLE_OIL:
 
 # ===== 原版药水 (has_doneness: true, 通用渗入) =====
 _POTION_:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "药水"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 60
-  base_time_seconds: 18
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 144
   category: potion
   container_return: GLASS_BOTTLE
   hint: ""
@@ -185,6 +185,17 @@ slimefun:CILANTRO:
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
+minecraft:DRIED_KELP:
+  display_name: 干海带
+  weight_grams: 3
+  water_ml: 0
+  oil_ml: 0
+  has_doneness: false
+  category: seasoning
+  container_return: none
+  shelf_life_minutes: 0
+  hint: ""
+  lore_hint: ""
 slimefun:CURRY_LEAF:
   weight_grams: 1
   water_ml: 0
@@ -265,42 +276,42 @@ slimefun:INFERNOFRUIT:
 
 # ===== 柑橘类果汁 (has_doneness: true, 酸性强-快速渗入) =====
 slimefun:LEMON_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "柠檬汁"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 60
-  base_time_seconds: 12
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 144
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:LIME_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "酸橙汁"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 60
-  base_time_seconds: 12
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 144
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ORANGE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "橙汁"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 60
-  base_time_seconds: 12
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 144
   category: seasoning
   container_return: none
   hint: ""
@@ -309,140 +320,140 @@ slimefun:ORANGE_JUICE:
 
 # ===== 浆果类果汁 (has_doneness: true, 中快速渗入) =====
 slimefun:APPLE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "苹果汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:MELON_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "西瓜汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:SWEET_BERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "甜浆果汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:GLOW_BERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "发光浆果汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:GRAPE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "葡萄汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BLUEBERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "蓝莓汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:RASPBERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "树莓汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BLACKBERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "黑莓汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:CRANBERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "蔓越莓汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:STRAWBERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "草莓汁"
   has_doneness: true
-  min_temp: 45
-  optimal_temp: 70
-  base_time_seconds: 16
+  min_temp: 50
+  optimal_temp: 90
+  base_time_seconds: 160
   category: seasoning
   container_return: none
   hint: ""
@@ -451,98 +462,98 @@ slimefun:STRAWBERRY_JUICE:
 
 # ===== 核果类果汁 (has_doneness: true, 中速渗入) =====
 slimefun:PEACH_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "桃子汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 2000
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PLUM_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "梅子汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PEAR_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "梨汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:CHERRY_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "樱桃汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:POMEGRANATE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "石榴汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:DRAGON_FRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "火龙果汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:OAK_APPLE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "橡树苹果汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
@@ -551,42 +562,42 @@ slimefun:OAK_APPLE_JUICE:
 
 # ===== 浓郁类果汁 (has_doneness: true, 慢渗入) =====
 slimefun:COCONUT_MILK:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "椰奶"
   has_doneness: true
   min_temp: 55
   optimal_temp: 90
-  base_time_seconds: 25
+  base_time_seconds: 250
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PINEAPPLE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "菠萝汁"
   has_doneness: true
   min_temp: 55
   optimal_temp: 90
-  base_time_seconds: 25
+  base_time_seconds: 250
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:TOMATO_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "番茄汁"
   has_doneness: true
-  min_temp: 55
-  optimal_temp: 90
-  base_time_seconds: 25
+  min_temp: 60
+  optimal_temp: 100
+  base_time_seconds: 250
   category: seasoning
   container_return: none
   hint: ""
@@ -595,28 +606,28 @@ slimefun:TOMATO_JUICE:
 
 # ===== 根茎/大果类果汁 (has_doneness: true, 最慢渗入) =====
 slimefun:PUMPKIN_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "南瓜汁"
   has_doneness: true
-  min_temp: 60
-  optimal_temp: 100
-  base_time_seconds: 30
+  min_temp: 75
+  optimal_temp: 120
+  base_time_seconds: 300
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:CARROT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "胡萝卜汁"
   has_doneness: true
-  min_temp: 60
-  optimal_temp: 100
-  base_time_seconds: 30
+  min_temp: 75
+  optimal_temp: 120
+  base_time_seconds: 300
   category: seasoning
   container_return: none
   hint: ""
@@ -625,126 +636,126 @@ slimefun:CARROT_JUICE:
 
 # ===== 异域特调果汁 (has_doneness: true, 中速渗入) =====
 slimefun:BREADFRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "面包果汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ALIEN_FRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "外星果汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PUNCH_FRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "潘趣果汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:JACKFRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "菠萝蜜汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BIG_CARROT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "大萝卜汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BIG_WHEAT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "大麦汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:AMARANTH_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "苋菜汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:DEVIL_MELON_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "恶魔瓜汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ACORN_SQUASH_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "橡子南瓜汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
-  base_time_seconds: 20
+  min_temp: 55
+  optimal_temp: 95
+  base_time_seconds: 200
   category: seasoning
   container_return: none
   hint: ""
@@ -904,10 +915,10 @@ slimefun:MSG:
 slimefun:VINEGAR:
   display_name: "醋"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 70
-  base_time_seconds: 15
-  weight_grams: 1
+  min_temp: 50
+  optimal_temp: 85
+  base_time_seconds: 120
+  weight_grams: 100
   water_ml: 100
   oil_ml: 0
   category: seasoning
@@ -922,8 +933,8 @@ slimefun:STARCH_WATER:
   has_doneness: true
   min_temp: 60
   optimal_temp: 90
-  base_time_seconds: 20
-  weight_grams: 5
+  base_time_seconds: 200
+  weight_grams: 50
   water_ml: 50
   oil_ml: 0
   category: seasoning
@@ -934,41 +945,41 @@ slimefun:STARCH_WATER:
 
 # ===== BEFoodRegistry 新增汁类（普通）=====
 slimefun:ALOE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "芦荟汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 50
-  base_time_seconds: 12
+  min_temp: 40
+  optimal_temp: 65
+  base_time_seconds: 120
   category: seasoning
   container_return: none
   hint: "芦荟凝冻质地 低温溶入感更佳"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:INFERNOFRUIT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "地狱果汁"
   has_doneness: true
-  min_temp: 60
-  optimal_temp: 100
-  base_time_seconds: 15
+  min_temp: 65
+  optimal_temp: 115
+  base_time_seconds: 150
   category: seasoning
   container_return: none
   hint: "极辛辣的地狱果提炼 高温下辣味会进一步激发"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:MANDRAKE_ROOT_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "曼德拉根汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
+  min_temp: 55
+  optimal_temp: 95
   base_time_seconds: 15
   category: seasoning
   container_return: none
@@ -976,13 +987,13 @@ slimefun:MANDRAKE_ROOT_JUICE:
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:MEXICO_CHILI_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "墨西哥辣椒汁"
   has_doneness: true
-  min_temp: 50
-  optimal_temp: 80
+  min_temp: 55
+  optimal_temp: 95
   base_time_seconds: 12
   category: seasoning
   container_return: none
@@ -990,84 +1001,84 @@ slimefun:MEXICO_CHILI_JUICE:
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:OTHER_PEANUT_JUICE:
-  weight_grams: 1
-  water_ml: 150
-  oil_ml: 50
+  weight_grams: 75
+  water_ml: 50
+  oil_ml: 25
   display_name: "花生泥"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 70
-  base_time_seconds: 15
+  min_temp: 50
+  optimal_temp: 130
+  base_time_seconds: 250
   category: seasoning
   container_return: none
   hint: "香浓花生研磨 含油脂 适合增添坚果香"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PURPLE_FLOWER_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "紫花汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 50
-  base_time_seconds: 10
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 80
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PURPLE_ROSE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "紫色玫瑰汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 50
-  base_time_seconds: 10
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 80
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:REED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "甘蔗汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 60
-  base_time_seconds: 10
+  min_temp: 50
+  optimal_temp: 80
+  base_time_seconds: 100
   category: seasoning
   container_return: none
   hint: "甘甜多汁 天然糖分 可提鲜增甜"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ROSE_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "玫瑰汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 50
-  base_time_seconds: 10
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 80
   category: seasoning
   container_return: none
   hint: "花香清雅 适合甜点或茶饮类菜肴"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:SAKURA_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "樱花汁"
   has_doneness: true
-  min_temp: 30
-  optimal_temp: 50
-  base_time_seconds: 10
+  min_temp: 40
+  optimal_temp: 60
+  base_time_seconds: 80
   category: seasoning
   container_return: none
   hint: "轻盈花香 适合点缀甜品风味"
@@ -1076,266 +1087,266 @@ slimefun:SAKURA_JUICE:
 
 # ===== BEFoodRegistry 冰沙系（ICED_JUICE，冷泡风味，min_temp 低）=====
 slimefun:ACORN_SQUASH_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇橡子南瓜汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇后南瓜甜味更突出"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ALIEN_FRUIT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇外星果汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇异星风味 神秘清凉"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ALOE_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇芦荟汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 12
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇芦荟 凝冻质感更明显 清凉入味"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:AMARANTH_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇苋菜汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BIG_CARROT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇萝卜汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BIG_WHEAT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇大麦汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:BREADFRUIT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇面包果汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:DEVIL_MELON_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇恶魔瓜汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇后恶魔气息反而更加沁凉"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:INFERNOFRUIT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇地狱果汁"
   has_doneness: true
   min_temp: 20
-  optimal_temp: 50
-  base_time_seconds: 15
+  optimal_temp: 40
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰与火的碰撞 极度刺激的风味体验"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:JACKFRUIT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇菠萝蜜汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:MANDRAKE_ROOT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇曼德拉根汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇神秘根茎汁 魔法成分更稳定"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:MEXICO_CHILI_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇墨西哥辣椒汁"
   has_doneness: true
   min_temp: 20
-  optimal_temp: 50
-  base_time_seconds: 12
+  optimal_temp: 40
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "辣味被冰镇锁住 入热锅后瞬间爆发"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PEANUT_ICED_JUICE:
-  weight_grams: 1
-  water_ml: 150
-  oil_ml: 50
+  weight_grams: 90
+  water_ml: 75
+  oil_ml: 15
   display_name: "冰镇花生汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇花生香更醇厚"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PUNCH_FRUIT_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇潘趣果汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PURPLE_FLOWER_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇紫花汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 10
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PURPLE_ROSE_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇紫色玫瑰汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 10
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: ""
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:REED_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇甘蔗汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 10
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇甘蔗 清甜沁凉"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:ROSE_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇玫瑰汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 10
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇玫瑰 花香清冽"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:SAKURA_ICED_JUICE:
-  weight_grams: 1
+  weight_grams: 200
   water_ml: 200
   oil_ml: 0
   display_name: "冰镇樱花汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 10
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇樱花 轻盈花香更清透"
@@ -1343,28 +1354,28 @@ slimefun:SAKURA_ICED_JUICE:
   shelf_life_minutes: 0
 
 slimefun:PISTACHIO_JUICE:
-  weight_grams: 1
-  water_ml: 150
-  oil_ml: 50
+  weight_grams: 90
+  water_ml: 75
+  oil_ml: 15
   display_name: "开心果汁"
   has_doneness: true
-  min_temp: 40
-  optimal_temp: 70
-  base_time_seconds: 15
+  min_temp: 60
+  optimal_temp: 120
+  base_time_seconds: 180
   category: seasoning
   container_return: none
   hint: "开心果香浓 含油脂 适合增添坚果风味"
   lore_hint: ""
   shelf_life_minutes: 0
 slimefun:PISTACHIO_ICED_JUICE:
-  weight_grams: 1
-  water_ml: 150
-  oil_ml: 50
+  weight_grams: 90
+  water_ml: 75
+  oil_ml: 15
   display_name: "冰镇开心果汁"
   has_doneness: true
   min_temp: 20
   optimal_temp: 40
-  base_time_seconds: 15
+  base_time_seconds: 20
   category: seasoning
   container_return: none
   hint: "冰镇开心果 坚果香更醇厚"

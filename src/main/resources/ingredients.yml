@@ -31,50 +31,50 @@
 # ===== DUAL: 原版肉类 (8种) - 翻面: true, 可制肉酱 =====
 minecraft:BEEF:
   display_name: 牛肉
-  weight_grams: 200
+  weight_grams: 250
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 180
+  mature_ref_temp: 110
   base_cook_time_seconds: 180
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 14
+  shelf_life_minutes: 120
+  hint: "肉质紧实，肌理分明，红肉香气浓郁。适合煎烤锁住肉汁，或慢炖使其酥烂。富含蛋白质与铁质。"
+  lore_hint: "红肉，肉质紧实，适合&l煎烤&r或&l慢炖"
   sauce_creation:
-    clicks_required: 5
+    clicks_required: 8
 minecraft:PORKCHOP:
   display_name: 猪排
-  weight_grams: 200
+  weight_grams: 250
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 170
-  base_cook_time_seconds: 180
+  base_cook_time_seconds: 300
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 9
+  shelf_life_minutes: 120
+  hint: "肉质细嫩，脂肪分布均匀，煎烤后外焦里嫩，带有独特的油脂香气，使用料酒去腥味道会更好。"
+  lore_hint: "细嫩多汁，脂肪丰富，适合&l煎烤&r，也许可以加入&l料酒&r去腥"
   sauce_creation:
     clicks_required: 5
 minecraft:CHICKEN:
   display_name: 鸡肉
-  weight_grams: 200
+  weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 140
-  base_cook_time_seconds: 160
+  mature_ref_temp: 160
+  base_cook_time_seconds: 300
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 6
+  shelf_life_minutes: 120
+  hint: "肉质白嫩，脂肪含量低，易熟且入味，适合煎、烤或炖汤，口感柔滑。"
+  lore_hint: "低脂白肉，口感柔滑，适合多种烹饪"
   sauce_creation:
     clicks_required: 4
 
@@ -84,32 +84,32 @@ minecraft:APPLE:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
+  mature_ref_temp: 140
   base_cook_time_seconds: 100
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 3
+  shelf_life_minutes: 7200
+  hint: "酸甜爽脆，果香清新，富含维生素。加热后软糯香甜，适合制作甜点或佐餐。"
+  lore_hint: "酸甜水果，可烤制或煮制"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 4
 minecraft:GOLDEN_APPLE:
   display_name: 金苹果
-  weight_grams: 200
+  weight_grams: 225
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 160
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 15
+  shelf_life_minutes: 72000
+  hint: "蕴含黄金的魔力，果肉带有神圣的光泽，食用后恢复生命与饱食，香气馥郁而神秘。"
+  lore_hint: "魔法水果，恢复生命与饱食"
   sauce_creation:
-    clicks_required: 5
+    clicks_required: 18
 minecraft:GOLDEN_CARROT:
   display_name: 金胡萝卜
   weight_grams: 150
@@ -117,47 +117,31 @@ minecraft:GOLDEN_CARROT:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  base_cook_time_seconds: 100
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 12
+  shelf_life_minutes: 54000
+  hint: "金粒包裹的胡萝卜，香甜中带有一丝魔法的气息，食用后增强视力与饱食。"
+  lore_hint: "魔法蔬菜，增强视力"
   sauce_creation:
-    clicks_required: 5
+    clicks_required: 12
 minecraft:PUMPKIN:
   display_name: 南瓜
   weight_grams: 400
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 180
+  mature_ref_temp: 200
+  base_cook_time_seconds: 1200
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 12
+  saturation: 3
+  shelf_life_minutes: 72000
+  hint: "金黄厚实，果肉绵密，微甜。适合煮汤、烤制或做馅料，带有秋季的温暖气息。"
+  lore_hint: "绵密微甜，适合煮烤"
   sauce_creation:
-    clicks_required: 4
-minecraft:DRIED_KELP:
-  display_name: 干海带
-  weight_grams: 30
-  type: DUAL
-  states: [WHOLE, SLICED]
-  calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
-  flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
-  sauce_creation:
-    clicks_required: 2
+    clicks_required: 25
 
 # ===== DUAL: 原版特殊 (2种) =====
 minecraft:COCOA_BEANS:
@@ -166,60 +150,60 @@ minecraft:COCOA_BEANS:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 80
+  mature_ref_temp: 120
+  base_cook_time_seconds: 1200
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 5
+  shelf_life_minutes: 16200
+  hint: "可可豆香气浓郁，略带苦味，适合制作甜点或热饮，可在烹饪时加入少量牛奶和糖，可提升丝滑口感。"
+  lore_hint: "苦香豆子，可制甜品，建议加牛奶糖"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 40
 minecraft:BREAD:
   display_name: 面包
-  weight_grams: 300
+  weight_grams: 250
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
+  mature_ref_temp: 150
+  base_cook_time_seconds: 120
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 4
+  shelf_life_minutes: 4320
+  hint: "松软麦香，适合烤制后外酥里嫩，或吸收汤汁制作面包布丁。搭配黄油或蒜蓉更添风味。"
+  lore_hint: "麦香主食，可烤可煮，也许可以搭配黄油及其他佐料"
 minecraft:COD:
   display_name: 鳕鱼
   weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 110
-  base_cook_time_seconds: 120
+  mature_ref_temp: 140
+  base_cook_time_seconds: 240
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 10
+  shelf_life_minutes: 90
+  hint: "肉质洁白细嫩，脂肪少，易熟。建议煎制时加入料酒去腥，搭配柠檬汁或黄油以提升鲜味。"
+  lore_hint: "白肉鱼，细嫩，煎时加料酒去腥"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 6
 minecraft:SALMON:
   display_name: 鲑鱼
   weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 110
+  mature_ref_temp: 160
   base_cook_time_seconds: 120
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 6
+  saturation: 12
+  shelf_life_minutes: 60
+  hint: "肉质肥美，橙红纹理，富含油脂。煎烤后外皮酥脆，内部多汁。可搭配胡椒粉或柠檬，或撒少许海盐。"
+  lore_hint: "肥美鱼，橙红，煎烤佳，搭配胡椒粉柠檬"
   sauce_creation:
     clicks_required: 3
 minecraft:MUTTON:
@@ -231,27 +215,27 @@ minecraft:MUTTON:
   mature_ref_temp: 180
   base_cook_time_seconds: 180
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 13
+  shelf_life_minutes: 120
+  hint: "肉质鲜嫩但带有独特膻味，建议用料酒腌制后再烹饪，可去膻增香，适合烧烤或炖煮。"
+  lore_hint: "鲜嫩带膻，建议料酒腌制"
   sauce_creation:
-    clicks_required: 5
+    clicks_required: 12
 minecraft:RABBIT:
   display_name: 兔肉
   weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
+  mature_ref_temp: 180
   base_cook_time_seconds: 160
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 3
+  shelf_life_minutes: 120
+  hint: "肉质细嫩，脂肪少，味道清淡。建议加料酒和香料腌制，搭配土豆或蘑菇炖煮，口感更佳。"
+  lore_hint: "细嫩低脂，加料酒香料腌制，搭配蔬菜"
   sauce_creation:
     clicks_required: 4
 minecraft:EGG:
@@ -260,32 +244,32 @@ minecraft:EGG:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
+  mature_ref_temp: 140
+  base_cook_time_seconds: 180
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
+  saturation: 4
+  shelf_life_minutes: 20160
+  hint: "营养丰富，可煎炒蒸煮。建议煎制时小火慢煎，保持嫩滑；炒蛋时可加少许牛奶更蓬松。搭配番茄或培根风味更佳。"
   lore_hint: ""
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 3
 
 # ===== DUAL: 原版蔬菜 (5种) - 翻面: false, DICED保留 =====
 minecraft:POTATO:
   display_name: 土豆
-  weight_grams: 150
+  weight_grams: 250
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 180
-  base_cook_time_seconds: 200
+  mature_ref_temp: 200
+  base_cook_time_seconds: 2700
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 4
+  shelf_life_minutes: 30240
+  hint: "淀粉丰富，口感绵密。适合炖煮、烤制或煎炸。可选择切块切片，炖肉时可吸收汤汁，烤制时外酥里嫩。搭配黄油、调料更添风味。"
+  lore_hint: "淀粉根茎，炖烤煎炸切块切片皆可"
   sauce_creation:
     clicks_required: 4
 minecraft:CARROT:
@@ -294,64 +278,64 @@ minecraft:CARROT:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  mature_ref_temp: 200
+  base_cook_time_seconds: 1200
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 3
+  saturation: 3
+  shelf_life_minutes: 14400
+  hint: "甜脆多汁，富含胡萝卜素。适合炖汤、炒菜或榨汁。与肉类同炖，释放甜味；或切丝拌沙拉。加少许油烹饪更利营养吸收。"
+  lore_hint: "甜脆蔬菜，炖炒拌均可"
   sauce_creation:
-    clicks_required: 4
+    clicks_required: 5
 minecraft:BEETROOT:
   display_name: 甜菜根
   weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
+  mature_ref_temp: 180
   base_cook_time_seconds: 160
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 3
+  saturation: 3
+  shelf_life_minutes: 86400
+  hint: "色泽深红，清甜土香。可煮制切片做沙拉，或腌制为酸甜开胃菜，也可炖汤增加色彩。建议搭配果汁或醋提味，并避免长时间高温以保色泽。"
+  lore_hint: "红甜根茎，煮腌炖汤，建议搭果汁醋"
   sauce_creation:
-    clicks_required: 4
+    clicks_required: 10
 minecraft:BROWN_MUSHROOM:
   display_name: 蘑菇
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 70
-  base_cook_time_seconds: 80
+  mature_ref_temp: 200
+  base_cook_time_seconds: 900
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 1440
+  hint: "菌香浓郁，口感软嫩。适合快炒、做汤或搭配奶油意面。可切片后黄油煎至金黄，加蒜末和调料提香，鲜美倍增。"
+  lore_hint: "鲜嫩菌菇，快炒做汤，可搭黄油蒜香"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 10
 minecraft:RED_MUSHROOM:
   display_name: 红蘑菇
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 70
-  base_cook_time_seconds: 80
+  mature_ref_temp: 200
+  base_cook_time_seconds: 900
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 14400
+  hint: "色泽鲜艳，风味独特，但生食有轻微毒性，务必充分煮熟后再食用。适合炖煮或与肉类同烧，吸收汤汁后口感滑嫩，建议搭配洋葱和香料。"
+  lore_hint: "鲜艳菌菇，务必煮熟，炖肉吸汁"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 10
 
 # ===== DUAL: 原版水果/浆果 (3种) =====
 minecraft:MELON_SLICE:
@@ -360,134 +344,134 @@ minecraft:MELON_SLICE:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 200
+  base_cook_time_seconds: 90
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 1
+  shelf_life_minutes: 120
+  hint: "清甜多汁，果肉脆爽，富含水分。适合生食消暑，也可榨汁或制作水果沙拉。加热后甜度提升，可做果酱或搭配乳制品。"
+  lore_hint: "清甜多汁，直接食用或榨汁制果酱"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 5
 minecraft:SWEET_BERRIES:
   display_name: 甜浆果
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 90
+  base_cook_time_seconds: 300
   flip_required: false
-  food_points: 2
+  food_points: 1
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 300
+  hint: "酸甜多汁，果香清新。适合制作果酱、甜点馅料或搭配肉类解腻。可加入少许糖和柠檬汁熬煮，风味更佳。"
+  lore_hint: "酸甜浆果，制酱或配肉解腻"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 5
 minecraft:GLOW_BERRIES:
   display_name: 发光浆果
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 120
+  base_cook_time_seconds: 300
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 3
+  shelf_life_minutes: 600
+  hint: "散发着柔和的荧光，清甜中带一丝神秘气息。可直接食用、榨汁或用于甜点装饰。熬制后果酱呈淡荧光色，若搭配面包或奶酪食用，别有风味。"
+  lore_hint: "神秘荧光果，可食可制酱，搭配奶酪面包"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 7
 
 # ===== MAIN: ExoticGarden 作物 (14种) =====
 slimefun:CORN:
   display_name: 玉米
-  weight_grams: 150
-  type: MAIN
-  states: [WHOLE, SLICED, DICED]
-  calculator_type: standard
-  mature_ref_temp: 180
-  base_cook_time_seconds: 200
-  flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
-slimefun:CABBAGE:
-  display_name: 卷心菜
   weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
+  mature_ref_temp: 100
+  base_cook_time_seconds: 480
+  flip_required: true
+  food_points: 4
+  saturation: 3.5
+  shelf_life_minutes: 540
+  hint: "金黄甜脆，粒粒饱满。适合蒸煮、烤制或做沙拉。可刷黄油和撒盐烤制，外焦里嫩；也可剥粒入汤或炒菜，清甜可口。"
+  lore_hint: "金黄甜脆，蒸烤煮炒，可刷黄油烤制"
+slimefun:CABBAGE:
+  display_name: 卷心菜
+  weight_grams: 150
+  type: MAIN
+  states: [WHOLE, SLICED, DICED]
+  calculator_type: standard
+  mature_ref_temp: 220
   base_cook_time_seconds: 120
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 3
+  saturation: 2.5
+  shelf_life_minutes: 43200
+  hint: "叶片紧实，脆嫩微甜。适合切丝凉拌、炒制或做汤。建议与培根、香肠同炒，吸收肉香；也可制成腌菜，爽脆开胃。"
+  lore_hint: "脆嫩微甜，凉拌炒汤，配培根香肠更佳"
 slimefun:LETTUCE:
   display_name: 生菜
   weight_grams: 100
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 40
+  mature_ref_temp: 120
+  base_cook_time_seconds: 90
   flip_required: false
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 2880
+  hint: "叶片水嫩，清爽微苦。最适合生食做沙拉基底，或夹入三明治、汉堡。若快炒，建议大火速成保持脆度，搭配油或蒜蓉。"
+  lore_hint: "水嫩清苦，沙拉三明治，可搭配油快炒"
 slimefun:GARLIC:
   display_name: 大蒜
   weight_grams: 50
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 80
+  mature_ref_temp: 180
+  base_cook_time_seconds: 1200
   flip_required: false
-  food_points: 2
+  food_points: 1
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 86400
+  hint: "辛香浓烈，是烹饪中的灵魂调味品。建议切片或剁碎后油煸出香，用于炒菜、烤肉或制作蒜蓉酱。生食辛辣，熟后甘甜。"
+  lore_hint: "辛香调味，煸香炒烤肉，制蒜蓉酱"
 slimefun:BREADFRUIT:
   display_name: 面包果
-  weight_grams: 200
+  weight_grams: 400
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  mature_ref_temp: 200
+  base_cook_time_seconds: 1800
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 10
+  saturation: 8
+  shelf_life_minutes: 14400
+  hint: "果肉富含淀粉，烤熟后散发面包般的香气。适合切片烤制或油炸，外酥内绵；也可炖煮吸收汤汁，口感类似马铃薯。"
+  lore_hint: "淀粉果，烤后如同面包，可类似薯类炸炖"
 slimefun:ALIEN_FRUIT:
   display_name: 外星果实
   weight_grams: 200
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  mature_ref_temp: 320
+  base_cook_time_seconds: 600
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 8
+  shelf_life_minutes: 4800
+  hint: "外皮泛着奇异的颜色光泽，果肉晶莹多汁，带有未知的花果香气。可鲜食或制成果酱，貌似与蜂蜜和香料搭配能激发其神秘风味。"
+  lore_hint: "神秘外星水果，可鲜食可制酱，据说与蜂蜜香料烹饪能激发出神秘香味"
 slimefun:PUNCH_FRUIT:
   display_name: 潘趣果
   weight_grams: 200
@@ -495,26 +479,26 @@ slimefun:PUNCH_FRUIT:
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  base_cook_time_seconds: 180
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 3
+  shelf_life_minutes: 3600
+  hint: "酸甜浓郁，带有热带鸡尾酒般的复合果香。适合榨汁、做水果沙拉或熬制甜酸酱，搭配烤肉可解腻提味。"
+  lore_hint: "酸甜热带果，可榨汁做酱，搭配烤肉解腻"
 slimefun:JACKFRUIT:
   display_name: 菠萝蜜
-  weight_grams: 200
+  weight_grams: 675
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 160
-  base_cook_time_seconds: 180
+  mature_ref_temp: 120
+  base_cook_time_seconds: 90
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
+  food_points: 12
+  saturation: 4
+  shelf_life_minutes: 14400
+  hint: "果肉硕大，甜糯浓香，带有独特的风味。可鲜食或入菜，煮熟后质地接近肉类，适合搭配咖喱或做成素食肉料理。"
   lore_hint: ""
 slimefun:BIG_CARROT:
   display_name: 大萝卜
@@ -522,56 +506,56 @@ slimefun:BIG_CARROT:
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 160
+  mature_ref_temp: 200
+  base_cook_time_seconds: 360
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 5
+  saturation: 4.5
+  shelf_life_minutes: 14400
+  hint: "体型硕大，肉质白嫩，微辣中带清甜。适合炖汤、红烧或腌制。可切厚块与肉块同炖，吸足肉汤精华，软糯入味。"
+  lore_hint: "硕大白嫩，微辣清甜，炖汤红烧腌"
 slimefun:ACORN_SQUASH:
   display_name: 橡子南瓜
   weight_grams: 300
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 180
-  base_cook_time_seconds: 200
+  mature_ref_temp: 200
+  base_cook_time_seconds: 2400
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 8
+  saturation: 5
+  shelf_life_minutes: 86400
+  hint: "果形如橡子，外皮坚硬，果肉橙黄绵密，坚果香气浓郁。适合切开烤制，填入馅料；或切块煮汤，口感甜糯。"
+  lore_hint: "坚果香南瓜，烤制填馅，煮汤甜糯"
 slimefun:GINSENGBABY:
   display_name: 人参果娃
   weight_grams: 80
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 120
-  base_cook_time_seconds: 140
+  mature_ref_temp: 100
+  base_cook_time_seconds: 120
   flip_required: true
-  food_points: 2
+  food_points: 3
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 14400
+  hint: "形似小娃娃，果皮淡金，果肉清甜多汁，传说有滋补功效。宜鲜食保留营养，也可炖汤，风味清雅独特。"
+  lore_hint: "淡金果，清甜滋补，鲜食炖汤皆可"
 slimefun:BIG_WHEAT:
   display_name: 异域大麦
   weight_grams: 150
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 180
-  base_cook_time_seconds: 200
+  mature_ref_temp: 95
+  base_cook_time_seconds: 1800
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 5
+  shelf_life_minutes: 388800
+  hint: "麦粒饱满，带有异域独有的焦香与坚果气息。可与蘑菇或肉类同煮，吸收鲜味。"
+  lore_hint: "异域谷物，有焦香坚果味，与蘑菇肉类搭配别有一番风味"
 slimefun:AMARANTH:
   display_name: 苋菜
   weight_grams: 50
@@ -581,25 +565,25 @@ slimefun:AMARANTH:
   mature_ref_temp: 90
   base_cook_time_seconds: 100
   flip_required: false
-  food_points: 2
+  food_points: 3
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 2880
+  hint: "叶片红绿相间，嫩滑清香，富含营养。适合蒜蓉快炒或做上汤，风味独特。"
+  lore_hint: "红绿嫩叶，可用蒜蓉快炒或做上汤"
 slimefun:TEQUILA:
   display_name: 龙舌兰
   weight_grams: 100
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 80
+  mature_ref_temp: 130
+  base_cook_time_seconds: 10800
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 3
+  shelf_life_minutes: 120
+  hint: "叶片厚实多汁，可提取甜味汁液。适合制作糖浆、调味酱料或酿造特殊饮品。加热后甜度提升，带有焦糖般的香气。"
+  lore_hint: "多汁可调味，制糖浆酱料"
 
 # ===== DUAL: ExoticGarden 蔬菜 (3种) =====
 slimefun:TOMATO:
@@ -608,14 +592,14 @@ slimefun:TOMATO:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 70
-  base_cook_time_seconds: 120
+  mature_ref_temp: 100
+  base_cook_time_seconds: 360
   flip_required: false
-  food_points: 2
+  food_points: 3
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 8640
+  hint: "红润多汁，酸甜平衡。适合做酱、煮汤或切片入沙拉。可加少许糖中和酸度，与奶酪是经典搭配，加热后风味更浓郁，也可作炒菜配菜。"
+  lore_hint: "酸甜多汁的红色果实，制酱煮汤炒菜皆可"
   sauce_creation:
     clicks_required: 3
 slimefun:ONION:
@@ -624,14 +608,14 @@ slimefun:ONION:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 80
-  base_cook_time_seconds: 100
+  mature_ref_temp: 190
+  base_cook_time_seconds: 1800
   flip_required: false
   food_points: 2
   saturation: 2
   shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  hint: "层次丰富，生食辛辣，熟后甘甜。适合切丝爆香作为料理基底，或慢火焦糖化制作洋葱酱。搭配牛肉、蘑菇风味尤佳。"
+  lore_hint: "辛辣回甘的蔬菜，常作爆香基底，也可焦糖化制酱"
   sauce_creation:
     clicks_required: 4
 slimefun:RED_BELL_PEPPER:
@@ -640,14 +624,14 @@ slimefun:RED_BELL_PEPPER:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 80
-  base_cook_time_seconds: 100
+  mature_ref_temp: 180
+  base_cook_time_seconds: 120
   flip_required: false
-  food_points: 2
+  food_points: 3
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 86400
+  hint: "色泽红艳，甜脆爽口。适合生食做沙拉，或烤制后做成酱料。与洋葱、番茄同煮是地中海料理的灵魂组合。"
+  lore_hint: "甜脆红艳，可生食可烤制，搭配洋葱番茄别具一番风味"
   sauce_creation:
     clicks_required: 3
 
@@ -658,14 +642,14 @@ slimefun:OAK_APPLE:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
+  mature_ref_temp: 300
   base_cook_time_seconds: 100
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 3
+  shelf_life_minutes: 120
+  hint: "橡树苹果外形介于橡果与苹果之间，果皮呈深棕褐色，表面带有独特的木质纹理与淡淡树脂光泽，果肉金黄紧实，质地脆硬，散发着坚果与木质的复合香气，入口微涩但回甘明显，风味深邃而独特。成熟温度极高，适合高温快速煎烤，以锁住内部汁水并激发坚果香气；烹饪时间极短，需密切注意火候，两面各煎片刻即可，过度加热会导致风味流失。建议切片后高温快煎至表面微焦，搭配海盐、黑胡椒或蜂蜜食用，与烤禽类、猪肉同烹能衬托其木质香气，搭配迷迭香或百里香更添森林气息。需注意保鲜期极短，宜尽快食用。"
+  lore_hint: "坚果木质风味，&l高温快煎&r（需&l翻面&r），搭&l海盐&r&l迷迭香&r"
   sauce_creation:
     clicks_required: 3
 slimefun:CHERRY:
@@ -674,14 +658,14 @@ slimefun:CHERRY:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 70
-  base_cook_time_seconds: 80
+  mature_ref_temp: 200
+  base_cook_time_seconds: 180
   flip_required: true
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 2160
+  hint: "樱桃果实圆润饱满，表皮光滑呈深红至紫红色，光泽诱人，果肉软嫩多汁，紧裹着坚硬果核，风味甜美中透出清爽的果酸，果香清雅怡人。成熟温度较高而烹饪时间较短，适合高温快速煎烤以锁住汁水并激发香气，烹饪时需适时翻面保证均匀受热。适合鲜食、制作果酱、糖渍或点缀甜点，亦可去核后与肉类同烹，经典的樱桃酱搭配鸭胸或猪肉能起到解腻提鲜的效果。熬酱时加少许柠檬汁和糖平衡酸甜，搭配香草、肉桂或黑胡椒能增添层次，高温快煎至表皮微皱即可呈现最佳风味，保鲜期较短宜尽快食用。"
+  lore_hint: "甜美多汁，&l高温快煎&r（需&l翻面&r），适合&l鲜食&r&l制酱&r&l佐肉&r，搭&l香草&r&l肉桂&r"
   sauce_creation:
     clicks_required: 2
 slimefun:POMEGRANATE:
@@ -690,14 +674,14 @@ slimefun:POMEGRANATE:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 100
+  mature_ref_temp: 200
+  base_cook_time_seconds: 240
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 3
+  saturation: 3
+  shelf_life_minutes: 86400
+  hint: "红宝石般的籽粒，酸甜爆汁。适合榨汁、做沙拉或点缀甜点。可取籽与乳制品、蜂蜜同食，或制成石榴糖浆用于调饮。"
+  lore_hint: "有着红宝石籽粒的果实，酸甜爆汁，可榨汁或作点缀"
   sauce_creation:
     clicks_required: 3
 slimefun:LEMON:
@@ -706,30 +690,30 @@ slimefun:LEMON:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
+  mature_ref_temp: 80
+  base_cook_time_seconds: 120
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 0.2
+  shelf_life_minutes: 30240
+  hint: "酸爽清新，果香明亮。适合榨汁调味、腌制肉类或制作甜点。通常与海鲜、白肉搭配去腥，或泡制蜂蜜柠檬水，开胃解腻。"
+  lore_hint: "酸爽调味，通常榨汁腌肉，或搭配海鲜白肉"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 5
 slimefun:PLUM:
   display_name: 梅子
   weight_grams: 100
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 88
+  mature_ref_temp: 170
+  base_cook_time_seconds: 120
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 0.2
+  shelf_life_minutes: 10080
+  hint: "酸甜浓郁，果肉紧实。适合制作梅子酱、蜜饯。建议与肉类同煮，酸甜解腻，或搭配肉餐作为开胃小食"
+  lore_hint: "酸香鲜明，&l快煎&r（需&l翻面&r），适合&l制酱&r&l腌渍&r&l佐肉&r，搭&l蜂蜜&r"
   sauce_creation:
     clicks_required: 3
 slimefun:LIME:
@@ -738,78 +722,78 @@ slimefun:LIME:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
+  mature_ref_temp: 55
+  base_cook_time_seconds: 180
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 1
+  saturation: 0.2
+  shelf_life_minutes: 30240
+  hint: "酸橙果实较橙子小巧，呈圆形或椭球形，表皮光滑呈亮绿色，果皮较薄，油腺密集香气更为锐利，果肉分瓣呈浅绿色，质地细嫩多汁，汁水充沛，风味极酸，但香气异常清新明快，柑橘类特有的清爽感尤为突出。成熟温度极低，适合低温慢煎以释放香气并避免果汁过度蒸发，烹饪时间中等需适时翻面保证均匀受热，高温会破坏其清新的酸香风味。适合榨汁制作饮品、腌制海鲜或肉类、制作酱汁或调味料，亦可切片后低温慢煎佐配烤鱼或禽类，经典的酸橙汁腌鱼、酸橙派或酸橙酱配海鲜是许多菜系中的灵魂风味。建议使用时先揉搓表皮释放油胞香气，榨汁前可常温回温；果皮可刨屑入菜增香，但注意用量以免过苦；熬酱时加足量糖和少许盐平衡酸度，搭配香菜、辣椒、椰浆或蜂蜜能充分展现酸橙的明快与层次。"
+  lore_hint: "清香极酸，&l低温慢煎&r（需&l翻面&r），适合&l榨汁&r&l调味&r&l佐海鲜&r，搭&l椰浆&r&l香菜&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 8
 slimefun:ORANGE:
   display_name: 橙子
   weight_grams: 150
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 80
-  base_cook_time_seconds: 88
+  mature_ref_temp: 180
+  base_cook_time_seconds: 120
   flip_required: true
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 1.5
+  shelf_life_minutes: 30240
+  hint: "橙子果实呈圆形或椭球形，表皮光滑呈亮橙色，布满细密油腺，果皮香气清新明亮，果肉分瓣、橙黄色，质地脆嫩多汁，汁水丰沛，风味酸甜浓郁，柑橘类特有的清爽果香极具辨识度。成熟温度中等偏高，适合快速煎烤以激发香气并锁住汁水，烹饪时间较短需注意火候，适时翻面保证均匀受热。适合鲜食、榨汁、制作水果沙拉或果酱，橙皮可刨屑入菜增香，亦可将橙片煎烤后搭配禽类或海鲜，经典橙子酱配鸭胸或橙香烤鱼是法餐中的名作。建议切片后高温快煎至表面微焦，释放焦糖甜香；榨汁前可先揉搓表皮释放油胞香气；熬酱时加入少许橙皮屑和糖慢煮，可充分展现橙子的清新与甜酸层次，搭配迷迭香、黑胡椒或八角能增添复合风味。"
+  lore_hint: "酸甜清爽，&l快煎&r（需&l翻面&r），适合&l鲜食&r&l制酱&r&l佐肉&r"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 6
 slimefun:PEACH:
   display_name: 桃子
   weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 100
+  mature_ref_temp: 200
+  base_cook_time_seconds: 150
   flip_required: true
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 1.5
+  shelf_life_minutes: 4320
+  hint: "桃子果实圆润饱满，表皮有细密绒毛，呈粉红至橙黄色，带有自然的红晕，果肉淡黄或乳白，质地软嫩多汁，香气浓郁甜美，标志性的桃香令人难忘，风味甜润微酸。成熟温度较高，适合高温快速煎烤以锁住汁水并激发香气，烹饪时间较短需密切注意火候，适时翻面保证均匀受热。适合鲜食、制作水果沙拉、果酱或糖渍，亦可烤制或炖煮，经典的烤桃子搭配蜂蜜、奶酪或脆皮猪肉，与香草糖浆同煮更是夏日甜品的灵魂。建议切片后高温快煎至表面微焦，搭配肉桂、香草或蜂蜜能进一步衬托其甜美风味；制酱需耐心慢熬至浓稠。"
+  lore_hint: "甜美多汁，&l高温快煎&r（需&l翻面&r），适合&l鲜食&r&l烤制&r&l佐肉&r，搭&l蜂蜜&r"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 6
 slimefun:PEAR:
   display_name: 梨子
   weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 100
+  mature_ref_temp: 200
+  base_cook_time_seconds: 150
   flip_required: true
-  food_points: 2
+  food_points: 3
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 14400
+  hint: "梨子果实呈葫芦形或圆形，表皮光滑呈黄绿色或金黄色，果肉洁白细腻，质地脆嫩多汁，入口清甜爽润，带有独特的花果香气，微带果酸。成熟温度较高，适合高温快速煎烤以锁住汁水并激发香气，烹饪时间较短需密切注意火候，适时翻面保证均匀受热。适合鲜食、制作水果沙拉、榨汁，亦可烤制或炖煮，经典的烤梨搭配蜂蜜或芝士，与红酒同煮更是暖心甜点。建议切片后高温快煎至表面微焦，搭配蓝纹芝士、核桃或蜂蜜食用风味更佳，与禽类、猪肉同烹能清甜解腻；熬酱时加少许柠檬汁和肉桂平衡甜酸，持续慢熬至浓稠，制酱需一定耐心。"
+  lore_hint: "清甜爽润，&l高温快煎&r（需&l翻面&r），适合&l鲜食&r&l烤制&r&l佐肉&r，搭&l蜂蜜&r"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 7
 slimefun:DRAGON_FRUIT:
   display_name: 火龙果
   weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 70
+  mature_ref_temp: 6
   base_cook_time_seconds: 80
   flip_required: true
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 14400
+  hint: "火龙果果实呈椭圆形，外皮鲜红或粉红，覆有绿色肉质鳞片状萼叶，果肉洁白或玫红，密布细小黑色籽粒，质地软嫩，入口清甜淡雅，水分充盈，口感似猕猴桃与梨的融合，风味温和而不张扬。成熟温度极低，稍加热即熟，烹饪时间极短，需以极低温短时煎烤，轻轻加热即可释放清甜香气，过度加热会使果肉软塌失色。适合鲜食、制作水果沙拉、榨汁或点缀甜品；亦可用于温和加热的轻煎料理，搭配海鲜或禽类以增添清雅果香。建议切片后以小火温煎，适时翻面，轻微加热至表面微温即可，搭配蜂蜜、柠檬汁、薄荷或椰浆食用更能提升其清新鲜甜的风味层次。"
+  lore_hint: "清甜淡雅，&l极低温快煎&r（需&l翻面&r），适合&l鲜食&r&l轻煎&r，搭&l蜂蜜&r&l椰浆&r"
   sauce_creation:
     clicks_required: 2
 slimefun:PINEAPPLE:
@@ -818,32 +802,32 @@ slimefun:PINEAPPLE:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 90
-  base_cook_time_seconds: 100
+  mature_ref_temp: 200
+  base_cook_time_seconds: 150
   flip_required: true
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 1
+  shelf_life_minutes: 14400
+  hint: "菠萝果实硕大，呈圆柱形或椭球形，外皮坚硬粗糙呈橙黄色，表面布满六边形鳞甲状果眼，顶部带有翠绿色冠芽。果肉金黄鲜亮，质地脆嫩多汁，纤维感适中，风味酸甜浓郁，热带果香扑鼻，生食时酸度鲜明，加热后果酸转化为柔和的甜香。适合鲜食、榨汁、制作水果沙拉，亦可入菜与肉类同烤或炖煮，菠萝蛋白酶能软化肉质，去腥解腻，是经典的烤肉搭档。煎烤至表面微焦可激发焦糖香气，搭配薄荷、椰浆或辣椒粉能突出其热带风情，与火腿、猪肉、鸡肉同烹尤为经典。"
+  lore_hint: "金黄酸甜，适合&l鲜食&r&l烤制&r&l入菜&r，搭&r&l椰浆&r&l薄荷&r"
   sauce_creation:
-    clicks_required: 3
+    clicks_required: 15
 slimefun:COCONUT:
   display_name: 椰子
-  weight_grams: 200
+  weight_grams: 500
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 120
-  base_cook_time_seconds: 140
+  mature_ref_temp: 180
+  base_cook_time_seconds: 600
   flip_required: true
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 3
+  saturation: 4
+  shelf_life_minutes: 129600
+  hint: "椰子果实硕大呈椭球形，外皮光滑坚硬呈棕褐色，内壁附有厚实的白色椰肉，中心充盈着清澈甘甜的椰子水。椰肉质地硬实，生时脆韧，熟后柔韧，富含天然油脂，椰香浓郁醇厚。椰子水清甜解渴，可直接饮用；椰肉可刨丝、切片或榨取椰浆，用于制作咖喱、椰奶甜品、糕点或炒菜，亦可烘干制成椰蓉。切片煎烤至表面微焦能激发更浓郁的坚果椰香，椰浆慢煮后风味更为醇厚绵长。搭配鸡肉、海鲜、糯米或芒果能充分发挥椰子的香浓特质，与香茅、姜黄等香料同烹更具东南亚风情。"
+  lore_hint: "椰香浓郁，适合搭&l鸡肉&r&l芒果&r"
   sauce_creation:
-    clicks_required: 4
+    clicks_required: 25
 
 # ===== DUAL: ExoticGarden 浆果类 (8种) - 翻面: false, 无 DICED =====
 slimefun:STRAWBERRY:
@@ -852,30 +836,30 @@ slimefun:STRAWBERRY:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 85
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 300
+  hint: "草莓果实呈心形或圆锥形，饱满鲜红，表面均匀分布着金黄色的细小种子，光泽诱人。果肉质地细嫩柔软，汁水丰盈，入口即化，风味清甜中透出明快的果酸，香气浓郁而纯正，是浆果中极具辨识度的存在。适合鲜食、拌入酸奶或燕麦，亦可熬制果酱、糖浆，或切片装饰蛋糕与甜点。建议短时间低温加热以保持鲜亮色泽与果粒形态，搭配蜂蜜、薄荷或淡奶油可提升清新层次；加入少许柠檬汁和糖慢煮，能更好地平衡酸甜风味，熬出的果酱色泽红亮诱人。"
+  lore_hint: "鲜红香甜，适合&l鲜食&r&l制酱&r，搭&l蜂蜜&r&l奶油&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 4
 slimefun:GRAPE:
   display_name: 葡萄
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 180
+  base_cook_time_seconds: 900
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 1200
+  hint: "葡萄果实呈椭圆形或圆形，颗粒饱满，表皮光滑，颜色从翠绿、紫红到深紫不等，表面覆有天然果粉。果肉半透明、汁水充盈，入口清甜爽润，微带果酸，香气清新纯正。成熟温度较高，耐热性良好，适合慢火熬煮成果酱、浓缩糖浆或制作葡萄汁；亦可入菜，与禽类、肉类同炖，清甜果香可去腥提鲜。炖煮时适量加糖和少许柠檬汁平衡甜酸，搭配迷迭香或肉桂可增加风味深度。"
+  lore_hint: "清甜爽润，适合&l鲜食&r&l制酱&r&l佐肉&r，搭&l柠檬&r"
   sauce_creation:
     clicks_required: 2
 slimefun:BLUEBERRY:
@@ -884,14 +868,14 @@ slimefun:BLUEBERRY:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 180
+  base_cook_time_seconds: 900
   flip_required: false
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 1200
+  hint: "蓝莓果实圆润饱满，表皮呈深蓝色并覆有天然白霜，果肉浅绿半透明，质地软嫩多汁，入口轻轻一咬即汁水四溢，风味清甜微酸，带有清爽的果香。成熟温度较高，耐热性在浆果中尤为突出，适合烘烤，烤制后果皮微微皱缩、果肉甜度提升，常用于制作马芬、松饼、派或蛋糕等烘焙甜点。亦可熬制果酱、拌入酸奶、燕麦或鲜食。建议加糖和少许柠檬汁熬煮，或直接拌入面糊烘烤，搭配肉桂或蜂蜜能进一步衬托其清甜风味。"
+  lore_hint: "清甜爆汁，耐烤制，适合&l烘焙&r或&l制酱&r，搭&l蜂蜜&r&l肉桂&r"
   sauce_creation:
     clicks_required: 2
 slimefun:RASPBERRY:
@@ -901,45 +885,45 @@ slimefun:RASPBERRY:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 50
-  base_cook_time_seconds: 48
+  base_cook_time_seconds: 180
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 3
+  shelf_life_minutes: 360
+  hint: "树莓果实由众多小核果聚合而成，外形饱满呈覆盆子状，表皮鲜红或深红，带有细密绒毛，果肉极为柔软娇嫩，轻压即碎。风味酸甜清爽，果香清新明亮，带有迷人的花香气息。树莓极为娇嫩，不耐高温久煮，成熟温度很低，稍微加热即可出汁，适合短时间低温熬煮成果酱、果泥或糖浆，也可直接鲜食、点缀甜点或拌入酸奶与燕麦。建议小火低温处理以保留果粒形态与鲜亮色泽，搭配砂糖、蜂蜜可调和酸度，佐以奶油、冰淇淋或薄荷叶则能突出其清新风味。"
+  lore_hint: "娇嫩清香，不耐久煮，适合&l鲜食&r&l低温制酱&r，搭&l蜂蜜&r&l奶油&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 3
 slimefun:BLACKBERRY:
   display_name: 黑莓
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 150
+  base_cook_time_seconds: 900
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 3
+  shelf_life_minutes: 1200
+  hint: "黑莓果实由众多小核果聚合而成，外形饱满圆润，表皮呈深紫黑色，带有柔和的光泽。果肉软嫩多汁，入口即化，风味甜中带酸，浓郁的莓果香气中透出微妙的野果气息。适合熬制果酱、制作水果塔馅料或搭配冰淇淋，也可鲜食、榨汁或拌入酸奶。建议加糖和少许柠檬汁慢火熬煮至浓稠，温度稍高时黑莓会释放出更醇厚的深色果汁，适合长时间慢煮以浓缩风味；搭配香草、薄荷或奶油制品效果尤佳。"
+  lore_hint: "深紫饱满，甜酸多汁，适合&l制酱&r或&l甜点&r，搭&l奶油&r&l薄荷&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 3
 slimefun:CRANBERRY:
   display_name: 蔓越莓
   weight_grams: 50
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 85
+  base_cook_time_seconds: 420
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 4320
+  hint: "蔓越莓果实圆润饱满，表皮光滑呈鲜亮红色，果肉紧实，风味酸涩明亮，酸度强烈而清爽，带有清新的浆果气息。非常适合熬制果酱搭配烤禽类或涂抹面包，或煮成果汁、糖浆用于饮品与甜点，亦可晒干后作为烘焙点缀。建议加足量糖和少许橙皮同煮以平衡酸涩，慢火熬至果肉爆裂浓稠；搭配肉桂或丁香可增添节日般的温暖香料风味，与火鸡、鸡肉等禽类同食更是经典搭配。"
+  lore_hint: "酸亮紧实，适合&l制酱&r&l佐禽类&r，搭&l糖&r&l橙皮&r"
   sauce_creation:
     clicks_required: 2
 slimefun:ELDERBERRY:
@@ -948,14 +932,14 @@ slimefun:ELDERBERRY:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 100
+  base_cook_time_seconds: 1200
   flip_required: false
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 420
+  hint: "⚠ 接骨木果生食有毒，务必充分煮熟后方可食用，未熟透会导致恶心与不适。果实细小呈深紫黑色，果肉软嫩多汁，风味酸甜带独特的麝香与花香气息。适合熬制成果酱、糖浆或果汁，亦可与苹果、梨等水果混合制作甜点馅料。建议加糖和柠檬汁慢火熬煮以平衡风味，搭配蜂蜜或生姜可提升层次感，常用于调制热饮或搭配松饼、奶酪食用。"
+  lore_hint: "⚠ &l务必煮熟&r，酸甜香浓，适合&l制酱&r&l糖浆&r，搭&l蜂蜜&r"
   sauce_creation:
     clicks_required: 2
 slimefun:COWBERRY:
@@ -964,14 +948,14 @@ slimefun:COWBERRY:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 100
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 5760
+  hint: "越橘果实细小圆润，表皮光滑呈深红色，果肉紧实多汁，风味酸甜明亮，酸度尤为突出，带有清爽的森林浆果香气。适合熬制成果酱搭配面包、煎饼或肉类，或煮成糖浆用于甜点与饮品。建议加足量糖慢火熬煮以平衡天然酸度，搭配肉桂或香草可增添温暖风味；其鲜明的酸味也特别适合与野味、烤肉或肉丸同食，起到解腻提鲜的作用。"
+  lore_hint: "酸亮浆果，适合&l制酱&r或&l佐肉&r，搭&r&l糖&r"
   sauce_creation:
     clicks_required: 2
 
@@ -982,16 +966,16 @@ slimefun:SWEET_POTATO:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 180
-  base_cook_time_seconds: 200
+  mature_ref_temp: 160
+  base_cook_time_seconds: 3600
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  food_points: 4
+  saturation: 5
+  shelf_life_minutes: 30240
+  hint: "地瓜外皮呈红褐或淡紫色，果肉金黄或橙红，质地紧实，生时硬脆，烤熟后绵密软糯，甜香四溢，带有独特的焦糖香气。适合烤制、蒸煮或切块熬粥，亦可切片油炸成地瓜片。烤制时糖分自然焦化，风味最为浓郁；蒸煮后口感湿润绵滑。建议搭配黄油、蜂蜜或肉桂粉食用，亦可撒少许海盐平衡甜度，咸甜交织更显层次。"
+  lore_hint: "绵密甜糯，适合&l烤制&r&l蒸煮&r&l炸片&r，搭&l黄油蜂蜜&r或&l海盐&r"
   sauce_creation:
-    clicks_required: 4
+    clicks_required: 12
 
 minecraft:PUFFERFISH:
   display_name: 河豚
@@ -999,14 +983,14 @@ minecraft:PUFFERFISH:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 110
-  base_cook_time_seconds: 120
+  mature_ref_temp: 100
+  base_cook_time_seconds: 10800
   flip_required: true
-  food_points: 1
-  saturation: 0.2
-  shelf_life_minutes: 8
-  hint: "河豚含有毒素，需要充分烹饪；若未充分处理会导致中毒"
-  lore_hint: ""
+  food_points: 6
+  saturation: 10
+  shelf_life_minutes: 90
+  hint: "⚠ 河豚含有剧毒，必须经充分高温长时间烹饪后方可安全食用，未彻底煮熟会导致严重中毒。鱼肉洁白细嫩，脂肪极少，风味清雅鲜美。建议耐心慢火煎制或炖煮至完全熟透，过程中需适时翻面以保证均匀受热。可搭配萝卜泥、醋或葱姜去腥提鲜，凸显其本真的淡雅风味。亦可剁碎后熬煮成河豚酱，但务必确保全程高温彻底处理。"
+  lore_hint: "⚠ &l务必彻底煮熟&r，肉质细嫩清鲜，适合&l慢煎&r或&l炖煮&r，搭&l萝卜泥&r&l醋&r"
   sauce_creation:
     clicks_required: 3
 
@@ -1018,13 +1002,13 @@ slimefun:DOUGH:
   states: [WHOLE]
   calculator_type: standard
   mature_ref_temp: 180
-  base_cook_time_seconds: 160
+  base_cook_time_seconds: 1800
   flip_required: false
   food_points: 3
   saturation: 2
-  shelf_life_minutes: 30
-  hint: "面团需在砧板上擀制成面饼后方可烹饪"
-  lore_hint: ""
+  shelf_life_minutes: 240
+  hint: "面团质地柔软光滑，富有弹性，带有自然的麦香与微微的发酵气息。作为面食的基础半成品，需进一步加工后方可食用。可是玩家选择了直接烹饪?"
+  lore_hint: "柔软麦香，需&l加工&r后食用，可&l擀饼&r或&l切面&r，搭&l酱料高汤&r"
   transform_to: FLATBREAD_ITEM
   sauce_creation:
     clicks_required: 5
@@ -1036,13 +1020,13 @@ slimefun:FLATBREAD_ITEM:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 200
-  base_cook_time_seconds: 120
+  base_cook_time_seconds: 900
   flip_required: true
   food_points: 3
   saturation: 2
-  shelf_life_minutes: 20
-  hint: "擀薄的面饼 可直接烤制或切成宽面"
-  lore_hint: ""
+  shelf_life_minutes: 240
+  hint: "面饼擀得薄而均匀，表面光滑微带面粉光泽，质地柔韧有弹性，散发着质朴的麦香。适合在平底锅或烤盘上双面烙烤至金黄微焦，外酥内软，香气四溢。可直接卷入馅料做成卷饼，或刷酱料后烤制成风味薄饼。建议烙烤时适时翻面以保证均匀受热，搭配烤肉、蔬菜或蘸酱食用风味更佳。亦可切割成宽面条用于汤面或拌面。"
+  lore_hint: "薄韧麦香，需&l翻面烙烤&r，可切宽面，搭&r&l烤肉蘸酱&r"
   transform_to: WIDE_NOODLES
 
 slimefun:WIDE_NOODLES:
@@ -1052,13 +1036,13 @@ slimefun:WIDE_NOODLES:
   states: [WHOLE, SLICED]
   calculator_type: standard
   mature_ref_temp: 100
-  base_cook_time_seconds: 80
+  base_cook_time_seconds: 300
   flip_required: false
   food_points: 2
   saturation: 1.5
-  shelf_life_minutes: 15
-  hint: "宽面条 切割后可得到细面条"
-  lore_hint: ""
+  shelf_life_minutes: 240
+  hint: "宽面身形扁阔，色泽淡黄，质地干燥硬脆，麦香纯正。需充分煮熟后食用，煮制时间较普通面条稍长，熟后宽厚滑韧，咀嚼感十足。适合制作汤面、拌面或炒面，宽大的表面更能裹挟酱汁与配料，风味浓郁。建议搭配酱油、醋、辣椒油或肉类高汤提味，亦可切割成细面条以满足不同口感需求。"
+  lore_hint: "宽厚劲道，需&l煮熟&r，适合&l拌面&r&l汤面&r，可切细面，搭&l浓酱&r&l高汤&r"
   transform_to: RAW_NOODLES
 
 slimefun:RAW_NOODLES:
@@ -1068,14 +1052,14 @@ slimefun:RAW_NOODLES:
   states: [WHOLE]
   calculator_type: standard
   mature_ref_temp: 100
-  base_cook_time_seconds: 60
+  base_cook_time_seconds: 120
   flip_required: false
   no_flip_side: true
   food_points: 2
   saturation: 1.5
-  shelf_life_minutes: 15
-  hint: "生面条 需煮熟后食用；煮熟后即为成品面条"
-  lore_hint: ""
+  shelf_life_minutes: 240
+  hint: "生面条色泽淡黄或米白，质地干燥硬脆，带有清新的麦香。需充分煮熟后方可食用，沸水煮至弹牙爽滑即可捞出。适合制作汤面、拌面或炒面，可吸收汤汁与酱料的风味。建议煮熟后过冷水使口感更劲道，搭配酱油、香油、葱花或高汤更添鲜美。"
+  lore_hint: "麦香主食，需&l煮熟&r后食用，适合&l汤面&r&l拌面&r，搭&l高汤&r&l酱油&r"
 
 # ===== 新增异域植物食材 =====
 # --- 彩虹果/红醋栗 ---
@@ -1085,16 +1069,16 @@ slimefun:RAINBOW_FRUITS:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 70
-  base_cook_time_seconds: 80
+  mature_ref_temp: 120
+  base_cook_time_seconds: 120
   flip_required: false
   food_points: 2
   saturation: 2
-  shelf_life_minutes: 10
-  hint: ""
-  lore_hint: ""
+  shelf_life_minutes: 480
+  hint: "彩虹果果皮光滑鲜亮，呈现渐变的多彩色泽，果肉晶莹多汁，入口清甜爽脆，带有混合花果的复合香气，回味悠长。适合鲜食、榨汁或切块制作水果沙拉，亦可熬制成果酱涂抹面包。搭配酸奶或薄荷叶食用，能凸显其清新鲜甜的风味层次。"
+  lore_hint: "多色脆果，清甜爽脆，适合&l鲜食&r&l榨汁&r，搭&l酸奶&r&l薄荷&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 5
 
 slimefun:GOOSEBERRY:
   display_name: 红醋栗
@@ -1102,16 +1086,16 @@ slimefun:GOOSEBERRY:
   type: DUAL
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 60
+  mature_ref_temp: 100
+  base_cook_time_seconds: 450
   flip_required: false
   food_points: 2
-  saturation: 2
-  shelf_life_minutes: 8
-  hint: ""
-  lore_hint: ""
+  saturation: 1.5
+  shelf_life_minutes: 2160
+  hint: "红醋栗果实小巧圆润，表皮薄而透亮，呈鲜艳的宝石红色，酸味明亮突出，微带清甜果香。适合熬制果酱、制作甜点馅料，或与肉类同煮以酸味解腻提鲜。建议加糖中和酸度，慢火熬煮至浓稠，搭配香草或肉桂可增添温暖风味层次。"
+  lore_hint: "酸亮浆果，适合&l制酱&r或&l佐肉&r，搭&l糖&r&l香草&r"
   sauce_creation:
-    clicks_required: 2
+    clicks_required: 8
 
 # --- 异域蔬菜/香辛料 ---
 slimefun:MEXICO_CHILI:
@@ -1120,14 +1104,14 @@ slimefun:MEXICO_CHILI:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 80
-  base_cook_time_seconds: 80
+  mature_ref_temp: 180
+  base_cook_time_seconds: 300
   flip_required: false
-  food_points: 2
-  saturation: 2
-  shelf_life_minutes: 10
-  hint: "辛辣刺激的异域辣椒 充分加热后辣味会转化为鲜甜"
-  lore_hint: ""
+  food_points: 1
+  saturation: 0.2
+  shelf_life_minutes: 14400
+  hint: "墨西哥辣椒外形饱满，表皮光滑呈深绿色或红褐色，果肉厚实多汁，香气辛辣而富层次。生食时辣味直冲，充分加热后则转为鲜甜醇厚，余韵悠长。适合整只烤制后剥皮入菜，或切碎与肉类、豆类同炖，亦可制成辣酱佐餐。搭配番茄、洋葱、大蒜或酸奶油，能平衡辣度并提升整体风味层次。"
+  lore_hint: "厚实多汁，辣中带甜，适合&l烤制&r&l炖煮&r，搭&l番茄&r&l酸奶油&r"
   sauce_creation:
     clicks_required: 3
 
@@ -1137,14 +1121,16 @@ slimefun:MUSTARD_SEED:
   type: MAIN
   states: [WHOLE, DICED]
   calculator_type: standard
-  mature_ref_temp: 60
+  mature_ref_temp: 180
   base_cook_time_seconds: 60
   flip_required: false
   food_points: 1
-  saturation: 1
-  shelf_life_minutes: 20
-  hint: "芥菜籽 研磨后可制成芥末 烹调中可直接作为辛香料使用"
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 525600
+  hint: "芥菜籽颗粒细小，呈浅褐至深褐色，质地坚硬，咀嚼时释放出尖锐辛辣的香气。研磨后与液体混合可制成芥末酱，赋予料理鲜明的刺激感；整粒使用时可入油爆香，为炖菜、腌肉或酱汁增添坚果般的辛香底味。建议研磨时加入少许醋或蜂蜜调和辣度，使风味更圆润柔和。"
+  lore_hint: "辛香调味，可&l磨酱&r或&l爆香&r，搭&l醋&r&l蜂蜜&r"
+  sauce_creation:
+    clicks_required: 2
 
 # --- 异域根茎类 ---
 slimefun:MANDRAKE_ROOT:
@@ -1153,14 +1139,14 @@ slimefun:MANDRAKE_ROOT:
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 150
-  base_cook_time_seconds: 140
+  mature_ref_temp: 240
+  base_cook_time_seconds: 180
   flip_required: false
   food_points: 2
   saturation: 2
   shelf_life_minutes: 12
-  hint: "神秘的异域根茎 传说具有魔法力量 充分烹调后安全食用"
-  lore_hint: ""
+  hint: "曼德拉根形似人偶，外皮粗糙呈土褐色，肉质紧实微辛，带有浓郁的泥土与草药气息。传说蕴含魔法之力，但生食有剧毒，务必充分煮熟后方可食用。适合长时间炖煮成浓汤，或切片烤制至焦香，可搭配大蒜、迷迭香等香料去腥提味。炖煮时汤汁会呈现奇异的淡紫色，风味独特而醇厚。"
+  lore_hint: "神秘根茎，&l务必充分煮熟&r，适合&l炖汤&r或&l烤制&r"
   sauce_creation:
     clicks_required: 4
 
@@ -1171,14 +1157,14 @@ slimefun:ROSE:
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 40
+  mature_ref_temp: 70
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 1
-  saturation: 1
-  shelf_life_minutes: 8
-  hint: "异域玫瑰 花瓣可食 适合制作甜点或茶饮"
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 1440
+  hint: "异域玫瑰花瓣薄软丝滑，色泽深红浓郁，香气扑鼻而甜美，入口微甜带一丝清幽涩感。适合泡制玫瑰茶、熬制玫瑰酱，或糖渍后点缀糕点与冰淇淋。建议低温慢煮以锁住香气与色素，搭配蜂蜜或柠檬汁可柔和涩感，提升甜润层次。"
+  lore_hint: "花瓣丝滑，适合&l泡茶&r&l制酱&r，搭&l蜂蜜柠檬&r"
   sauce_creation:
     clicks_required: 2
 
@@ -1188,14 +1174,14 @@ slimefun:SAKURA:
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 45
-  base_cook_time_seconds: 40
+  mature_ref_temp: 70
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 1
-  saturation: 1
-  shelf_life_minutes: 8
-  hint: "异域樱花 花瓣轻盈 适合点缀甜品或制作樱花盐腌食品"
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 1440
+  hint: "异域樱花花瓣轻盈纤薄，色泽粉嫩，散发淡雅清幽的花香，微咸中带一丝回甘。适合盐渍保存、泡制樱花茶，或点缀于和果子与布丁等甜品之上。建议用温水短时冲泡以释放香气，避免沸水破坏花瓣形态。搭配抹茶或蜜豆食用，更添日式风情。"
+  lore_hint: "淡雅清幽，适合&l盐渍&r&l泡茶&r，搭&l抹茶&r"
   sauce_creation:
     clicks_required: 2
 
@@ -1205,14 +1191,14 @@ slimefun:PURPLE_FLOWER:
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 45
-  base_cook_time_seconds: 40
+  mature_ref_temp: 70
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 1
-  saturation: 1
-  shelf_life_minutes: 8
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 1440
+  hint: "紫花花瓣柔嫩，色泽艳丽，带有清幽的草木香气，微甜中透着一丝淡雅。适合泡制花茶、糖渍点缀甜品，或与面粉混合制作鲜花饼。建议低温快煮以保持花瓣形态与天然色素，搭配蜂蜜或淡奶油可增加醇厚风味。"
+  lore_hint: "柔嫩清甜，适合&l泡茶&r或&l制饼&r，搭&l蜂蜜&r"
   sauce_creation:
     clicks_required: 2
 
@@ -1222,49 +1208,49 @@ slimefun:PURPLE_ROSE:
   type: MAIN
   states: [WHOLE, SLICED]
   calculator_type: standard
-  mature_ref_temp: 50
-  base_cook_time_seconds: 40
+  mature_ref_temp: 70
+  base_cook_time_seconds: 240
   flip_required: false
   food_points: 1
-  saturation: 1
-  shelf_life_minutes: 8
-  hint: ""
-  lore_hint: ""
+  saturation: 0.2
+  shelf_life_minutes: 1440
+  hint: "紫色玫瑰花瓣薄软，丝绒质感，香气馥郁优雅，微带清甜。适合制作花茶、玫瑰酱或糖渍装饰甜点，也可入汤增添花香。建议低温慢煮以保留色泽与香气，搭配蜂蜜或薄荷可提升清甜感。"
+  lore_hint: "花瓣可食，&l泡茶&r或&l糖渍&r，搭&l蜂蜜&r&l薄荷&r"
   sauce_creation:
     clicks_required: 2
 
 # --- 异域草本/茎秆类 ---
 slimefun:REED:
   display_name: 异域甘蔗
-  weight_grams: 80
+  weight_grams: 320
   type: MAIN
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 60
-  base_cook_time_seconds: 60
+  mature_ref_temp: 200
+  base_cook_time_seconds: 360
   flip_required: false
-  food_points: 2
-  saturation: 1.5
-  shelf_life_minutes: 12
-  hint: "异域甘蔗 味甜多汁 可榨汁或直接炖煮提鲜"
-  lore_hint: ""
+  food_points: 8
+  saturation: 6
+  shelf_life_minutes: 28800
+  hint: "甘蔗茎秆粗壮，质地硬脆，汁水丰盈，甜润清香。适合鲜榨成汁直接饮用或者烤制，或切段与肉类同炖，清甜提鲜；亦可切片烤制，糖分焦化后风味更浓郁。搭配柠檬片或生姜同煮，可平衡甜腻，增添层次。"
+  lore_hint: "甘甜多汁，适合&l榨汁&r&l炖煮&r，搭&l柠檬&r"
   sauce_creation:
     clicks_required: 2
 
 slimefun:ALOE:
   display_name: 异域芦荟
-  weight_grams: 100
+  weight_grams: 200
   type: DUAL
   states: [WHOLE, SLICED, DICED]
   calculator_type: standard
-  mature_ref_temp: 40
-  base_cook_time_seconds: 40
+  mature_ref_temp: 70
+  base_cook_time_seconds: 120
   flip_required: false
-  food_points: 1
-  saturation: 1.5
-  shelf_life_minutes: 8
-  hint: "异域芦荟 凝冻质地 低温烹调保留营养 高温则融化失去口感"
-  lore_hint: ""
+  food_points: 2
+  saturation: 1
+  shelf_life_minutes: 14400
+  hint: "芦荟果肉晶莹剔透，凝冻般爽滑，微带青草清香。适合低温凉拌、轻煮或制作饮品，可搭配蜂蜜、柠檬提味，高温久煮会使胶质融化流失口感。也可切丁加入沙拉或酸奶，清爽健康。"
+  lore_hint: "凝冻爽滑，适合&l凉拌&r&l轻煮&r，搭&l蜂蜜柠檬&r"
   sauce_creation:
     clicks_required: 3
 

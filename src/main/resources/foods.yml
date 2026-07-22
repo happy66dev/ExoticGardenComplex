@@ -33,5 +33,5 @@ blacklist:
   - minecraft:GLISTERING_MELON_SLICE
 
 overrides:
-  minecraft:GOLDEN_APPLE:
-     shelf_life_minutes: 10080
+  minecraft:ENCHANTED_GOLDEN_APPLE:
+     shelf_life_minutes: 1008000

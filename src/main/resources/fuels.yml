@@ -240,7 +240,7 @@ minecraft:DEAD_BUSH:
   duration_seconds: 12
   heat_rate: 7
   effect: GRASS_SMOKE
-  effect_display_name: "枯木烟熏,这真的有人会喜欢吗"
+  effect_display_name: "枯木味,这真的有人会喜欢吗"
   byproduct: null
   hint: "枯木的烟味,可能受众很小"
 minecraft:SUGAR_CANE:
@@ -249,7 +249,7 @@ minecraft:SUGAR_CANE:
   duration_seconds: 150
   heat_rate: 1
   effect: SWEET_SMOKE
-  effect_display_name: "甘蔗甜烟,作为燃料太不合格了"
+  effect_display_name: "微微的甘蔗味,作为燃料太不合格了"
   byproduct: null
   hint: "甘蔗香甜的味道"
 minecraft:VINE:
@@ -294,7 +294,7 @@ minecraft:HAY_BLOCK:
   duration_seconds: 30
   heat_rate: 12
   effect: GRASS_SMOKE
-  effect_display_name: "干草烟熏,燃尽了"
+  effect_display_name: "怎么全是灰?"
   byproduct: null
   hint: "很浓的烟! 食物落了一层灰!"
 
