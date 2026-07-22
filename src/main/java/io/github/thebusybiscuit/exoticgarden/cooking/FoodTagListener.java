@@ -686,6 +686,20 @@ public class FoodTagListener implements Listener {
 
         // 喵~防御：检查是否是药水类型（不受黑名单约束，药水不在黑名单中）喵
         if (mat == Material.POTION || mat == Material.SPLASH_POTION || mat == Material.LINGERING_POTION) {
+            // 喵~防御：水瓶 Material=POTION 但无任何药水效果，不应视为药水食材，直接跳过喵
+            if (itemMeta instanceof org.bukkit.inventory.meta.PotionMeta potionMeta) {
+                org.bukkit.potion.PotionType base = null;
+                try { base = potionMeta.getBasePotionType(); } catch (Exception ignored) {}
+                boolean hasEffects = (base != null && base != org.bukkit.potion.PotionType.WATER
+                        && base != org.bukkit.potion.PotionType.MUNDANE
+                        && base != org.bukkit.potion.PotionType.THICK)
+                        || !potionMeta.getCustomEffects().isEmpty();
+                // 喵~无有效效果（水瓶/平淡/浓稠药水）直接返回null，不参与烹饪标签体系喵
+                if (!hasEffects) return null;
+            } else {
+                // 喵~防御：meta不是PotionMeta时，无法确认效果，跳过喵
+                return null;
+            }
             // 药水类物品返回通用药水标识符，保质期默认5分钟喵
             return GENERIC_POTION_ID;
         }
