@@ -11,6 +11,9 @@ public final class CookingConstants {
     // 灶台最低温度限制，低于此值不再降温喵
     public static final double MIN_TEMP = -50.0;
 
+    // 温度系数上限：最高25倍成熟速度喵
+    public static final double MAX_TEMP_COEFFICIENT = 25.0;
+
     // 工具类不允许实例化喵
     private CookingConstants() {}
 }
