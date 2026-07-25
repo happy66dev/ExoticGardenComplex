@@ -73,10 +73,7 @@ public class FoodTagListener implements Listener {
         this.genericPotionShelfLifeMinutes = foodsConfig.getGenericPotionShelfLife();
     }
 
-    // [已禁用] 事件驱动触发已全部注释，改由定时扫描兜底喵~
-    // @EventHandler(ignoreCancelled = true)
-    // public void onPickup(EntityPickupItemEvent e) { ... }
-
+    // [已禁用] 事件驱动触发（含保质期物品）已全部注释，改由定时扫描兜底喵~
     // @EventHandler(ignoreCancelled = true)
     // public void onCreativeClick(InventoryCreativeEvent e) { ... }
 
@@ -91,6 +88,28 @@ public class FoodTagListener implements Listener {
 
     // @EventHandler(ignoreCancelled = false)
     // public void onInventoryClose(InventoryCloseEvent e) { ... }
+
+    /**
+     * 玩家拾取物品时，立即为无保质期物品（燃料）打标签喵~
+     * 整体思路：燃料的 lore 标签内容不含时间戳，所有已标签燃料完全一致。
+     *           若在物品进入背包前就打好标签，Minecraft 原生合叠逻辑会把它与
+     *           背包里同款已标签燃料合并，省去玩家手动整理喵~
+     * 仅处理燃料：含保质期物品（食材/调料/食物）需要在进入背包后才写时间戳，不在此处处理喵
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onPickup(EntityPickupItemEvent e) {
+        // 喵~防御：只处理玩家拾取，非玩家实体跳过喵
+        if (!(e.getEntity() instanceof org.bukkit.entity.Player)) return;
+        ItemStack item = e.getItem().getItemStack();
+        // 喵~防御：空物品跳过喵
+        if (item == null || item.getType().isAir()) return;
+        // 克隆后尝试打燃料标签；若是燃料则更新地上实体的 ItemStack，使其带标签进入背包喵
+        ItemStack copy = item.clone();
+        if (tagIfFuel(copy)) {
+            // 喵~把打好标签的副本写回地面实体，进背包时 Minecraft 会与同款标签堆合并喵
+            e.getItem().setItemStack(copy);
+        }
+    }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
         // 喵~防御：玩家光标上有物品（正在拖拽），跳过本次扫描，避免setItem覆盖光标状态造成卡手喵
