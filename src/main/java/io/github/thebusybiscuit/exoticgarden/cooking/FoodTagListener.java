@@ -93,6 +93,11 @@ public class FoodTagListener implements Listener {
     // public void onInventoryClose(InventoryCloseEvent e) { ... }
 
     private void scanPlayerInventory(org.bukkit.entity.Player player) {
+        // 喵~防御：玩家光标上有物品（正在拖拽），跳过本次扫描，避免setItem覆盖光标状态造成卡手喵
+        if (player.getOpenInventory().getCursor() != null
+                && !player.getOpenInventory().getCursor().getType().isAir()) {
+            return;
+        }
         for (int i = 0; i < player.getInventory().getSize(); i++) {
             ItemStack it = player.getInventory().getItem(i);
             if (it == null || it.getType().isAir()) continue;
@@ -299,16 +304,16 @@ public class FoodTagListener implements Listener {
     }
 
     /**
-     * 启动300tick定时扫描，兜底覆盖所有遗漏场景喵~
+     * 启动1200tick定时扫描（60秒一次），兜底覆盖所有遗漏场景喵~
      * 需在插件初始化时调用一次喵
      */
     public void startPeriodicScan(org.bukkit.plugin.java.JavaPlugin plugin) {
-        // 喵~每300tick(15秒)扫描所有在线玩家背包+副手喵
+        // 喵~每1200tick(60秒)扫描所有在线玩家背包+副手，避免频繁setItem造成卡手喵
         org.bukkit.Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
                 scanPlayerInventory(p);
             }
-        }, 300L, 300L);
+        }, 1200L, 1200L);
     }
 
     /**
