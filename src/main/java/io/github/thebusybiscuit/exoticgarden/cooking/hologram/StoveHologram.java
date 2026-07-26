@@ -21,6 +21,8 @@ public class StoveHologram {
 
     // 喵~将 Location 转为稳定的 key 字符串（world+block坐标）喵
     private static String locKey(Location loc) {
+        // 喵~防御：世界为空时返回稳定空键，调用方会跳过实际全息操作喵
+        if (loc == null || loc.getWorld() == null) return "null-world";
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
     }
 

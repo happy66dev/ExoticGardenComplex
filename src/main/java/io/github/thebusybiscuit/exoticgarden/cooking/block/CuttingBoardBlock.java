@@ -111,9 +111,39 @@ public class CuttingBoardBlock extends SlimefunItem {
         };
     }
 
-    // 喵~改为static，ExoticGarden加载YAML数据时也需要调用这个方法来生成盔甲架
-    private static ArmorStand spawnStand(Location loc, ItemStack item) {
-        if (loc.getWorld() == null) return null;
+    /**
+     * 判断实体是否为本插件的砧板展示盔甲架喵~
+     * 输入：entity-待检查实体
+     * 输出：带砧板PDC标记的ArmorStand时返回true
+     * 边界：null或其他实体类型安全返回false喵
+     */
+    public static boolean isBoardDisplay(org.bukkit.entity.Entity entity) {
+        // 喵~防御：仅允许带明确PDC标记的ArmorStand参与恢复与清理喵
+        return entity instanceof ArmorStand stand
+                && stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING);
+    }
+
+    /**
+     * 根据砧板展示盔甲架的位置反推所在砧板方块坐标喵~
+     * 输入：stand-带砧板标记的盔甲架
+     * 输出：对应方块位置；世界不存在时返回null
+     */
+    public static Location getBoardLocation(ArmorStand stand) {
+        // 喵~防御：实体或世界为空时无法安全构造方块位置喵
+        if (stand == null || stand.getWorld() == null) return null;
+        Location spawnLocation = stand.getLocation();
+        return new Location(spawnLocation.getWorld(), Math.floor(spawnLocation.getX()),
+                Math.floor(spawnLocation.getY() + 0.3), Math.floor(spawnLocation.getZ()));
+    }
+
+    /**
+     * 在砧板位置创建带PDC标记的展示盔甲架喵~
+     * 输入：loc-砧板方块位置，item-展示物品
+     * 输出：创建成功的ArmorStand；参数无效时返回null
+     */
+    public static ArmorStand spawnBoardDisplay(Location loc, ItemStack item) {
+        // 喵~防御：世界为空、物品为空或物品为空气时禁止生成无效展示实体喵
+        if (loc == null || loc.getWorld() == null || item == null || item.getType().isAir()) return null;
         Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
         stand.setVisible(false);
@@ -127,6 +157,11 @@ public class CuttingBoardBlock extends SlimefunItem {
         PersistentDataContainer pdc = stand.getPersistentDataContainer();
         pdc.set(CookingKeys.BOARD_ITEM, PersistentDataType.STRING, "true");
         return stand;
+    }
+
+    // 保留旧私有入口，统一委托共享展示生成方法，避免放置和恢复逻辑分叉喵
+    private static ArmorStand spawnStand(Location loc, ItemStack item) {
+        return spawnBoardDisplay(loc, item);
     }
 
     private static ItemStack ensureIngredientId(ItemStack item) {

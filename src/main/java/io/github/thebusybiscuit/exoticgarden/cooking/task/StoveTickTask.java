@@ -26,6 +26,8 @@ public class StoveTickTask extends BukkitRunnable {
     private final Map<String, DonenessCalculator> calculators;
     private final DonenessCalculator defaultCalculator = new StandardDonenessCalculator();
     private final StoveBlock stove;
+    // 空灶台持续十分钟未被有效交互后回收，单位：毫秒喵
+    private static final long EMPTY_STOVE_RETENTION_MILLIS = 600_000L;
     private int hologramCounter = 0;
 
 
@@ -44,9 +46,18 @@ public class StoveTickTask extends BukkitRunnable {
     @Override
     public void run() {
         hologramCounter = (hologramCounter + 2) % 10;
+        long nowMillis = System.currentTimeMillis();
         for (Map.Entry<Location, StoveState> entry : stove.activeStoves.entrySet()) {
             Location loc = entry.getKey();
             StoveState state = entry.getValue();
+            // 喵~防御：世界为空或区块未加载时跳过，禁止tick意外加载区块喵
+            if (loc.getWorld() == null
+                    || !loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
+            // 喵~防御：长期空闲且没有任何内容的灶台状态可以安全回收喵
+            if (state.isEmpty() && nowMillis - state.lastActiveAtMillis >= EMPTY_STOVE_RETENTION_MILLIS) {
+                stove.cleanupStove(loc, true);
+                continue;
+            }
             // 喵~首次tick：清除可能残留的旧全息（上次服务器未正常关闭留下的多行全息）喵
             if (state.firstTick) {
                 state.firstTick = false;

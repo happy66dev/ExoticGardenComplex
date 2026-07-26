@@ -7,6 +7,7 @@ import io.github.thebusybiscuit.exoticgarden.cooking.ai.DishGenerator;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig;
+import io.github.thebusybiscuit.exoticgarden.cooking.block.StoveBlock;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -152,24 +153,37 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         // 喵~冻结灶台，不允许任何交互（温度/食材状态不变）喵
         state.frozen = true;
         state.frozenReason = null;
+        // 为本次请求生成唯一令牌，迟到回调必须匹配令牌才可修改灶台喵
+        final java.util.UUID requestId = java.util.UUID.randomUUID();
+        state.activeAiRequestId = requestId;
+        // 记录本次有效交互时间，防止冻结状态被空闲回收喵
+        state.lastActiveAtMillis = System.currentTimeMillis();
 
         // 喵~消耗碗喵
         handItem.setAmount(handItem.getAmount() - 1);
 
         final java.util.UUID playerUUID = player.getUniqueId();
-        final Location loc2 = location;
+        // 克隆方块坐标，避免异步回调持有可变Location实例喵
+        final Location loc2 = location.clone();
         player.sendMessage("§6正在生成菜肴... 请等待喵~");
 
-        // 喵~异步调用 AI，主线程不阻塞喵
-        aiClient.generateDish(prompts[0], prompts[1]).thenAccept(result -> {
+        // 发起受限异步AI请求，并保存future供灶台销毁或插件停用时取消喵
+        java.util.concurrent.CompletableFuture<DishGenerator.DishResult> dishFuture = aiClient.generateDish(prompts[0], prompts[1]);
+        state.activeAiFuture = dishFuture;
+        dishFuture.thenAccept(result -> {
+            // 喵~防御：插件停用时不再向已卸载调度器提交任务喵
+            ExoticGarden callbackPlugin = ExoticGarden.getInstance();
+            if (callbackPlugin == null || !callbackPlugin.isEnabled()) return;
             // 喵~回调在异步线程，需要切回主线程操作Bukkit API喵
-            Bukkit.getScheduler().runTask(ExoticGarden.getInstance(), () -> {
-                // 喵~防御：灶台可能已被破坏或重置喵
+            Bukkit.getScheduler().runTask(callbackPlugin, () -> {
                 ExoticGarden plugin = ExoticGarden.getInstance();
-                if (plugin == null) return;
+                // 喵~防御：灶台已破坏、请求已取消或插件已停用时拒绝迟到成功回调喵
+                if (!isCurrentRequest(plugin, state, requestId, loc2)) return;
                 Player p = Bukkit.getPlayer(playerUUID);
                 String pName = p != null ? p.getName() : "未知玩家";
-                // 喵~AI成功：解冻，清空食材/调料/水油/药水（保留燃料和温度）喵
+                // AI成功：清除请求令牌并解冻，再清空食材/调料/水油/药水（保留燃料和温度）喵
+                state.activeAiRequestId = null;
+                state.activeAiFuture = null;
                 state.frozen = false;
                 state.frozenReason = null;
                 Arrays.fill(state.slots, null);
@@ -249,24 +263,53 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
                 plugin.getLogger().info("[Cooking] " + pName + " 生成菜肴: " + result.name + " 品质:" + result.quality);
             });
         }).exceptionally(ex -> {
-            // 喵~AI失败：保持冻结，记录原因，等待玩家右键解冻喵
-            Bukkit.getScheduler().runTask(ExoticGarden.getInstance(), () -> {
+            // 喵~防御：插件停用时不再向已卸载调度器提交失败处理任务喵
+            ExoticGarden callbackPlugin = ExoticGarden.getInstance();
+            if (callbackPlugin == null || !callbackPlugin.isEnabled()) return null;
+            // AI失败：保持冻结，记录原因，等待玩家右键解冻喵
+            Bukkit.getScheduler().runTask(callbackPlugin, () -> {
+                ExoticGarden plugin = ExoticGarden.getInstance();
+                // 喵~防御：仅当前有效请求才能写入失败状态，避免旧请求覆盖新一轮烹饪喵
+                if (!isCurrentRequest(plugin, state, requestId, loc2)) return;
                 String reason = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
-                if (reason != null && reason.length() > 100) reason = reason.substring(0, 100) + "...";
+                if (reason == null || reason.isBlank()) reason = "AI 请求失败";
+                if (reason.length() > 100) reason = reason.substring(0, 100) + "...";
+                // 失败不清除冻结和令牌，玩家右键解冻时会明确放弃本次失败请求喵
                 state.frozenReason = reason;
-                // 喵~frozen保持true，玩家右键时解冻喵
+                state.activeAiFuture = null;
                 Player p = Bukkit.getPlayer(playerUUID);
                 if (p != null) {
                     p.sendMessage("§c[AI] 菜肴生成失败: " + reason);
                     p.sendMessage("§e右键灶台可解冻继续交互喵~");
                 }
-                ExoticGarden plugin = ExoticGarden.getInstance();
-                if (plugin != null) plugin.getLogger().warning("[Cooking] AI生成失败: " + reason);
+                plugin.getLogger().warning("[Cooking] AI生成失败: " + reason);
             });
             return null;
         });
 
         return true;
+    }
+
+    /**
+     * 确认异步回调仍属于当前存在的同一台灶台和同一轮AI请求喵~
+     * 输入：plugin-插件实例，state-回调捕获状态，requestId-请求令牌，location-灶台坐标
+     * 输出：仅在所有生命周期条件仍有效时返回 true
+     * 边界：区块未加载、灶台被破坏、插件停用和请求被替换均必须拒绝回调喵
+     */
+    private boolean isCurrentRequest(ExoticGarden plugin, StoveState state,
+                                     java.util.UUID requestId, Location location) {
+        // 喵~防御：插件不存在或已停用时禁止任何Bukkit状态写入喵
+        if (plugin == null || !plugin.isEnabled()) return false;
+        // 喵~防御：世界不存在或区块未加载时不能访问方块或发放物品喵
+        if (location.getWorld() == null
+                || !location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) return false;
+        // 获取已注册的灶台物品实例喵
+        io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem slimefunItem =
+                io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getById("EG_COOKING_STOVE");
+        // 喵~防御：注册项不是StoveBlock时拒绝，避免类型转换异常喵
+        if (!(slimefunItem instanceof StoveBlock stoveBlock)) return false;
+        // 喵~防御：映射状态或令牌不匹配时说明灶台已销毁、重置或开始了新请求喵
+        return stoveBlock.activeStoves.get(location) == state && requestId.equals(state.activeAiRequestId);
     }
 
     private String foodStateDisplay(FoodState state) {

@@ -1,5 +1,6 @@
 package io.github.thebusybiscuit.exoticgarden.cooking.block;
 
+import io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram;
 import io.github.thebusybiscuit.exoticgarden.cooking.interaction.StoveInteractionHandler;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.IngredientSlot;
 import io.github.thebusybiscuit.exoticgarden.cooking.state.StoveState;
@@ -72,11 +73,13 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                     // 喵~冻结状态处理：AI进行中不允许解冻，AI失败才允许右键解冻喵
                     if (state.frozen) {
                         if (state.frozenReason != null) {
-                            // AI失败：允许解冻喵
+                            // AI失败：使失败请求令牌失效后允许继续交互喵
+                            state.invalidateAiRequest();
                             state.frozen = false;
                             e.getPlayer().sendMessage("§c[AI] 上次生成失败: " + state.frozenReason);
                             e.getPlayer().sendMessage("§a灶台已解冻，可以继续交互喵~");
                             state.frozenReason = null;
+                            state.lastActiveAtMillis = System.currentTimeMillis();
                         } else {
                             // AI进行中：提示不可操作喵
                             e.getPlayer().sendMessage("§e[AI] 正在生成菜肴，请稍候...");
@@ -97,9 +100,13 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
             e.cancel();
             if (e.getClickedBlock().isEmpty()) return;
             Player player = e.getPlayer();
+            // 使用方块坐标副本作为稳定键，避免位置对象被外部修改导致缓存失配喵
             Location loc = e.getClickedBlock().get().getLocation().clone();
             ItemStack hand = player.getInventory().getItemInMainHand();
-            StoveState state = activeStoves.computeIfAbsent(loc, k -> new StoveState());
+            // 仅在本次交互真正被处理后保存新状态，防止无效右键累积空灶台缓存喵
+            StoveState state = activeStoves.get(loc);
+            boolean createdForInteraction = state == null;
+            if (createdForInteraction) state = new StoveState();
             // 喵~AI冻结期间BlockUseHandler也不处理（onPlayerInteract已拦截，这里兜底）
             if (state.frozen) return;
 
@@ -110,7 +117,12 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                     break;
                 }
             }
-            if (!handled && !player.isSneaking()) {
+            // 仅持久化成功处理的新状态，避免空手或无关物品右键泄漏 Location 引用喵
+            if (handled && createdForInteraction) activeStoves.put(loc, state);
+            // 成功处理时刷新空闲计时，单位：毫秒喵
+            if (handled) state.lastActiveAtMillis = System.currentTimeMillis();
+            // 喵~防御：只有既有状态才允许重置待清燃料标记喵
+            if (!handled && !createdForInteraction && !player.isSneaking()) {
                 state.pendingFuelClear = false;
             }
         };
@@ -123,18 +135,48 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
                 org.bukkit.block.Block b = e.getBlock();
-                Location loc = b.getLocation();
-                StoveState state = activeStoves.remove(loc);
-                // 喵~清除多行全息（removeAndClean 会扫描所有可能的全息位置并移除），
-                // 同时也调用 HologramOwner.removeHologram 清除单行全息兜底喵
-                io.github.thebusybiscuit.exoticgarden.cooking.hologram.StoveHologram.removeAndClean(loc, StoveBlock.this);
-                if (state == null) return;
-                if (b.getState() instanceof Campfire campfire) {
-                    for (int i = 0; i < 4; i++) campfire.setItem(i, null);
-                    campfire.update(true, false);
-                }
+                // 真实玩家破坏时清理状态、全息、AI请求和营火展示槽喵
+                cleanupStove(b.getLocation(), true);
             }
         };
+    }
+
+    /**
+     * 清理指定灶台的运行时状态、全息和可选的营火展示槽喵~
+     * 输入：loc-灶台方块坐标，clearCampfireSlots-是否清空已加载区块内的展示槽
+     * 输出：无
+     * 边界：未加载区块绝不访问 BlockState，避免清理过程反向加载区块喵
+     */
+    public void cleanupStove(Location loc, boolean clearCampfireSlots) {
+        // 喵~防御：位置或世界为空时无法访问方块，但仍尽量释放状态引用喵
+        if (loc == null) return;
+        // 从映射移除状态，使定时任务不再继续持有该灶台喵
+        StoveState removedState = activeStoves.remove(loc);
+        // 喵~防御：存在AI请求时先失效令牌并尝试取消后台future喵
+        if (removedState != null) removedState.invalidateAiRequest();
+        // 只要世界仍存在就清除所有单行和多行全息以及位置缓存喵
+        if (loc.getWorld() != null) StoveHologram.removeAndClean(loc, this);
+        // 喵~防御：无需清槽、世界不存在或区块未加载时禁止访问方块状态喵
+        if (!clearCampfireSlots || loc.getWorld() == null
+                || !loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) return;
+        org.bukkit.block.Block block = loc.getBlock();
+        // 喵~防御：仅清理营火展示槽，避免误修改已替换成的其他方块喵
+        if (!(block.getState() instanceof Campfire campfire)) return;
+        // 清空原版营火展示的四个槽位，物品真实状态已随灶台状态一并回收喵
+        for (int index = 0; index < 4; index++) campfire.setItem(index, null);
+        campfire.update(true, false);
+    }
+
+    /**
+     * 仅清理灶台可视全息，不移除烹饪状态或营火槽，供区块/世界卸载使用喵~
+     * 输入：loc-灶台方块坐标
+     * 输出：无
+     * 边界：卸载期间必须保留食材状态，避免重载后丢失或复制喵
+     */
+    public void cleanupHologram(Location loc) {
+        // 喵~防御：世界为空时无法调用Slimefun全息服务喵
+        if (loc == null || loc.getWorld() == null) return;
+        StoveHologram.removeAndClean(loc, this);
     }
 
     private static ItemStack reconstructItem(String id) {
