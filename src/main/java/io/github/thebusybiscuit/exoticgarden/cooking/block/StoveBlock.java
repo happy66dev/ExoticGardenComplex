@@ -11,6 +11,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.HologramOwner;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +22,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockCookEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,13 +37,26 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
     public final Map<Location, StoveState> activeStoves = new ConcurrentHashMap<>();
 
     private final List<StoveInteractionHandler> handlers;
+    // 保存燃料配置以在放置瞬间构建与 tick 完全一致的全息内容喵~
+    private final Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig.FuelData> fuels;
+    // 保存食材配置以在放置瞬间显示空食材槽与后续名称喵~
+    private final Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> ingredients;
+    // 保存调料配置以在放置瞬间构建完整的全息渲染上下文喵~
+    private final Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasonings;
 
     public StoveBlock(ItemGroup group, SlimefunItemStack item, RecipeType recipeType,
                       ItemStack[] recipe, List<StoveInteractionHandler> handlers,
+                      Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig.FuelData> fuels,
+                      Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> ingredients,
+                      Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasonings,
                       JavaPlugin plugin) {
         super(group, item, recipeType, recipe);
         this.handlers = handlers;
-        addItemHandler(buildUseHandler(), buildBreakHandler());
+        // 保存放置时立即渲染全息所需的只读配置引用喵~
+        this.fuels = fuels;
+        this.ingredients = ingredients;
+        this.seasonings = seasonings;
+        addItemHandler(buildUseHandler(), buildBreakHandler(), buildPlaceHandler());
         plugin.getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler(ignoreCancelled = true)
             public void onBlockCook(BlockCookEvent e) {
@@ -93,6 +108,29 @@ public class StoveBlock extends SlimefunItem implements HologramOwner {
                 }
             }
         }, plugin);
+    }
+
+    // 构建灶台放置处理器，放置后立即创建空状态并渲染全息喵~
+    private BlockPlaceHandler buildPlaceHandler() {
+        // 禁止自动放置器创建无玩家交互上下文的运行时灶台喵~
+        return new BlockPlaceHandler(false) {
+            @Override
+            public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
+                // 使用方块坐标副本作为稳定 key，确保与交互、tick 和清理路径一致喵~
+                Location location = event.getBlockPlaced().getLocation().clone();
+                // 原子创建空灶台状态，重复事件绝不覆盖已有燃料、食材或 AI 状态喵~
+                StoveState createdState = new StoveState();
+                StoveState existingState = activeStoves.putIfAbsent(location, createdState);
+                // 已有状态时说明本位置已完成初始化，无需重置生命周期或重复生成全息喵~
+                if (existingState != null) return;
+                // 清理同坐标可能由异常卸载或旧版本残留的多行全息喵~
+                StoveHologram.removeAndClean(location, StoveBlock.this);
+                // 放置回调已经立即渲染全息，禁止首个 tick 把刚创建的全息当残留清除喵~
+                createdState.firstTick = false;
+                // 立即渲染空灶台完整状态，无需等待玩家放食物或定时任务刷新喵~
+                StoveHologram.update(location, createdState, fuels, ingredients, seasonings, StoveBlock.this);
+            }
+        };
     }
 
     private BlockUseHandler buildUseHandler() {

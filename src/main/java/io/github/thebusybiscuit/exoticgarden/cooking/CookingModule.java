@@ -96,7 +96,7 @@ public class CookingModule {
         Map<String, DonenessCalculator> calculators = buildCalculators();
         List<StoveInteractionHandler> stoveHandlers = buildHandlers(fuels, ingredients, seasonings);
 
-        stoveInstance = registerStove(plugin, cookingGroup, stoveHandlers);
+        stoveInstance = registerStove(plugin, cookingGroup, stoveHandlers, fuels, ingredients, seasonings);
         registerBoard(plugin, cookingGroup);
         registerKnife(plugin, cookingGroup, ingredients);
         registerSpatula(plugin, cookingGroup, ingredients);
@@ -225,7 +225,10 @@ public class CookingModule {
     }
 
     private static StoveBlock registerStove(ExoticGarden plugin, ItemGroup group,
-                                            List<StoveInteractionHandler> handlers) {
+                                            List<StoveInteractionHandler> handlers,
+                                            Map<String, FuelConfig.FuelData> fuels,
+                                            Map<String, IngredientConfig.IngredientData> ingredients,
+                                            Map<String, SeasoningConfig.SeasoningData> seasonings) {
         SlimefunItemStack stack = new SlimefunItemStack("EG_COOKING_STOVE", Material.CAMPFIRE,
             "&6烹饪灶台", "&7放置燃料和食材进行烹饪", "&7右键交互以操作");
         StoveBlock stove = new StoveBlock(group, stack, RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -233,7 +236,7 @@ public class CookingModule {
                 new ItemStack(Material.COBBLESTONE), new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COBBLESTONE),
                 new ItemStack(Material.IRON_INGOT),  new ItemStack(Material.CAMPFIRE),   new ItemStack(Material.IRON_INGOT),
                 new ItemStack(Material.COBBLESTONE), new ItemStack(Material.IRON_INGOT), new ItemStack(Material.COBBLESTONE)
-            }, handlers, plugin);
+            }, handlers, fuels, ingredients, seasonings, plugin);
         stove.register(plugin);
         return stove;
     }
