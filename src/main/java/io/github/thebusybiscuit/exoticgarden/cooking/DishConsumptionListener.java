@@ -97,15 +97,18 @@ public class DishConsumptionListener implements Listener {
         double saturation = Math.max(0, Math.min(saturationRaw, 20.0));
 
         // ===== 保质期进度计算 =====
-        // shelfProgress: 0.0=新鲜，1.0=刚过期，3.0=过期3倍时间喵
-        Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-        Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
-        double shelfProgress = 0.0;
-        // 喵~防御：无 DISH_SHELF_LIFE 或保质期<=0 或无时间戳视为新鲜喵
-        if (timestamp != null && shelfLifeMinutes != null && shelfLifeMinutes > 0) {
-            double diffMinutes = (System.currentTimeMillis() - timestamp) / 60000.0;
-            shelfProgress = diffMinutes / shelfLifeMinutes;
-        }
+        // 获取统一服务，确保消费处罚与物品 lore 使用完全相同的配置来源喵
+        FoodExpiryService foodExpiryService = CookingModule.getFoodExpiryService();
+        // 读取当前时间一次，确保本次消费内所有判断使用相同边界喵
+        long nowMillis = System.currentTimeMillis();
+        // 使用统一服务解析菜肴 PDC 的真实生产时间与保质期喵
+        java.util.Optional<FoodExpiryService.ExpiryInfo> expiryInfo = foodExpiryService != null
+                ? foodExpiryService.getExpiryInfo(item)
+                : java.util.Optional.empty();
+        // 缺失期限信息时保持既有保守行为，视为新鲜避免损坏物品被错误处罚喵
+        double shelfProgress = expiryInfo.map(info -> info.shelfLifeMinutes() == 0
+                ? (info.isExpiredAt(nowMillis) ? 1.0D : 0.0D)
+                : info.calculateProgressAt(nowMillis)).orElse(0.0D);
 
         // 饱食度倍率：0~75%不变 → 75~100%线性1.0降0.6 → 100~300%线性0.6降0喵
         double hungerMult = calcHungerMult(shelfProgress);
@@ -294,24 +297,15 @@ public class DishConsumptionListener implements Listener {
     }
 
     private void handleIngredientConsume(PlayerItemConsumeEvent e, ItemStack item, ItemMeta meta, PersistentDataContainer pdc) {
-        long nowMs = System.currentTimeMillis();
-
-        // 读取食材ID，查询对应的保质期配置喵
-        String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-        IngredientConfig.IngredientData data = ingId != null ? ingredients.get(ingId) : null;
-        // 喵~防御：无配置时使用默认保质期10分钟喵
-        int shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10;
-
-        // 读取原始时间戳，用于过期判断（食用前的时间）喵
-        Long oldTimestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-
-        // 判断是否过期：用旧时间戳判断喵
-        boolean expired = false;
-        if (oldTimestamp != null) {
-            long diffMinutes = (nowMs - oldTimestamp) / 60000L;
-            // 经过时间超过保质期则过期喵
-            expired = diffMinutes >= shelfLifeMinutes;
-        }
+        // 读取当前时间一次，确保本次消费使用一致的过期边界喵
+        long nowMillis = System.currentTimeMillis();
+        // 获取统一的 PDC 与配置过期判定服务喵
+        FoodExpiryService foodExpiryService = CookingModule.getFoodExpiryService();
+        // 读取当前食材标识以获取其营养配置，缺失配置时仍回退原版营养表喵
+        String ingredientId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
+        IngredientConfig.IngredientData ingredientData = ingredientId != null ? ingredients.get(ingredientId) : null;
+        // 喵~防御：服务尚未初始化时保守放行，避免启用阶段错误处罚玩家喵~
+        boolean expired = foodExpiryService != null && foodExpiryService.isExpired(item, nowMillis);
 
         if (expired) {
             // 喵~30%概率触发过期处罚，70%概率安全通过喵
@@ -347,10 +341,10 @@ public class DishConsumptionListener implements Listener {
                 // 计算原始饱食度和饱和度（从配置读取，无配置时查原版Material，再无则默认2）喵
                 double baseFoodPoints;
                 double baseSaturation;
-                if (data != null) {
+                if (ingredientData != null) {
                     // 从食材配置读取喵
-                    baseFoodPoints = data.foodPoints;
-                    baseSaturation = data.saturation;
+                    baseFoodPoints = ingredientData.foodPoints;
+                    baseSaturation = ingredientData.saturation;
                 } else {
                     // 喵~防御：无配置时查原版Material饱食度，再无则默认2喵
                     baseFoodPoints = getVanillaFoodPoints(item.getType());

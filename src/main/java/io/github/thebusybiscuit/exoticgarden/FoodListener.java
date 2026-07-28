@@ -123,36 +123,63 @@ public class FoodListener implements Listener {
     }
 
     /**
-     * 判断物品是否已过期：从PDC读取INGREDIENT_ID+FOOD_TIMESTAMP，查询保质期配置喵
-     * 输入：itemStack物品。
-     * 输出：true=已过期或无时间戳时返回false（视为未过期）。
+     * 判断物品是否已过期：统一委托烹饪模块的 PDC 与配置判定服务喵
+     * 输入：待食用或待种植的物品。
+     * 输出：true=已达到真实配置保质期，false=未标记、无期限或未过期。
      */
     private boolean isExpired(ItemStack item) {
-        // 喵~防御：item为null或无meta时视为未过期喵
-        if (item == null || !item.hasItemMeta()) return false;
-        ItemMeta meta = item.getItemMeta();
-        // 喵~防御：meta为null时视为未过期喵
-        if (meta == null) return false;
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        // 无时间戳的物品视为未过期（没经过烹饪系统标记的食物）喵
-        Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-        if (timestamp == null) return false;
-        // 读取食材ID查询保质期配置喵
-        String ingId = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-        IngredientConfig.IngredientData data = ingId != null ? ingredients.get(ingId) : null;
-        int shelfLifeMinutes = data != null ? data.shelfLifeMinutes : 10; // 默认10分钟喵
-        // 计算从生产到现在经过的分钟数喵
-        long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
-        // 喵~防御：diffMinutes为负（时钟回拨）视为未过期喵
-        return diffMinutes >= shelfLifeMinutes;
+        // 获取所有食用与设备路径共享的实时过期判定服务喵
+        io.github.thebusybiscuit.exoticgarden.cooking.FoodExpiryService foodExpiryService =
+                io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getFoodExpiryService();
+        // 喵~防御：烹饪模块尚未完成初始化时保守放行，避免插件启用期间空指针异常喵~
+        if (foodExpiryService == null) {
+            // 返回未过期结果，等待模块完成初始化后的正常事件处理喵~
+            return false;
+        }
+        // 以 PDC 生产时间和当前配置实时判断，不依赖可能滞后60秒的 lore 喵~
+        return foodExpiryService.isExpired(item);
     }
 
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlace(BlockPlaceEvent e) {
-        SlimefunItem item = SlimefunItem.getByItem(e.getItemInHand());
-        if (item instanceof EGPlant && e.getItemInHand().getType() == Material.PLAYER_HEAD)
+        // 读取本次实际放置后的方块材质，避免把普通可放置食物误认成作物喵~
+        Material placedMaterial = e.getBlockPlaced().getType();
+        // 已过期的受管理可种植作物禁止落地，防止收获时获得新生产时间戳喵~
+        if (isPlantableCrop(placedMaterial) && isExpired(e.getItemInHand())) {
+            // 取消放置以保留原物品的过期状态喵~
             e.setCancelled(true);
+            // 向玩家说明该批作物不能通过种植刷新保质期喵~
+            e.getPlayer().sendMessage("§c这份作物已经过期，不能种植来刷新保质期喵~");
+            // 已处理过期种植后不再执行旧头颅保护判断喵~
+            return;
+        }
+        // 读取 Slimefun 物品以保留旧版头颅植物放置保护喵~
+        SlimefunItem item = SlimefunItem.getByItem(e.getItemInHand());
+        // 原有头颅植物无论是否带时间戳都禁止通过原版放置路径落地喵~
+        if (item instanceof EGPlant && e.getItemInHand().getType() == Material.PLAYER_HEAD) {
+            // 取消旧版不支持的头颅放置操作喵~
+            e.setCancelled(true);
+        }
+    }
+
+    // 判断实际放置方块是否属于可由食物物品种下的作物喵~
+    private boolean isPlantableCrop(Material placedMaterial) {
+        // 喵~防御：未知方块材质不能安全归类为作物喵~
+        if (placedMaterial == null) {
+            // 返回非作物结果喵~
+            return false;
+        }
+        // 返回原版可由食物或种子直接种下的作物方块匹配结果喵~
+        return placedMaterial == Material.WHEAT
+                || placedMaterial == Material.CARROTS
+                || placedMaterial == Material.POTATOES
+                || placedMaterial == Material.BEETROOTS
+                || placedMaterial == Material.NETHER_WART
+                || placedMaterial == Material.COCOA
+                || placedMaterial == Material.SWEET_BERRY_BUSH
+                || placedMaterial == Material.TORCHFLOWER_CROP
+                || placedMaterial == Material.PITCHER_CROP;
     }
 
     @EventHandler

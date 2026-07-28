@@ -324,9 +324,10 @@ public class FoodTagListener implements Listener {
             boolean hasProductionLine = lore.stream().anyMatch(l -> l.startsWith("§8生产日期:"));
             if (!hasProductionLine) { lore.add("§8生产日期: " + formatTimestamp(nowMs)); changed = true; }
 
-            // 喵~过期标记喵
-            long diffMin = (System.currentTimeMillis() - nowMs) / 60000L;
-            boolean expired = diffMin >= shelfLife;
+            // 使用毫秒边界判断调料过期，保持与统一实时判定服务的阈值一致喵
+            long elapsedMillis = System.currentTimeMillis() - nowMs;
+            // 喵~防御：系统时钟回拨时不把调料误标为过期喵
+            boolean expired = elapsedMillis >= 0L && elapsedMillis >= (long) shelfLife * 60_000L;
             String expiredMark = "§c已过期";
             boolean hasExpiredMark = !lore.isEmpty() && lore.get(0).equals(expiredMark);
             if (expired && !hasExpiredMark) { lore.add(0, expiredMark); changed = true; }
@@ -354,10 +355,22 @@ public class FoodTagListener implements Listener {
         Integer shelfLifeMinutes = pdc.get(CookingKeys.DISH_SHELF_LIFE, PersistentDataType.INTEGER);
         if (timestamp == null || shelfLifeMinutes == null) return false;
 
-        // 喵~计算保质期进度（0=新鲜，1=刚过期，>1=超过期）喵
-        double diffMinutes = (System.currentTimeMillis() - timestamp) / 60000.0;
-        double shelfProgress = shelfLifeMinutes > 0 ? diffMinutes / shelfLifeMinutes : 0.0;
-        boolean expired = shelfProgress >= 1.0;
+        // 获取统一服务，确保菜肴 lore 与食用处罚按同一 PDC 和配置边界判定喵
+        FoodExpiryService foodExpiryService = CookingModule.getFoodExpiryService();
+        // 读取当前时间一次，避免同次刷新出现边界抖动喵
+        long nowMillis = System.currentTimeMillis();
+        // 解析菜肴有效期限信息，损坏 PDC 时安全跳过展示更新喵
+        java.util.Optional<FoodExpiryService.ExpiryInfo> expiryInfo = foodExpiryService != null
+                ? foodExpiryService.getExpiryInfo(item)
+                : java.util.Optional.empty();
+        // 喵~防御：没有有效期限的菜肴不应被添加过期标记喵
+        if (expiryInfo.isEmpty()) return false;
+        // 读取统一服务解析出的期限快照喵
+        FoodExpiryService.ExpiryInfo resolvedInfo = expiryInfo.get();
+        // 计算连续保质期进度供营养 lore 复用喵
+        double shelfProgress = resolvedInfo.calculateProgressAt(nowMillis);
+        // 按统一毫秒边界判断是否已过期喵
+        boolean expired = resolvedInfo.isExpiredAt(nowMillis);
 
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         String expiredMark = "§c已过期";
@@ -579,10 +592,10 @@ public class FoodTagListener implements Listener {
         // 可变标签：保质期随配置变化，每次刷新喵
         String shelfLifeLine = "§8保质期: " + formatShelfLife(shelfLifeMinutes);
 
-        // 可变标签：过期状态随时间变化，每次刷新喵
-        long diffMinutes = (System.currentTimeMillis() - nowMs) / 60000L;
-        // 喵~防御：diffMinutes为负（时钟回拨）视为未过期喵
-        boolean expired = diffMinutes >= shelfLifeMinutes;
+        // 可变标签：过期状态随时间变化，每次刷新，以毫秒边界与实时消费判定保持一致喵
+        long elapsedMillis = System.currentTimeMillis() - nowMs;
+        // 喵~防御：系统时钟回拨时不把未来时间戳物品误标为过期喵
+        boolean expired = elapsedMillis >= 0L && elapsedMillis >= (long) shelfLifeMinutes * 60_000L;
 
         // 生产日期不可变：首次写入后不再更新喵
         boolean hasProductionLine = false;

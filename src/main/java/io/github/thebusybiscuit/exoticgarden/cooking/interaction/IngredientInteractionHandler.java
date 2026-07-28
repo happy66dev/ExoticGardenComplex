@@ -69,18 +69,27 @@ public class IngredientInteractionHandler implements StoveInteractionHandler {
             if (rawState != null) {
                 try { foodState = FoodState.valueOf(rawState); } catch (IllegalArgumentException ignored) {}
             }
-            // 喵~检测食材是否已过期，记录到 IngredientSlot 供 AI 参考喵
+            // 获取统一服务，确保灶台记录的期限与食用、lore和机器拦截完全一致喵
+            io.github.thebusybiscuit.exoticgarden.cooking.FoodExpiryService foodExpiryService =
+                    io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getFoodExpiryService();
+            // 读取物品生产时间以供成菜后追溯保质期进度喵
             Long timestamp = pdc.get(CookingKeys.FOOD_TIMESTAMP, PersistentDataType.LONG);
-            if (timestamp != null) {
-                String ingId2 = pdc.get(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING);
-                io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData data2
-                    = ingId2 != null ? ingredients.get(ingId2) : null;
-                int shelfLife = data2 != null ? data2.shelfLifeMinutes : 10;
-                long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
-                isExpired = diffMinutes >= shelfLife;
-                // 喵~记录时间戳和保质期，盛菜时用于计算已过期多少分钟喵
-                foodTimestamp = timestamp;
-                ingredientShelfLife = shelfLife;
+            // 仅对带时间戳且可解析有效期限的物品写入过期快照喵
+            if (timestamp != null && foodExpiryService != null) {
+                // 解析统一服务计算出的时间戳和保质期信息喵
+                java.util.Optional<io.github.thebusybiscuit.exoticgarden.cooking.FoodExpiryService.ExpiryInfo> expiryInfo =
+                        foodExpiryService.getExpiryInfo(handItem);
+                // 仅在物品属于本系统且具有有效期限时记录给 AI 和成菜流程喵
+                if (expiryInfo.isPresent()) {
+                    // 读取不可变期限快照喵
+                    io.github.thebusybiscuit.exoticgarden.cooking.FoodExpiryService.ExpiryInfo resolvedInfo = expiryInfo.get();
+                    // 按当前时间实时判断是否已过期喵
+                    isExpired = resolvedInfo.isExpiredAt(System.currentTimeMillis());
+                    // 保存原始生产时间戳喵
+                    foodTimestamp = resolvedInfo.timestampMillis();
+                    // 保存统一配置解析的保质期分钟数喵
+                    ingredientShelfLife = resolvedInfo.shelfLifeMinutes();
+                }
             }
         }
 

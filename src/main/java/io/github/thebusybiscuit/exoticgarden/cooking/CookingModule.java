@@ -54,6 +54,8 @@ public class CookingModule {
     private static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.SeasoningConfig.SeasoningData> seasoningsMap;
     // 保存 foods.yml 配置，供 ExoticGardenFruit 等外部类查询保质期覆盖喵
     private static FoodsConfig foodsConfigInstance;
+    // 保存统一保质期服务，确保所有入口按同一配置与 PDC 真值判断喵
+    private static FoodExpiryService foodExpiryService;
 
     /** 获取食材配置 map，用于刷新 lore 等场景喵 */
     public static Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> getIngredients() {
@@ -70,6 +72,11 @@ public class CookingModule {
         return foodsConfigInstance;
     }
 
+    /** 获取统一保质期服务，供所有实时过期判定入口复用喵 */
+    public static FoodExpiryService getFoodExpiryService() {
+        return foodExpiryService;
+    }
+
     public static void initialize(ExoticGarden plugin) {
         Map<String, FuelConfig.FuelData> fuels = loadConfigs(plugin);
         Map<String, IngredientConfig.IngredientData> ingredients = loadIngredients(plugin);
@@ -78,6 +85,7 @@ public class CookingModule {
         seasoningsMap = seasonings; // 保存引用供外部查询调料保质期喵
         FoodsConfig foodsConfig = loadFoods(plugin);
         foodsConfigInstance = foodsConfig; // 保存引用供外部查询保质期覆盖喵
+        foodExpiryService = new FoodExpiryService(ingredients, seasonings, foodsConfig); // 创建统一实时过期判定服务喵
 
         // 加载三个 map 后做交叉 key 冲突检测，发现冲突立即报错喵
         checkDuplicate(plugin, fuels, seasonings, "fuels.yml", "seasonings.yml");

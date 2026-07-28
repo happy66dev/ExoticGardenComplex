@@ -113,61 +113,20 @@ public class ExoticGardenFruit extends SimpleSlimefunItem<ItemUseHandler> {
     }
 
     /**
-     * 判断物品是否已过期：读取PDC的FOOD_TIMESTAMP和INGREDIENT_ID，查询保质期喵~
-     * 无时间戳视为未过期（未经烹饪系统标记的物品）喵
-     * 保质期优先级：ingredients.yml 单独配置 > foods.yml overrides > foods.yml 通用默认值
+     * 判断物品是否已过期：统一委托烹饪模块的 PDC 与配置判定服务喵~
+     * 无时间戳、无有效期限或模块尚未初始化时安全视为未过期喵~
      */
     protected boolean isExpired(ItemStack item) {
-        // 喵~防御：null或无meta视为未过期喵
-        if (item == null || !item.hasItemMeta()) return false;
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return false;
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
-        // 无时间戳的物品不参与过期机制喵
-        Long timestamp = pdc.get(
-            io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.FOOD_TIMESTAMP,
-            PersistentDataType.LONG);
-        if (timestamp == null) return false;
-
-        String ingId = pdc.get(
-            io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.INGREDIENT_ID,
-            PersistentDataType.STRING);
-
-        int shelfLife = 10; // 兜底默认值喵
-
-        // 1. 先查 ingredients.yml 单独配置喵
-        if (ingId != null) {
-            java.util.Map<String, io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData> ingMap
-                = io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getIngredients();
-            if (ingMap != null) {
-                io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig.IngredientData data
-                    = ingMap.get(ingId);
-                if (data != null) {
-                    shelfLife = data.shelfLifeMinutes;
-                    long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
-                    return diffMinutes >= shelfLife;
-                }
-            }
+        // 获取全局唯一的实时过期判定服务喵~
+        io.github.thebusybiscuit.exoticgarden.cooking.FoodExpiryService foodExpiryService =
+            io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getFoodExpiryService();
+        // 喵~防御：烹饪模块未就绪时不对果实施加错误处罚喵~
+        if (foodExpiryService == null) {
+            // 返回未过期结果喵~
+            return false;
         }
-
-        // 2. ingredients.yml 无配置时查 foods.yml overrides 喵
-        io.github.thebusybiscuit.exoticgarden.cooking.config.FoodsConfig foodsCfg
-            = io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getFoodsConfig();
-        if (foodsCfg != null) {
-            // 用 ItemIdUtil 生成带命名空间 key 查 overrides 喵
-            String itemKey = io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil.toKey(item);
-            java.util.Optional<Integer> override = foodsCfg.getOverrideShelfLife(itemKey != null ? itemKey : "");
-            if (override.isPresent()) {
-                shelfLife = override.get();
-            } else {
-                // 3. 回退到 foods.yml 通用默认值喵
-                shelfLife = foodsCfg.getGenericFoodShelfLife();
-            }
-        }
-
-        long diffMinutes = (System.currentTimeMillis() - timestamp) / 60000L;
-        // 喵~防御：时钟回拨（diffMinutes为负）视为未过期喵
-        return diffMinutes >= shelfLife;
+        // 按 PDC 生产时间和统一配置实时判定果实状态喵~
+        return foodExpiryService.isExpired(item);
     }
 
     private void restoreHunger(@Nonnull Player p) {
