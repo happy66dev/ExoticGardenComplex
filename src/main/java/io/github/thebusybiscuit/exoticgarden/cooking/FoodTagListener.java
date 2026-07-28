@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -30,6 +31,8 @@ public class FoodTagListener implements Listener {
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
     // 记录是否已报告外部背包 API 不兼容，避免每分钟重复刷屏喵~
     private static boolean externalBackpackApiWarningLogged = false;
+    // 限制收纳袋嵌套扫描深度，防御异常物品数据导致周期任务递归失控喵~
+    private static final int MAX_BUNDLE_DEPTH = 4;
 
     /**
      * 通用食物标识符，用于原版可食用物品（不在黑名单中）的 fallback 保质期标签喵~
@@ -125,9 +128,12 @@ public class FoodTagListener implements Listener {
             updateInventorySlot(player.getInventory(), i);
         }
         ItemStack offHand = player.getInventory().getItemInOffHand();
+        // 喵~防御：副手为空气时没有根物品与收纳袋内容需要刷新喵~
         if (!offHand.getType().isAir()) {
-            ItemStack copy = offHand.clone();
-            if (updateItem(copy) && !offHand.equals(copy)) player.getInventory().setItemInOffHand(copy);
+            // 刷新副手根物品及其受限深度内的收纳袋内容喵~
+            ItemStack refreshedOffHand = refreshItemTree(offHand);
+            // 仅副手根物品实际变化时才写回，避免无意义背包同步喵~
+            if (!offHand.equals(refreshedOffHand)) player.getInventory().setItemInOffHand(refreshedOffHand);
         }
         scanHeldSlimefunBackpacks(player);
         refreshExternalPlayerBackpack(player);
@@ -144,9 +150,72 @@ public class FoodTagListener implements Listener {
         ItemStack originalItem = inventory.getItem(slot);
         // 喵~防御：空物品无需读取 PDC 或写回喵~
         if (originalItem == null || originalItem.getType().isAir()) return;
+        // 克隆根物品，隔离本轮 PDC、lore 与收纳袋内容修改喵~
         ItemStack refreshedItem = originalItem.clone();
-        // 仅在更新规则识别物品且内容实际变化时写回库存喵~
-        if (updateItem(refreshedItem) && !originalItem.equals(refreshedItem)) inventory.setItem(slot, refreshedItem);
+        // 刷新根物品和受限深度内的所有收纳袋物品喵~
+        refreshedItem = refreshItemTree(refreshedItem);
+        // 仅在根物品实际变化时写回库存，避免周期扫描产生无意义同步喵~
+        if (!originalItem.equals(refreshedItem)) inventory.setItem(slot, refreshedItem);
+    }
+
+    /**
+     * 刷新根物品及其收纳袋内受限深度的食物 PDC 与 lore 喵~
+     * 输入：rootItem-待刷新根物品
+     * 输出：实际变化时返回独立更新副本，无变化时返回原物品引用
+     * 边界：收纳袋嵌套超过固定上限时停止深入，保证周期扫描资源可控喵~
+     */
+    private ItemStack refreshItemTree(ItemStack rootItem) {
+        // 从根层开始递归扫描收纳袋内容喵~
+        return refreshItemTree(rootItem, 0);
+    }
+
+    /**
+     * 递归刷新单个物品及其收纳袋内容喵~
+     * 输入：sourceItem-当前层物品，bundleDepth-当前收纳袋深度
+     * 输出：实际变化时返回更新副本，无变化时返回原物品
+     */
+    private ItemStack refreshItemTree(ItemStack sourceItem, int bundleDepth) {
+        // 喵~防御：空物品或空气没有 PDC、lore 与收纳袋内容可更新喵~
+        if (sourceItem == null || sourceItem.getType().isAir()) return sourceItem;
+        // 克隆当前层物品，隔离更新过程对库存原对象的可变修改喵~
+        ItemStack refreshedItem = sourceItem.clone();
+        // 按既有规则刷新当前层食物、菜肴、调料或燃料标签喵~
+        updateItem(refreshedItem);
+        // 只有收纳袋且未到深度上限时才递归读取内部物品喵~
+        if (refreshedItem.getType() == Material.BUNDLE && bundleDepth < MAX_BUNDLE_DEPTH) {
+            // 读取收纳袋元数据以访问不可变内容快照喵~
+            ItemMeta itemMeta = refreshedItem.getItemMeta();
+            // 喵~防御：异常 Bundle 元数据不符合 BundleMeta 时不尝试写入喵~
+            if (itemMeta instanceof BundleMeta bundleMeta) {
+                // 复制内容快照为可修改列表，禁止直接修改 BundleMeta 返回列表喵~
+                List<ItemStack> refreshedContents = new ArrayList<>(bundleMeta.getItems());
+                // 记录是否有任意内部根物品实际发生变化喵~
+                boolean contentsChanged = false;
+                // 主人注意：每层最多遍历收纳袋实际内容，深度固定为4层以限制周期扫描成本喵~
+                for (int contentIndex = 0; contentIndex < refreshedContents.size(); contentIndex++) {
+                    // 读取当前内部物品喵~
+                    ItemStack originalContent = refreshedContents.get(contentIndex);
+                    // 递归刷新内部物品及更深层收纳袋喵~
+                    ItemStack refreshedContent = refreshItemTree(originalContent, bundleDepth + 1);
+                    // 仅内部根物品实际不同才替换该列表元素喵~
+                    if (originalContent != null && !originalContent.equals(refreshedContent)) {
+                        // 写入更新后的内部物品副本喵~
+                        refreshedContents.set(contentIndex, refreshedContent);
+                        // 标记当前收纳袋内容已发生真实变化喵~
+                        contentsChanged = true;
+                    }
+                }
+                // 至少一个内部物品变化时才整体写回收纳袋元数据喵~
+                if (contentsChanged) {
+                    // 写入完整且保持原有顺序的收纳袋内容列表喵~
+                    bundleMeta.setItems(refreshedContents);
+                    // 将更新后的元数据写回外层收纳袋物品喵~
+                    refreshedItem.setItemMeta(bundleMeta);
+                }
+            }
+        }
+        // 根物品无实际差异时复用原引用，供外部背包 API 跳过数据库事务喵~
+        return sourceItem.equals(refreshedItem) ? sourceItem : refreshedItem;
     }
 
     /**
@@ -170,8 +239,10 @@ public class FoodTagListener implements Listener {
         for (ItemStack heldItem : heldItems) {
             // PlayerBackpack 自行兼容新版 PDC UUID 与旧版 lore ID，并在主线程回调喵~
             PlayerBackpack.getAsync(heldItem, backpack -> {
-                // 喵~防御：玩家离线、背包失效或重复 UUID 时跳过，避免无效持久化喵~
-                if (!player.isOnline() || backpack == null || backpack.isInvalid()
+                // 喵~防御：玩家开始拖拽、背包失效或重复 UUID 时跳过，避免异步回调覆盖交互状态喵~
+                if (!player.isOnline() || (player.getOpenInventory().getCursor() != null
+                        && !player.getOpenInventory().getCursor().getType().isAir())
+                        || backpack == null || backpack.isInvalid()
                         || !scannedBackpackIds.add(backpack.getUniqueId())) return;
                 // 打开的背包可能正在由玩家编辑，本轮跳过以避免竞争覆盖喵~
                 if (!backpack.getInventory().getViewers().isEmpty()) return;
@@ -182,8 +253,10 @@ public class FoodTagListener implements Listener {
                     for (int slot = 0; slot < backpack.getInventory().getSize(); slot++) {
                         ItemStack originalItem = backpack.getInventory().getItem(slot);
                         if (originalItem == null || originalItem.getType().isAir()) continue;
-                        ItemStack refreshedItem = originalItem.clone();
-                        if (updateItem(refreshedItem) && !originalItem.equals(refreshedItem)) {
+                        // 刷新背包格根物品与其收纳袋内容喵~
+                        ItemStack refreshedItem = refreshItemTree(originalItem);
+                        // 仅根物品实际变化时写回并标记需要 Slimefun 持久化喵~
+                        if (!originalItem.equals(refreshedItem)) {
                             backpack.getInventory().setItem(slot, refreshedItem);
                             changed = true;
                         }
@@ -209,10 +282,10 @@ public class FoodTagListener implements Listener {
             // 喵~防御：服务尚未完成初始化时跳过本次周期刷新喵~
             if (backpackService == null) return;
             java.util.function.UnaryOperator<ItemStack> itemRefresher = originalItem -> {
+                // 喵~防御：空物品没有收纳袋内容或食物标签可刷新喵~
                 if (originalItem == null || originalItem.getType().isAir()) return originalItem;
-                ItemStack refreshedItem = originalItem.clone();
-                updateItem(refreshedItem);
-                return refreshedItem;
+                // 刷新根物品及其收纳袋内容；无差异时方法会返回原引用避免 SQLite 写入喵~
+                return refreshItemTree(originalItem);
             };
             backpackService.getClass().getMethod("refreshExistingItems", java.util.UUID.class,
                     java.util.function.UnaryOperator.class).invoke(backpackService, player.getUniqueId(), itemRefresher);
