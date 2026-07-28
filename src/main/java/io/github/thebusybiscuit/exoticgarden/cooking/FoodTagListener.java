@@ -5,6 +5,8 @@ import io.github.thebusybiscuit.exoticgarden.cooking.config.FuelConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.config.IngredientConfig;
 import io.github.thebusybiscuit.exoticgarden.cooking.util.ItemIdUtil;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.player.PlayerBackpack;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,6 +28,8 @@ public class FoodTagListener implements Listener {
 
     private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
+    // 记录是否已报告外部背包 API 不兼容，避免每分钟重复刷屏喵~
+    private static boolean externalBackpackApiWarningLogged = false;
 
     /**
      * 通用食物标识符，用于原版可食用物品（不在黑名单中）的 fallback 保质期标签喵~
@@ -118,15 +122,106 @@ public class FoodTagListener implements Listener {
             return;
         }
         for (int i = 0; i < player.getInventory().getSize(); i++) {
-            ItemStack it = player.getInventory().getItem(i);
-            if (it == null || it.getType().isAir()) continue;
-            ItemStack copy = it.clone();
-            if (updateItem(copy)) player.getInventory().setItem(i, copy);
+            updateInventorySlot(player.getInventory(), i);
         }
         ItemStack offHand = player.getInventory().getItemInOffHand();
         if (!offHand.getType().isAir()) {
             ItemStack copy = offHand.clone();
-            if (updateItem(copy)) player.getInventory().setItemInOffHand(copy);
+            if (updateItem(copy) && !offHand.equals(copy)) player.getInventory().setItemInOffHand(copy);
+        }
+        scanHeldSlimefunBackpacks(player);
+        refreshExternalPlayerBackpack(player);
+    }
+
+    /**
+     * 更新一个 Bukkit Inventory 槽位内的食物 PDC 与 lore 喵~
+     * 输入：inventory-目标库存，slot-待检查槽位
+     * 输出：物品实际变化时写回；空物品或无变化时不写入
+     */
+    private void updateInventorySlot(org.bukkit.inventory.Inventory inventory, int slot) {
+        // 喵~防御：库存为空或槽位越界时跳过，避免周期任务异常中断喵~
+        if (inventory == null || slot < 0 || slot >= inventory.getSize()) return;
+        ItemStack originalItem = inventory.getItem(slot);
+        // 喵~防御：空物品无需读取 PDC 或写回喵~
+        if (originalItem == null || originalItem.getType().isAir()) return;
+        ItemStack refreshedItem = originalItem.clone();
+        // 仅在更新规则识别物品且内容实际变化时写回库存喵~
+        if (updateItem(refreshedItem) && !originalItem.equals(refreshedItem)) inventory.setItem(slot, refreshedItem);
+    }
+
+    /**
+     * 扫描玩家当前实际持有的 Slimefun 原生背包，不按玩家 UUID 枚举全部背包喵~
+     * 输入：player-当前在线玩家
+     * 输出：每个唯一背包最多扫描并保存一次
+     */
+    private void scanHeldSlimefunBackpacks(org.bukkit.entity.Player player) {
+        // 喵~防御：玩家为空或已离线时不提交异步背包解析请求喵~
+        if (player == null || !player.isOnline()) return;
+        java.util.List<ItemStack> heldItems = new java.util.ArrayList<>();
+        // 收集主背包中实际持有的候选背包物品喵~
+        for (ItemStack inventoryItem : player.getInventory().getContents()) {
+            if (inventoryItem != null && !inventoryItem.getType().isAir()) heldItems.add(inventoryItem.clone());
+        }
+        // 收集副手候选背包物品喵~
+        ItemStack offHandItem = player.getInventory().getItemInOffHand();
+        if (offHandItem != null && !offHandItem.getType().isAir()) heldItems.add(offHandItem.clone());
+        // 每轮回调按背包 UUID 去重，避免复制出的同一背包重复保存喵~
+        java.util.Set<java.util.UUID> scannedBackpackIds = new java.util.HashSet<>();
+        for (ItemStack heldItem : heldItems) {
+            // PlayerBackpack 自行兼容新版 PDC UUID 与旧版 lore ID，并在主线程回调喵~
+            PlayerBackpack.getAsync(heldItem, backpack -> {
+                // 喵~防御：玩家离线、背包失效或重复 UUID 时跳过，避免无效持久化喵~
+                if (!player.isOnline() || backpack == null || backpack.isInvalid()
+                        || !scannedBackpackIds.add(backpack.getUniqueId())) return;
+                // 打开的背包可能正在由玩家编辑，本轮跳过以避免竞争覆盖喵~
+                if (!backpack.getInventory().getViewers().isEmpty()) return;
+                synchronized (backpack) {
+                    // 喵~防御：锁内二次检查查看者，避免进入锁前刚打开背包喵~
+                    if (!backpack.getInventory().getViewers().isEmpty()) return;
+                    boolean changed = false;
+                    for (int slot = 0; slot < backpack.getInventory().getSize(); slot++) {
+                        ItemStack originalItem = backpack.getInventory().getItem(slot);
+                        if (originalItem == null || originalItem.getType().isAir()) continue;
+                        ItemStack refreshedItem = originalItem.clone();
+                        if (updateItem(refreshedItem) && !originalItem.equals(refreshedItem)) {
+                            backpack.getInventory().setItem(slot, refreshedItem);
+                            changed = true;
+                        }
+                    }
+                    // 仅真实变更时委托 Slimefun 正规控制器计算差异、刷新快照并持久化喵~
+                    if (changed) Slimefun.getDatabaseManager().getProfileDataController().saveBackpackInventory(backpack);
+                }
+            }, true);
+        }
+    }
+
+    /**
+     * 通过可选 PlayerBackpack 插件的公开服务刷新该玩家的独立背包喵~
+     * 输入：player-当前在线玩家
+     * 输出：插件缺失、停用或接口不可用时安全跳过
+     */
+    private void refreshExternalPlayerBackpack(org.bukkit.entity.Player player) {
+        // 喵~防御：仅在目标插件启用时调用反射 API，避免硬依赖导致启动失败喵~
+        org.bukkit.plugin.Plugin externalPlugin = org.bukkit.Bukkit.getPluginManager().getPlugin("PlayerBackpack");
+        if (externalPlugin == null || !externalPlugin.isEnabled()) return;
+        try {
+            Object backpackService = externalPlugin.getClass().getMethod("getBackpackService").invoke(externalPlugin);
+            // 喵~防御：服务尚未完成初始化时跳过本次周期刷新喵~
+            if (backpackService == null) return;
+            java.util.function.UnaryOperator<ItemStack> itemRefresher = originalItem -> {
+                if (originalItem == null || originalItem.getType().isAir()) return originalItem;
+                ItemStack refreshedItem = originalItem.clone();
+                updateItem(refreshedItem);
+                return refreshedItem;
+            };
+            backpackService.getClass().getMethod("refreshExistingItems", java.util.UUID.class,
+                    java.util.function.UnaryOperator.class).invoke(backpackService, player.getUniqueId(), itemRefresher);
+        } catch (ReflectiveOperationException exception) {
+            // 喵~防御：旧版本或不兼容 API 仅跳过本次刷新，不影响原版与Slimefun背包逻辑喵~
+            if (!externalBackpackApiWarningLogged) {
+                externalBackpackApiWarningLogged = true;
+                org.bukkit.Bukkit.getLogger().warning("[Cooking] PlayerBackpack 未提供兼容刷新 API，已跳过外部背包食物更新喵~");
+            }
         }
     }
 

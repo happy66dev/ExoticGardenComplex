@@ -21,6 +21,7 @@ softdepend:
   - Sanity
   - Residence
   - FluffyMachines
+  - PlayerBackpack
 
 commands:
   exotic:
