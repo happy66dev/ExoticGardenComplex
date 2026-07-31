@@ -170,6 +170,8 @@ public class CuttingBoardBlock extends SlimefunItem {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         // 喵~防御：菜肴物品（有DISH_HUNGER标记）不能打食材标签，直接返回原物品喵
         if (pdc.has(CookingKeys.DISH_HUNGER, PersistentDataType.INTEGER)) return item;
+
+        // 喵~防御：只有在食材配置里的物品才打标签，普通物品（碗、工具等）不打标签直接返回喵~
         if (!pdc.has(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING)) {
             io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem sfItem =
                 io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem.getByItem(item);
@@ -177,6 +179,13 @@ public class CuttingBoardBlock extends SlimefunItem {
             String id = sfItem != null
                 ? "slimefun:" + sfItem.getId()
                 : "minecraft:" + item.getType().name();
+
+            // 喵~检查这个物品是否在食材配置里，不在的话不打标签直接返回喵~
+            var ingredients = io.github.thebusybiscuit.exoticgarden.cooking.CookingModule.getIngredients();
+            if (ingredients == null || !ingredients.containsKey(id)) {
+                return item; // 喵~不是食材，原样返回，不打PDC标签喵~
+            }
+
             pdc.set(CookingKeys.INGREDIENT_ID, PersistentDataType.STRING, id);
         }
         if (!pdc.has(CookingKeys.FOOD_STATE, PersistentDataType.STRING)) {
