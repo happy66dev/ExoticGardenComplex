@@ -77,10 +77,13 @@ public class DishConsumptionListener implements Listener {
      *   - 菜肴取消原版事件，手动处理饱食度恢复和物品扣减
      *   - 过期时：hunger和saturation乘以0.4，应用随机debuff，随机移除1个正面buff
      *   - 不过期时：正常恢复，正常应用buff
+     *   - 通过 setItem 阻止原版材质效果（金苹果等）触发喵
      */
     private void handleDishConsume(PlayerItemConsumeEvent e, ItemStack item, ItemMeta meta, PersistentDataContainer pdc) {
         // 喵~防御：取消原版消耗事件，手动处理喵
         e.setCancelled(true);
+        // 喵~关键：将消费物品替换为空气，阻止 Bukkit 应用原版材质效果（金苹果、附魔金苹果等）喵
+        e.setItem(new ItemStack(Material.AIR));
         Player player = e.getPlayer();
 
         // 读取剩余份量，默认1份喵
