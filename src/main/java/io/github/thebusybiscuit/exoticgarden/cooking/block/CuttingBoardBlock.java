@@ -8,6 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -16,7 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -30,6 +33,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CuttingBoardBlock extends SlimefunItem {
+
+    private static final double DISPLAY_Y_OFFSET = -0.9;
 
     public static final Map<Location, ArmorStand> boardDisplays = new ConcurrentHashMap<>();
     // 喵~保存插件实例引用，用于调用YAML持久化方法
@@ -123,6 +128,38 @@ public class CuttingBoardBlock extends SlimefunItem {
                 && stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING);
     }
 
+    public static boolean isCuttingBoard(Location location) {
+        // 喵~防御：空位置或世界不存在时不能读取方块标识喵
+        if (location == null || location.getWorld() == null) return false;
+        // 喵~通过Slimefun方块存储确认当前位置仍是砧板喵
+        return "EG_CUTTING_BOARD".equals(BlockStorage.checkID(location.getBlock()));
+    }
+
+    /**
+     * 清理指定砧板的展示实体和缓存映射，按调用方要求决定是否掉落物品喵
+     */
+    public static ItemStack removeBoardDisplay(Location boardLocation, boolean dropItem) {
+        // 喵~防御：位置无效时直接返回空，避免误删其他实体喵
+        if (boardLocation == null) return null;
+        ArmorStand stand = boardDisplays.remove(boardLocation);
+        if (stand == null) return null;
+        ItemStack storedItem = stand.getEquipment().getHelmet();
+        // 喵~先复制物品，再删除实体，避免实体删除后无法读取状态喵
+        ItemStack result = storedItem == null || storedItem.getType().isAir() ? null : storedItem.clone();
+        if (dropItem && result != null && boardLocation.getWorld() != null) {
+            boardLocation.getWorld().dropItemNaturally(boardLocation, result);
+        }
+        stand.remove();
+        return result;
+    }
+
+    /**
+     * 判断实体位置对应的方块是否仍然是砧板，防止孤立展示跨重启复活喵
+     */
+    public static boolean isValidBoardDisplay(ArmorStand stand) {
+        // 喵~防御：先确认实体本身有效，再校验坐标和底层方块喵
+        return isBoardDisplay(stand) && isCuttingBoard(getBoardLocation(stand));
+    }
     /**
      * 根据砧板展示盔甲架的位置反推所在砧板方块坐标喵~
      * 输入：stand-带砧板标记的盔甲架
@@ -133,7 +170,7 @@ public class CuttingBoardBlock extends SlimefunItem {
         if (stand == null || stand.getWorld() == null) return null;
         Location spawnLocation = stand.getLocation();
         return new Location(spawnLocation.getWorld(), Math.floor(spawnLocation.getX()),
-                Math.floor(spawnLocation.getY() + 0.3), Math.floor(spawnLocation.getZ()));
+                Math.floor(spawnLocation.getY() - DISPLAY_Y_OFFSET), Math.floor(spawnLocation.getZ()));
     }
 
     /**
@@ -144,7 +181,7 @@ public class CuttingBoardBlock extends SlimefunItem {
     public static ArmorStand spawnBoardDisplay(Location loc, ItemStack item) {
         // 喵~防御：世界为空、物品为空或物品为空气时禁止生成无效展示实体喵
         if (loc == null || loc.getWorld() == null || item == null || item.getType().isAir()) return null;
-        Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
+        Location spawnLoc = loc.clone().add(0.5, DISPLAY_Y_OFFSET, 0.5);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
@@ -202,16 +239,10 @@ public class CuttingBoardBlock extends SlimefunItem {
                                       @Nonnull ItemStack item,
                                       @Nonnull List<ItemStack> drops) {
                 Location loc = e.getBlock().getLocation();
-                // 喵~破坏砧板后，从缓存移除并保存到YAML
-                ArmorStand stand = boardDisplays.remove(loc);
+                // 喵~统一清理砧板展示并掉落其中物品，避免缓存和实体只清理一边喵
+                removeBoardDisplay(loc, true);
+                // 喵~清理完成后保存最新砧板快照喵
                 saveCuttingBoardToYaml();
-                if (stand != null) {
-                    ItemStack stored = stand.getEquipment().getHelmet();
-                    if (stored != null && !stored.getType().isAir() && loc.getWorld() != null) {
-                        loc.getWorld().dropItemNaturally(loc, stored);
-                    }
-                    stand.remove();
-                }
             }
         };
     }
@@ -243,7 +274,25 @@ public class CuttingBoardBlock extends SlimefunItem {
     private static class BoardProtectionListener implements Listener {
 
         @EventHandler(ignoreCancelled = true)
+        public void onBlockExplode(BlockExplodeEvent event) {
+            // 喵~爆炸移除砧板时清理展示实体，但不重复掉落物品喵
+            event.blockList().stream().filter(block -> isCuttingBoard(block.getLocation())).forEach(block -> {
+                removeBoardDisplay(block.getLocation(), false);
+                saveCuttingBoardToYaml();
+            });
+        }
+
+        @EventHandler(ignoreCancelled = true)
+        public void onEntityExplode(EntityExplodeEvent event) {
+            // 喵~实体爆炸移除砧板时使用同一套安全清理逻辑喵
+            event.blockList().stream().filter(block -> isCuttingBoard(block.getLocation())).forEach(block -> {
+                removeBoardDisplay(block.getLocation(), false);
+                saveCuttingBoardToYaml();
+            });
+        }
+        @EventHandler(ignoreCancelled = true)
         public void onEntityDamage(EntityDamageByEntityEvent e) {
+            // 喵~防止玩家或其他实体破坏砧板展示盔甲架喵
             if (!(e.getEntity() instanceof ArmorStand stand)) return;
             if (!stand.getPersistentDataContainer().has(CookingKeys.BOARD_ITEM, PersistentDataType.STRING)) return;
             e.setCancelled(true);

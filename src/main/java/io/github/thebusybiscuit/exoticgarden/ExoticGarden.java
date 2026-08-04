@@ -84,6 +84,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
     public static final ConcurrentHashMap<String, PlayerAlcohol> drunkPlayers = new ConcurrentHashMap<>();
     private static final String ALCOHOL_PATH = "Players.%p.Alcohol";
     private static final String DRUNK_PATH = "Players.%p.Drunk";
+    private static final String STORAGE_FILE_NAME = "storage.yml";
+    private static final String LEGACY_STORAGE_FILE_NAME = "storge.yml";
     private static final List<String> drunkMsg = new ArrayList<>();
     private static final boolean skullitems = true;
     public static ExoticGarden instance;
@@ -252,10 +254,18 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         if (!(new File("plugins/ExoticGarden")).exists()) (new File("plugins/ExoticGarden")).mkdirs();
 
-        File storgeFile = new File(getDataFolder() + File.separator + "storage.yml");
-        createDefaultConfiguration(storgeFile, "storage.yml");
-        initDataFromYAML(storgeFile);
-        // 喵~启动时从YAML加载砧板数据并重建盔甲架
+        File storageFile = new File(getDataFolder(), STORAGE_FILE_NAME);
+        File legacyStorageFile = new File(getDataFolder(), LEGACY_STORAGE_FILE_NAME);
+        // 喵~防御：兼容旧版拼写错误文件，优先迁移旧数据到正确文件名喵
+        if (!storageFile.exists() && legacyStorageFile.exists()) {
+            storageFile = legacyStorageFile;
+            getLogger().warning("[Cooking] 使用旧版 storge.yml 数据，后续将迁移到 storage.yml 喵~");
+        }
+        createDefaultConfiguration(storageFile, STORAGE_FILE_NAME);
+        initDataFromYAML(storageFile);
+        // 喵~先初始化烹饪配置，确保砧板恢复时食材状态环境已就绪喵
+        CookingModule.initialize(this);
+        // 喵~启动时从YAML加载砧板数据并重建盔甲架喵
         loadCuttingBoards();
 
         registerDrunkMessage();
@@ -274,8 +284,6 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         Bukkit.getPluginManager().registerEvents(BEListener.getInstance(), ExoticGarden.instance);
 
         cfg.save();
-
-        CookingModule.initialize(this);
 
         getServer().getScheduler().runTaskTimer(this, ExoticGarden.this::checkDrunkers, 120L, 120L);
     }
@@ -1415,7 +1423,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         if (section == null) {
             this.yamlStorge.set("Players", null);
             try {
-                this.yamlStorge.save("storge.yml");
+                this.yamlStorge.save(new File(getDataFolder(), STORAGE_FILE_NAME));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1450,7 +1458,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
             }
             // 喵~保存玩家数据时，同时保存砧板数据
             saveCuttingBoards();
-            this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
+            this.yamlStorge.save(new File(getDataFolder(), STORAGE_FILE_NAME));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1461,7 +1469,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
             String playerName = "Players." + player.getName();
             this.yamlStorge.set(playerName + ".Alcohol", drunkPlayers.get(player.getName()).getAlcohol());
             this.yamlStorge.set(playerName + ".Drunk", drunkPlayers.get(player.getName()).isDrunk());
-            this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
+            this.yamlStorge.save(new File(getDataFolder(), STORAGE_FILE_NAME));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1501,7 +1509,7 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         // 喵~保存文件到磁盘
         try {
-            this.yamlStorge.save(new File(getDataFolder() + File.separator + "storge.yml"));
+            this.yamlStorge.save(new File(getDataFolder(), STORAGE_FILE_NAME));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1522,7 +1530,12 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
             for (org.bukkit.entity.ArmorStand stand : world.getEntitiesByClass(org.bukkit.entity.ArmorStand.class)) {
                 // 喵~防御：只接受带本插件砧板PDC标记的展示实体喵
                 if (!io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.isBoardDisplay(stand)) continue;
-                // 反推该展示实体对应的砧板方块位置喵
+                if (!io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.isValidBoardDisplay(stand)) {
+                    // 喵~清理底层方块已不是砧板的孤立实体，避免悬浮物品跨重启复活喵
+                    stand.remove();
+                    needsSave = true;
+                    continue;
+                }
                 Location boardLocation = io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.getBoardLocation(stand);
                 ItemStack displayItem = stand.getEquipment().getHelmet();
                 // 喵~防御：世界异常、坐标无法还原或展示物为空时移除无主实体，让YAML记录负责补齐喵
@@ -1551,6 +1564,11 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
                 Location boardLocation = parseLocationKey(key);
                 // 喵~防御：世界不存在或坐标无效时跳过旧记录并在本次结束后规范化喵
                 if (boardLocation == null) {
+                    needsSave = true;
+                    continue;
+                }
+                // 喵~防御：YAML记录对应的方块不存在或已不是砧板时丢弃旧记录喵
+                if (!io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.isCuttingBoard(boardLocation)) {
                     needsSave = true;
                     continue;
                 }
@@ -1599,21 +1617,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
     private org.bukkit.entity.ArmorStand spawnBoardArmorStand(Location loc, ItemStack item) {
         // 喵~防御：世界为空时返回null
         if (loc.getWorld() == null) return null;
-        // 喵~盔甲架生成在方块中心偏下方，这样头盔看起来像是放在方块上面
-        Location spawnLoc = loc.clone().add(0.5, -0.9, 0.5);
-        org.bukkit.entity.ArmorStand stand = (org.bukkit.entity.ArmorStand) loc.getWorld().spawnEntity(spawnLoc, org.bukkit.entity.EntityType.ARMOR_STAND);
-        stand.setVisible(false);           // 喵~不可见，只展示头盔物品
-        stand.setGravity(false);           // 喵~关闭重力，防止掉落
-        stand.setMarker(true);             // 喵~标记模式，不参与碰撞
-        stand.setArms(false);              // 喵~不显示手臂
-        stand.setBasePlate(false);         // 喵~不显示底座
-        stand.setCollidable(false);        // 喵~不可碰撞
-        stand.getEquipment().setHelmet(item); // 喵~把物品放到头上展示
-        stand.setHeadPose(new org.bukkit.util.EulerAngle(0, 0, 0)); // 喵~头的角度归零
-        // 喵~设置PersistentDataContainer标记，这样插件知道这是砧板用的盔甲架
-        org.bukkit.persistence.PersistentDataContainer pdc = stand.getPersistentDataContainer();
-        pdc.set(io.github.thebusybiscuit.exoticgarden.cooking.CookingKeys.BOARD_ITEM,
-                org.bukkit.persistence.PersistentDataType.STRING, "true");
+        // 喵~盔甲架生成位置必须与CuttingBoardBlock共享同一套偏移常量喵
+        org.bukkit.entity.ArmorStand stand = io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.spawnBoardDisplay(loc, item);
         return stand;
     }
 

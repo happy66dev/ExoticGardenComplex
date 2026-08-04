@@ -20,7 +20,7 @@ public class PlayerAlcohol {
             ConfigurationSection section = storge.createSection("Players");
             section.set(player + ".Alcohol", 0);
             section.set(player + ".Drunk", Boolean.FALSE);
-            storge.save(new File(ExoticGarden.instance.getDataFolder() + File.separator + "storge.yml"));
+            storge.save(new File(ExoticGarden.instance.getDataFolder(), "storage.yml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
