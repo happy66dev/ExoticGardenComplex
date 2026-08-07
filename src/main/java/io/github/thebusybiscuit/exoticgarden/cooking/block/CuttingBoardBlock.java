@@ -142,6 +142,16 @@ public class CuttingBoardBlock extends SlimefunItem {
         // 喵~防御：位置无效时直接返回空，避免误删其他实体喵
         if (boardLocation == null) return null;
         ArmorStand stand = boardDisplays.remove(boardLocation);
+        // 喵~缓存缺失时扫描同一方块附近实体，清理重启后未恢复映射的展示架喵
+        if (stand == null && boardLocation.getWorld() != null) {
+            for (ArmorStand candidate : boardLocation.getWorld().getNearbyEntitiesByType(ArmorStand.class,
+                    boardLocation.clone().add(0.5, DISPLAY_Y_OFFSET, 0.5), 0.7)) {
+                if (isBoardDisplay(candidate) && boardLocation.equals(getBoardLocation(candidate))) {
+                    stand = candidate;
+                    break;
+                }
+            }
+        }
         if (stand == null) return null;
         ItemStack storedItem = stand.getEquipment().getHelmet();
         // 喵~先复制物品，再删除实体，避免实体删除后无法读取状态喵

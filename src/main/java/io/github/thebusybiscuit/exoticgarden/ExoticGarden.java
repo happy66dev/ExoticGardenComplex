@@ -256,17 +256,25 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
 
         File storageFile = new File(getDataFolder(), STORAGE_FILE_NAME);
         File legacyStorageFile = new File(getDataFolder(), LEGACY_STORAGE_FILE_NAME);
-        // 喵~防御：兼容旧版拼写错误文件，优先迁移旧数据到正确文件名喵
-        if (!storageFile.exists() && legacyStorageFile.exists()) {
+        boolean usingLegacyStorage = !storageFile.exists() && legacyStorageFile.exists();
+        // 喵~防御：兼容旧版拼写错误文件，先读取旧文件内容再迁移到正确文件名喵
+        if (usingLegacyStorage) {
             storageFile = legacyStorageFile;
-            getLogger().warning("[Cooking] 使用旧版 storge.yml 数据，后续将迁移到 storage.yml 喵~");
+            getLogger().warning("[Cooking] 使用旧版 storge.yml 数据，正在迁移到 storage.yml 喵~");
         }
         createDefaultConfiguration(storageFile, STORAGE_FILE_NAME);
         initDataFromYAML(storageFile);
+        if (usingLegacyStorage) {
+            try {
+                this.yamlStorge.save(new File(getDataFolder(), STORAGE_FILE_NAME));
+            } catch (IOException exception) {
+                getLogger().log(Level.WARNING, "[Cooking] 迁移 storage.yml 失败，保留旧数据喵~", exception);
+            }
+        }
         // 喵~先初始化烹饪配置，确保砧板恢复时食材状态环境已就绪喵
         CookingModule.initialize(this);
-        // 喵~启动时从YAML加载砧板数据并重建盔甲架喵
-        loadCuttingBoards();
+        // 喵~等待世界区块和Slimefun存储完成恢复，避免过早校验将有效YAML记录覆盖删除喵
+        getServer().getScheduler().runTaskLater(this, this::loadCuttingBoards, 200L);
 
         registerDrunkMessage();
 
@@ -1524,6 +1532,8 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
         io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.clear();
         // 记录恢复过程中是否需要将规范化结果写回YAML喵
         boolean needsSave = false;
+        // 记录Slimefun存储尚未就绪的有效记录，防止本轮保存覆盖它们喵
+        boolean hasDeferredRecords = false;
         // 先扫描已加载世界的现存砧板展示实体，实体是重启后优先恢复来源喵
         for (org.bukkit.World world : getServer().getWorlds()) {
             // 仅扫描当前世界的盔甲架，避免触碰其他实体类型喵
@@ -1567,8 +1577,15 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
                     needsSave = true;
                     continue;
                 }
-                // 喵~防御：YAML记录对应的方块不存在或已不是砧板时丢弃旧记录喵
-                if (!io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.isCuttingBoard(boardLocation)) {
+                // 喵~BlockStorage未就绪时保留记录，禁止把有效砧板数据误判为失效喵
+                String blockId = me.mrCookieSlime.Slimefun.api.BlockStorage.checkID(boardLocation.getBlock());
+                if (blockId == null) {
+                    getLogger().warning("[Cooking] 暂缓恢复砧板记录（Slimefun存储未就绪）: " + key);
+                    hasDeferredRecords = true;
+                    continue;
+                }
+                // 喵~仅确认明确不是砧板的记录失效，避免启动时误删有效数据喵
+                if (!"EG_CUTTING_BOARD".equals(blockId)) {
                     needsSave = true;
                     continue;
                 }
@@ -1604,8 +1621,12 @@ public class ExoticGarden extends JavaPlugin implements SlimefunAddon {
                 }
             }
         }
-        // 实体补录、YAML补齐或重复清除后写入一个统一快照，防止旧记录持续制造冲突喵
-        if (needsSave) saveCuttingBoards();
+        // 喵~只有没有延迟记录时才保存规范化快照，避免未就绪数据被清空喵
+        if (needsSave && !hasDeferredRecords) saveCuttingBoards();
+        // 喵~存储仍未就绪时继续延迟重试，直到有效砧板记录可以安全恢复喵
+        if (hasDeferredRecords) {
+            getServer().getScheduler().runTaskLater(this, this::loadCuttingBoards, 200L);
+        }
         getLogger().info("[Cooking] 砧板数据加载完成，共 "
                 + io.github.thebusybiscuit.exoticgarden.cooking.block.CuttingBoardBlock.boardDisplays.size() + " 个");
     }
