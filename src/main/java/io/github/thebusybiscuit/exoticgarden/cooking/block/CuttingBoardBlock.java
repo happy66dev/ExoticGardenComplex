@@ -56,6 +56,10 @@ public class CuttingBoardBlock extends SlimefunItem {
             Player player = e.getPlayer();
             Location loc = e.getClickedBlock().get().getLocation();
             ArmorStand stand = boardDisplays.get(loc);
+            // 喵~防御：重启后缓存尚未补录时，按固定展示坐标寻找实体并恢复映射喵
+            if (stand == null) {
+                stand = findBoardDisplay(loc);
+            }
 
             if (!player.isSneaking()) {
                 ItemStack hand = player.getInventory().getItemInMainHand();
@@ -163,9 +167,22 @@ public class CuttingBoardBlock extends SlimefunItem {
         return result;
     }
 
-    /**
-     * 判断实体位置对应的方块是否仍然是砧板，防止孤立展示跨重启复活喵
-     */
+    public static ArmorStand findBoardDisplay(Location boardLocation) {
+        // 喵~防御：位置或世界无效时不扫描实体喵
+        if (boardLocation == null || boardLocation.getWorld() == null) return null;
+        // 喵~按统一生成坐标附近扫描，兼容启动延迟导致的缓存未建立喵
+        for (ArmorStand candidate : boardLocation.getWorld().getNearbyEntitiesByType(ArmorStand.class,
+                boardLocation.clone().add(0.5, DISPLAY_Y_OFFSET, 0.5), 0.7)) {
+            // 喵~只接受PDC标记且坐标匹配的砧板展示实体喵
+            if (isBoardDisplay(candidate) && boardLocation.equals(getBoardLocation(candidate))) {
+                boardDisplays.putIfAbsent(boardLocation, candidate);
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+
     public static boolean isValidBoardDisplay(ArmorStand stand) {
         // 喵~防御：先确认实体本身有效，再校验坐标和底层方块喵
         return isBoardDisplay(stand) && isCuttingBoard(getBoardLocation(stand));
@@ -259,6 +276,8 @@ public class CuttingBoardBlock extends SlimefunItem {
 
     public static ItemStack getStoredItem(Location boardLoc) {
         ArmorStand stand = boardDisplays.get(boardLoc);
+        // 喵~防御：缓存缺失时恢复附近展示实体，避免刀具和锅铲重启后失效喵
+        if (stand == null) stand = findBoardDisplay(boardLoc);
         if (stand == null) return null;
         ItemStack item = stand.getEquipment().getHelmet();
         return (item == null || item.getType().isAir()) ? null : item.clone();
@@ -267,6 +286,8 @@ public class CuttingBoardBlock extends SlimefunItem {
     // 喵~辅助方法：将setStoredItem也触发YAML保存，因为KnifeItem/SpatulaItem可能通过这个方法更新砧板物品
     public static void setStoredItem(Location boardLoc, ItemStack item) {
         ArmorStand stand = boardDisplays.get(boardLoc);
+        // 喵~防御：缓存缺失时恢复附近展示实体，避免刀具和锅铲重启后失效喵
+        if (stand == null) stand = findBoardDisplay(boardLoc);
         if (stand == null) return;
         stand.getEquipment().setHelmet(item);
         // 喵~物品更新后也要同步到YAML，确保切割等操作也能持久化
