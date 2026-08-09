@@ -7,7 +7,7 @@
 # display_name          - 食材显示名称
 # weight_grams          - 食材重量（克），影响 AI 生成菜肴的份量估算
 # type                  - 食材类型：MAIN=主食类 / DUAL=可作主食或配菜
-# states                - 允许的切割状态列表：WHOLE=整块, SLICED=切片, DICED=切丁
+# states - 允许的切割状态列表：WHOLE=整块, SLICED=切片, JULIENNED=切丝, DICED=切丁
 # calculator_type       - 成熟度计算器类型（目前仅 standard）
 # mature_ref_temp       - 成熟参考温度（°C），在此温度时成熟速度为标准速度
 # base_cook_time_seconds- 基础烹饪时间（秒），用于计算成熟度进度
@@ -33,7 +33,7 @@ minecraft:BEEF:
   display_name: 牛肉
   weight_grams: 250
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 110
   base_cook_time_seconds: 180
@@ -49,7 +49,7 @@ minecraft:PORKCHOP:
   display_name: 猪排
   weight_grams: 250
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 170
   base_cook_time_seconds: 300
@@ -65,7 +65,7 @@ minecraft:CHICKEN:
   display_name: 鸡肉
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 160
   base_cook_time_seconds: 300
@@ -82,7 +82,7 @@ minecraft:APPLE:
   display_name: 苹果
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 140
   base_cook_time_seconds: 100
@@ -98,7 +98,7 @@ minecraft:GOLDEN_APPLE:
   display_name: 金苹果
   weight_grams: 225
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 160
@@ -106,7 +106,7 @@ minecraft:GOLDEN_APPLE:
   food_points: 5
   saturation: 15
   shelf_life_minutes: 72000
-  hint: "蕴含黄金的魔力，果肉带有神圣的光泽，食用后恢复生命与饱食，香气馥郁而神秘。"
+  hint: "蕴含黄金的魔力，食用后根据分量给予不同时间的buff 这是一份的情况下的buff参考:2分钟的伤害吸收I(absorption 0级 120s) 5秒的生命恢复II(regeneration 1级 5s) 120秒的生命恢复I (resistance 0级 120s)如果分量多 可以将生命恢复的等级降低 增加秒数"
   lore_hint: "魔法水果，恢复生命与饱食"
   sauce_creation:
     clicks_required: 18
@@ -114,7 +114,7 @@ minecraft:GOLDEN_CARROT:
   display_name: 金胡萝卜
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 100
@@ -130,7 +130,7 @@ minecraft:PUMPKIN:
   display_name: 南瓜
   weight_grams: 400
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 1200
@@ -148,7 +148,7 @@ minecraft:COCOA_BEANS:
   display_name: 可可豆
   weight_grams: 30
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 120
   base_cook_time_seconds: 1200
@@ -164,7 +164,7 @@ minecraft:BREAD:
   display_name: 面包
   weight_grams: 250
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 120
@@ -178,7 +178,7 @@ minecraft:COD:
   display_name: 鳕鱼
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 140
   base_cook_time_seconds: 240
@@ -194,7 +194,7 @@ minecraft:SALMON:
   display_name: 鲑鱼
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 160
   base_cook_time_seconds: 120
@@ -210,7 +210,7 @@ minecraft:MUTTON:
   display_name: 羊肉
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 180
@@ -226,7 +226,7 @@ minecraft:RABBIT:
   display_name: 兔肉
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 160
@@ -242,7 +242,7 @@ minecraft:EGG:
   display_name: 鸡蛋
   weight_grams: 60
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 140
   base_cook_time_seconds: 180
@@ -260,7 +260,7 @@ minecraft:POTATO:
   display_name: 土豆
   weight_grams: 250
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 2700
@@ -276,7 +276,7 @@ minecraft:CARROT:
   display_name: 胡萝卜
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 1200
@@ -292,7 +292,7 @@ minecraft:BEETROOT:
   display_name: 甜菜根
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 160
@@ -308,7 +308,7 @@ minecraft:BROWN_MUSHROOM:
   display_name: 蘑菇
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 900
@@ -324,7 +324,7 @@ minecraft:RED_MUSHROOM:
   display_name: 红蘑菇
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 900
@@ -342,7 +342,7 @@ minecraft:MELON_SLICE:
   display_name: 西瓜片
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 90
@@ -358,7 +358,7 @@ minecraft:SWEET_BERRIES:
   display_name: 甜浆果
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 90
   base_cook_time_seconds: 300
@@ -374,7 +374,7 @@ minecraft:GLOW_BERRIES:
   display_name: 发光浆果
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 120
   base_cook_time_seconds: 300
@@ -392,7 +392,7 @@ slimefun:CORN:
   display_name: 玉米
   weight_grams: 200
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 480
@@ -406,7 +406,7 @@ slimefun:CABBAGE:
   display_name: 卷心菜
   weight_grams: 150
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 220
   base_cook_time_seconds: 120
@@ -420,7 +420,7 @@ slimefun:LETTUCE:
   display_name: 生菜
   weight_grams: 100
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 120
   base_cook_time_seconds: 90
@@ -434,7 +434,7 @@ slimefun:GARLIC:
   display_name: 大蒜
   weight_grams: 50
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 1200
@@ -448,7 +448,7 @@ slimefun:BREADFRUIT:
   display_name: 面包果
   weight_grams: 400
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 1800
@@ -462,7 +462,7 @@ slimefun:ALIEN_FRUIT:
   display_name: 外星果实
   weight_grams: 200
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 320
   base_cook_time_seconds: 600
@@ -476,7 +476,7 @@ slimefun:PUNCH_FRUIT:
   display_name: 潘趣果
   weight_grams: 200
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 180
@@ -490,7 +490,7 @@ slimefun:JACKFRUIT:
   display_name: 菠萝蜜
   weight_grams: 675
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 120
   base_cook_time_seconds: 90
@@ -504,7 +504,7 @@ slimefun:BIG_CARROT:
   display_name: 大萝卜
   weight_grams: 200
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 360
@@ -518,7 +518,7 @@ slimefun:ACORN_SQUASH:
   display_name: 橡子南瓜
   weight_grams: 300
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 2400
@@ -532,7 +532,7 @@ slimefun:GINSENGBABY:
   display_name: 人参果娃
   weight_grams: 80
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 120
@@ -546,7 +546,7 @@ slimefun:BIG_WHEAT:
   display_name: 异域大麦
   weight_grams: 150
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 95
   base_cook_time_seconds: 1800
@@ -560,7 +560,7 @@ slimefun:AMARANTH:
   display_name: 苋菜
   weight_grams: 50
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 90
   base_cook_time_seconds: 100
@@ -574,7 +574,7 @@ slimefun:TEQUILA:
   display_name: 龙舌兰
   weight_grams: 100
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 130
   base_cook_time_seconds: 10800
@@ -590,7 +590,7 @@ slimefun:TOMATO:
   display_name: 番茄
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 360
@@ -606,7 +606,7 @@ slimefun:ONION:
   display_name: 洋葱
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 190
   base_cook_time_seconds: 1800
@@ -622,7 +622,7 @@ slimefun:RED_BELL_PEPPER:
   display_name: 红甜椒
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 120
@@ -640,7 +640,7 @@ slimefun:OAK_APPLE:
   display_name: 橡树苹果
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 300
   base_cook_time_seconds: 100
@@ -656,7 +656,7 @@ slimefun:CHERRY:
   display_name: 樱桃
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 180
@@ -672,7 +672,7 @@ slimefun:POMEGRANATE:
   display_name: 石榴
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 240
@@ -688,7 +688,7 @@ slimefun:LEMON:
   display_name: 柠檬
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 80
   base_cook_time_seconds: 120
@@ -704,7 +704,7 @@ slimefun:PLUM:
   display_name: 梅子
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 170
   base_cook_time_seconds: 120
@@ -720,7 +720,7 @@ slimefun:LIME:
   display_name: 酸橙
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 55
   base_cook_time_seconds: 180
@@ -736,7 +736,7 @@ slimefun:ORANGE:
   display_name: 橙子
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 120
@@ -752,7 +752,7 @@ slimefun:PEACH:
   display_name: 桃子
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 150
@@ -768,7 +768,7 @@ slimefun:PEAR:
   display_name: 梨子
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 150
@@ -784,7 +784,7 @@ slimefun:DRAGON_FRUIT:
   display_name: 火龙果
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 6
   base_cook_time_seconds: 80
@@ -800,7 +800,7 @@ slimefun:PINEAPPLE:
   display_name: 菠萝
   weight_grams: 300
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 150
@@ -816,7 +816,7 @@ slimefun:COCONUT:
   display_name: 椰子
   weight_grams: 500
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 600
@@ -834,7 +834,7 @@ slimefun:STRAWBERRY:
   display_name: 草莓
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 85
   base_cook_time_seconds: 240
@@ -850,7 +850,7 @@ slimefun:GRAPE:
   display_name: 葡萄
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 900
@@ -866,7 +866,7 @@ slimefun:BLUEBERRY:
   display_name: 蓝莓
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 900
@@ -882,7 +882,7 @@ slimefun:RASPBERRY:
   display_name: 树莓
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 50
   base_cook_time_seconds: 180
@@ -898,7 +898,7 @@ slimefun:BLACKBERRY:
   display_name: 黑莓
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 150
   base_cook_time_seconds: 900
@@ -914,7 +914,7 @@ slimefun:CRANBERRY:
   display_name: 蔓越莓
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 85
   base_cook_time_seconds: 420
@@ -930,7 +930,7 @@ slimefun:ELDERBERRY:
   display_name: 接骨木果
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 1200
@@ -946,7 +946,7 @@ slimefun:COWBERRY:
   display_name: 越橘
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 240
@@ -964,7 +964,7 @@ slimefun:SWEET_POTATO:
   display_name: 地瓜
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 160
   base_cook_time_seconds: 3600
@@ -981,7 +981,7 @@ minecraft:PUFFERFISH:
   display_name: 河豚
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 10800
@@ -1017,7 +1017,7 @@ slimefun:FLATBREAD_ITEM:
   display_name: 面饼
   weight_grams: 150
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 900
@@ -1033,7 +1033,7 @@ slimefun:WIDE_NOODLES:
   display_name: 宽面
   weight_grams: 100
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 300
@@ -1067,7 +1067,7 @@ slimefun:RAINBOW_FRUITS:
   display_name: 彩虹果
   weight_grams: 100
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 120
   base_cook_time_seconds: 120
@@ -1084,7 +1084,7 @@ slimefun:GOOSEBERRY:
   display_name: 红醋栗
   weight_grams: 50
   type: DUAL
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 100
   base_cook_time_seconds: 450
@@ -1102,7 +1102,7 @@ slimefun:MEXICO_CHILI:
   display_name: 异域墨西哥辣椒
   weight_grams: 80
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 300
@@ -1119,7 +1119,7 @@ slimefun:MUSTARD_SEED:
   display_name: 芥菜籽
   weight_grams: 30
   type: MAIN
-  states: [WHOLE, DICED]
+  states: [WHOLE, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 180
   base_cook_time_seconds: 60
@@ -1137,7 +1137,7 @@ slimefun:MANDRAKE_ROOT:
   display_name: 异域曼德拉根
   weight_grams: 150
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 240
   base_cook_time_seconds: 180
@@ -1155,7 +1155,7 @@ slimefun:ROSE:
   display_name: 异域玫瑰
   weight_grams: 30
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 70
   base_cook_time_seconds: 240
@@ -1172,7 +1172,7 @@ slimefun:SAKURA:
   display_name: 异域樱花
   weight_grams: 20
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 70
   base_cook_time_seconds: 240
@@ -1189,7 +1189,7 @@ slimefun:PURPLE_FLOWER:
   display_name: 紫花
   weight_grams: 20
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 70
   base_cook_time_seconds: 240
@@ -1206,7 +1206,7 @@ slimefun:PURPLE_ROSE:
   display_name: 紫色玫瑰
   weight_grams: 25
   type: MAIN
-  states: [WHOLE, SLICED]
+  states: [WHOLE, SLICED, JULIENNED]
   calculator_type: standard
   mature_ref_temp: 70
   base_cook_time_seconds: 240
@@ -1224,7 +1224,7 @@ slimefun:REED:
   display_name: 异域甘蔗
   weight_grams: 320
   type: MAIN
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 200
   base_cook_time_seconds: 360
@@ -1241,7 +1241,7 @@ slimefun:ALOE:
   display_name: 异域芦荟
   weight_grams: 200
   type: DUAL
-  states: [WHOLE, SLICED, DICED]
+  states: [WHOLE, SLICED, JULIENNED, DICED]
   calculator_type: standard
   mature_ref_temp: 70
   base_cook_time_seconds: 120

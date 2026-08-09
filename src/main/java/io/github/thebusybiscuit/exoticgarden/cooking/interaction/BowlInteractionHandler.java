@@ -316,7 +316,7 @@ public class BowlInteractionHandler implements StoveInteractionHandler {
         return switch (state) {
             case WHOLE     -> "完整";
             case SLICED    -> "切片";
-            case JULIENNED -> "切条";
+            case JULIENNED -> "切丝";
             case DICED     -> "切丁";
             case SAUCE     -> "酱汁";
         };
