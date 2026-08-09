@@ -117,7 +117,25 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
             effects = potionMeta.getBasePotionType().getPotionEffects();
         }
 
-        // 药水加水量喵
+        // 喵~防御：没有任何有效buff的药水一律按普通水瓶处理，不进入调料槽喵
+        if (effects.isEmpty()) {
+            // 普通水瓶固定增加200ml水，不能使用药水配置中的其他数值喵
+            double plainWaterMl = 200;
+            // 喵~热均衡：普通水瓶液体视为室温混入喵
+            state.mixLiquid(plainWaterMl);
+            // 增加普通水瓶提供的水量喵
+            state.waterAmount += plainWaterMl;
+            // 记录水来源并去重喵
+            if (!state.waterSources.contains("水")) state.waterSources.add("水");
+            // 消耗手持物品并返还玻璃瓶喵
+            handItem.setAmount(handItem.getAmount() - 1);
+            returnContainer(player, "GLASS_BOTTLE");
+            // 向玩家反馈普通水瓶处理结果喵
+            player.sendMessage("§7水瓶已加入灶台（+200ml水）");
+            return;
+        }
+
+        // 有效药水固定按配置或默认值增加水量喵
         double waterMl = data != null ? data.waterMl : 200;
         // 喵~热均衡：药水液体视为室温混入喵
         state.mixLiquid(waterMl);
@@ -125,9 +143,7 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         if (!state.waterSources.contains("药水")) state.waterSources.add("药水");
 
         // 有效果时记录到 potionEffects 喵
-        if (!effects.isEmpty()) {
-            state.potionEffects.addAll(effects);
-        }
+        state.potionEffects.addAll(effects);
 
         // 加入调料槽，让药水在全息和AI中可见喵
         double potionWeight = data != null ? data.weightGrams : 1;
@@ -138,12 +154,8 @@ public class SeasoningInteractionHandler implements StoveInteractionHandler {
         String containerReturn = data != null ? data.containerReturn : "GLASS_BOTTLE";
         returnContainer(player, containerReturn);
 
-        // 向玩家反馈喵
-        if (!effects.isEmpty()) {
-            player.sendMessage("§a药水已加入灶台（" + effects.size() + " 个效果，+" + (int) waterMl + "ml水）");
-        } else {
-            player.sendMessage("§7水瓶已加入灶台（+" + (int) waterMl + "ml水）");
-        }
+        // 向玩家反馈有效药水处理结果喵
+        player.sendMessage("§a药水已加入灶台（" + effects.size() + " 个效果，+" + (int) waterMl + "ml水）");
     }
 
     /**
