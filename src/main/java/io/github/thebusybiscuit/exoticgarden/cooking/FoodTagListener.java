@@ -382,6 +382,20 @@ public class FoodTagListener implements Listener {
             changed = true;
         }
 
+        // 喵~有渗入度的辅料显示配置中的完整渗入时间，避免部分辅料缺少时间提示喵
+        if (sd != null && sd.hasDoneness) {
+            // 将秒数四舍五入到一位小数，保持配置精度且避免显示过长小数喵
+            double roundedBaseTimeSeconds = Math.round(sd.baseTimeSeconds * 10.0) / 10.0;
+            // 生成统一的渗入时间 Lore 行喵
+            String donenessTimeLine = "§7渗入时间: §e" + roundedBaseTimeSeconds + "秒";
+            // 替换已有渗入时间行，确保配置更新后旧显示不会残留喵
+            replaceLoreLineOrAdd(lore, "§7渗入时间:", donenessTimeLine);
+            changed = true;
+        } else {
+            // 喵~防御：无渗入度的辅料清理旧渗入时间行，避免误导玩家喵
+            if (lore.removeIf(line -> line.startsWith("§7渗入时间:"))) changed = true;
+        }
+
         // 喵~有保质期的调料显示保质期和生产日期喵
         if (shelfLife > 0) {
             String shelfLifeLine = "§8保质期: " + formatShelfLife(shelfLife);
