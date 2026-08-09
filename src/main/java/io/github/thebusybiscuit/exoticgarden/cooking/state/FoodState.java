@@ -8,7 +8,7 @@ public enum FoodState {
         return switch (this) {
             case WHOLE     -> 1.0; // 整块，无加速喵
             case SLICED    -> 2.0; // 切片，加速2.0倍喵
-            case JULIENNED -> 2.5; // 切条，加速2.5倍喵
+            case JULIENNED -> 2.5; // 切丝，加速2.5倍喵
             case DICED     -> 4.0; // 切丁，加速4.0倍喵
             case SAUCE     -> 5.0; // 酱汁，加速5.0倍喵
         };

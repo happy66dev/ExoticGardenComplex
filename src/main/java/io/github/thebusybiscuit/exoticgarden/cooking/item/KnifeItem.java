@@ -194,7 +194,7 @@ public class KnifeItem extends SlimefunItem {
                 yield FoodState.SLICED;
             }
             case SLICED -> {
-                // 喵~防御：优先切条，若无切条则尝试切丁，两者都没有则停在切片喵
+                // 喵~防御：优先切丝，若无切丝则尝试切丁，两者都没有则停在切片喵
                 if (data != null && !data.states.contains("JULIENNED")) {
                     if (data.states.contains("DICED")) yield FoodState.DICED;
                     yield current; // 连切丁也没有，停着喵
@@ -316,7 +316,7 @@ public class KnifeItem extends SlimefunItem {
         return switch (state) {
             case "WHOLE"     -> "整块";
             case "SLICED"    -> "切片";
-            case "JULIENNED" -> "切条";
+            case "JULIENNED" -> "切丝";
             case "DICED"     -> "切丁";
             case "SAUCE"  -> "酱料";
             default       -> state;
