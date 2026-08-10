@@ -386,14 +386,19 @@ public class FoodTagListener implements Listener {
         if (sd != null && sd.hasDoneness) {
             // 将秒数四舍五入到一位小数，保持配置精度且避免显示过长小数喵
             double roundedBaseTimeSeconds = Math.round(sd.baseTimeSeconds * 10.0) / 10.0;
+            // 生成统一的推荐渗入温度 Lore 行，使用最佳渗入温度配置喵
+            String recommendedDonenessTemperatureLine = "§7推荐渗入温度: §e" + (int) sd.optimalTemp + "°C";
+            // 替换已有推荐渗入温度行，确保配置更新后旧显示不会残留喵
+            replaceLoreLineOrAdd(lore, "§7推荐渗入温度:", recommendedDonenessTemperatureLine);
+            changed = true;
             // 生成统一的渗入时间 Lore 行喵
             String donenessTimeLine = "§7渗入时间: §e" + roundedBaseTimeSeconds + "秒";
             // 替换已有渗入时间行，确保配置更新后旧显示不会残留喵
             replaceLoreLineOrAdd(lore, "§7渗入时间:", donenessTimeLine);
             changed = true;
         } else {
-            // 喵~防御：无渗入度的辅料清理旧渗入时间行，避免误导玩家喵
-            if (lore.removeIf(line -> line.startsWith("§7渗入时间:"))) changed = true;
+            // 喵~防御：无渗入度的辅料清理旧的推荐温度和渗入时间行，避免误导玩家喵
+            if (lore.removeIf(line -> line.startsWith("§7推荐渗入温度:") || line.startsWith("§7渗入时间:"))) changed = true;
         }
 
         // 喵~有保质期的调料显示保质期和生产日期喵
