@@ -49,7 +49,7 @@ minecraft:SPRUCE_LOG:
 minecraft:JUNGLE_LOG:
   display_name: 丛林原木
   temp_gain: 310
-  duration_seconds: 82
+  duration_seconds: 70
   heat_rate: 6
   effect: WOOD_SMOKE
   effect_display_name: "略微泥土的味道"
@@ -76,7 +76,7 @@ minecraft:DARK_OAK_LOG:
 minecraft:MANGROVE_LOG:
   display_name: 红树原木
   temp_gain: 210
-  duration_seconds: 90
+  duration_seconds: 75
   heat_rate: 3
   effect: WOOD_SMOKE
   effect_display_name: "泥泞沼泽的味道,可能不适合用来做饭"
@@ -85,7 +85,7 @@ minecraft:MANGROVE_LOG:
 minecraft:CHERRY_LOG:
   display_name: 樱花原木
   temp_gain: 300
-  duration_seconds: 30
+  duration_seconds: 35
   heat_rate: 6
   effect: FRUIT_WOOD
   effect_display_name: "樱花香!"
@@ -96,7 +96,7 @@ minecraft:CHERRY_LOG:
 minecraft:CHARCOAL:
   display_name: 木炭
   temp_gain: 450
-  duration_seconds: 120
+  duration_seconds: 110
   heat_rate: 4
   effect: SMOKY
   effect_display_name: "具有浓烟,可能污染食物"
@@ -105,7 +105,7 @@ minecraft:CHARCOAL:
 minecraft:COAL:
   display_name: 煤炭
   temp_gain: 600
-  duration_seconds: 300
+  duration_seconds: 160
   heat_rate: 5
   effect: SMOKY
   effect_display_name: "无烟炭,万能燃料"
@@ -114,10 +114,10 @@ minecraft:COAL:
 minecraft:COAL_BLOCK:
   display_name: 煤炭块
   temp_gain: 600
-  duration_seconds: 1200
+  duration_seconds: 900
   heat_rate: 8
   effect: INTENSE_SMOKE
-  effect_display_name: "无烟炭捆,很适合长期烹饪"
+  effect_display_name: "无烟炭捆,很适合长时间烹饪"
   byproduct: null
   hint: ""
 
@@ -134,7 +134,7 @@ minecraft:BLAZE_ROD:
 minecraft:BLAZE_POWDER:
   display_name: 烈焰粉
   temp_gain: 600
-  duration_seconds: 60
+  duration_seconds: 40
   heat_rate: 8
   effect: BLAZING
   effect_display_name: "文火,不错的燃料,没有任何污染物"
@@ -143,7 +143,7 @@ minecraft:BLAZE_POWDER:
 minecraft:LAVA_BUCKET:
   display_name: 岩浆桶
   temp_gain: 3000
-  duration_seconds: 600
+  duration_seconds: 320
   heat_rate: 40
   effect: LAVA_INFUSED
   effect_display_name: "岩浆淬炼,如果你会烹饪,那么可能这不是个好选择"
@@ -152,7 +152,7 @@ minecraft:LAVA_BUCKET:
 minecraft:MAGMA_BLOCK:
   display_name: 岩浆块
   temp_gain: 400
-  duration_seconds: 3600
+  duration_seconds: 360
   heat_rate: 5
   effect: MAGMATIC
   effect_display_name: "岩浆块烧烤,不错"
@@ -192,7 +192,7 @@ minecraft:WHEAT:
 minecraft:WHEAT_SEEDS:
   display_name: 小麦种子
   temp_gain: 50
-  duration_seconds: 30
+  duration_seconds: 4
   heat_rate: 2
   effect: GRASS_SMOKE
   effect_display_name: "废物利用? 可能控火很好用"
@@ -201,7 +201,7 @@ minecraft:WHEAT_SEEDS:
 minecraft:SHORT_GRASS:
   display_name: 矮草
   temp_gain: 150
-  duration_seconds: 3
+  duration_seconds: 5
   heat_rate: 5
   effect: GRASS_SMOKE
   effect_display_name: "废物利用? 似乎比较好烧"
@@ -210,7 +210,7 @@ minecraft:SHORT_GRASS:
 minecraft:TALL_GRASS:
   display_name: 高草
   temp_gain: 180
-  duration_seconds: 5
+  duration_seconds: 7
   heat_rate: 7
   effect: GRASS_SMOKE
   effect_display_name: "废物利用? 似乎很好烧"
@@ -219,7 +219,7 @@ minecraft:TALL_GRASS:
 minecraft:FERN:
   display_name: 蕨
   temp_gain: 120
-  duration_seconds: 3
+  duration_seconds: 5
   heat_rate: 10
   effect: GRASS_SMOKE
   effect_display_name: "废物利用? 天哪太好烧了"
@@ -246,7 +246,7 @@ minecraft:DEAD_BUSH:
 minecraft:SUGAR_CANE:
   display_name: 甘蔗
   temp_gain: 50
-  duration_seconds: 150
+  duration_seconds: 90
   heat_rate: 1
   effect: SWEET_SMOKE
   effect_display_name: "微微的甘蔗味,作为燃料太不合格了"
@@ -255,7 +255,7 @@ minecraft:SUGAR_CANE:
 minecraft:VINE:
   display_name: 藤蔓
   temp_gain: 120
-  duration_seconds: 4
+  duration_seconds: 20
   heat_rate: 4
   effect: GRASS_SMOKE
   effect_display_name: "丛林的味道"
@@ -264,7 +264,7 @@ minecraft:VINE:
 minecraft:TWISTING_VINES:
   display_name: 扭曲藤蔓
   temp_gain: 250
-  duration_seconds: 8
+  duration_seconds: 210
   heat_rate: 7
   effect: GRASS_SMOKE
   effect_display_name: "地狱气息"
@@ -273,7 +273,7 @@ minecraft:TWISTING_VINES:
 minecraft:WEEPING_VINES:
   display_name: 垂泪藤蔓
   temp_gain: 250
-  duration_seconds: 8
+  duration_seconds: 200
   heat_rate: 7
   effect: GRASS_SMOKE
   effect_display_name: "地狱气息"
@@ -302,7 +302,7 @@ minecraft:HAY_BLOCK:
 minecraft:DRIED_KELP_BLOCK:
   display_name: 干海带块
   temp_gain: 350
-  duration_seconds: 200
+  duration_seconds: 60
   heat_rate: 5
   effect: KELP_SMOKE
   effect_display_name: "海草鲜香"
@@ -313,7 +313,7 @@ minecraft:DRIED_KELP_BLOCK:
 minecraft:ICE:
   display_name: 冰
   temp_gain: 0
-  duration_seconds: 10
+  duration_seconds: 40
   heat_rate: -10
   effect: FREEZING
   effect_display_name: "降温?或冰食?"
@@ -322,7 +322,7 @@ minecraft:ICE:
 minecraft:SNOWBALL:
   display_name: 雪球
   temp_gain: 0
-  duration_seconds: 1
+  duration_seconds: 4
   heat_rate: -3
   effect: FREEZING
   effect_display_name: "降温?或冰食?"
@@ -331,7 +331,7 @@ minecraft:SNOWBALL:
 minecraft:SNOW_BLOCK:
   display_name: 雪块
   temp_gain: 0
-  duration_seconds: 9
+  duration_seconds: 18
   heat_rate: -5
   effect: FREEZING
   effect_display_name: "降温?或冰食?"
@@ -340,7 +340,7 @@ minecraft:SNOW_BLOCK:
 minecraft:POWDER_SNOW_BUCKET:
   display_name: 细雪桶
   temp_gain: 0
-  duration_seconds: 5
+  duration_seconds: 20
   heat_rate: -15
   effect: DEEP_FREEZE
   effect_display_name: "降温?或冰食?"
