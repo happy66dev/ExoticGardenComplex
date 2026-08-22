@@ -29,8 +29,12 @@ public class FoodTagListener implements Listener {
 
     private static final org.bukkit.NamespacedKey KEY_SF_ITEM =
             new org.bukkit.NamespacedKey("slimefun", "slimefun_item");
-    // 记录是否已报告外部背包 API 不兼容，避免每分钟重复刷屏喵~
+    // 记录是否已报告外部背包缺少可用刷新接口，避免每分钟重复刷屏喵~
     private static boolean externalBackpackApiWarningLogged = false;
+    // 记录是否已报告外部背包刷新调用失败，与"接口缺失"分开计数避免误导诊断喵~
+    private static boolean externalBackpackInvokeWarningLogged = false;
+    // 稳定公开 API 的服务接口全名，优先通过它调用刷新喵~
+    private static final String EXTERNAL_BACKPACK_API_CLASS = "com.playerbackpack.api.PlayerBackpackApi";
     // 限制收纳袋嵌套扫描深度，防御异常物品数据导致周期任务递归失控喵~
     private static final int MAX_BUNDLE_DEPTH = 4;
 
@@ -277,24 +281,110 @@ public class FoodTagListener implements Listener {
         // 喵~防御：仅在目标插件启用时调用反射 API，避免硬依赖导致启动失败喵~
         org.bukkit.plugin.Plugin externalPlugin = org.bukkit.Bukkit.getPluginManager().getPlugin("PlayerBackpack");
         if (externalPlugin == null || !externalPlugin.isEnabled()) return;
+        // 构造只在 Bukkit 主线程运行的物品刷新器，返回原引用表示无变化喵~
+        java.util.function.UnaryOperator<ItemStack> itemRefresher = originalItem -> {
+            // 喵~防御：空物品没有收纳袋内容或食物标签可刷新喵~
+            if (originalItem == null || originalItem.getType().isAir()) return originalItem;
+            // 刷新根物品及其收纳袋内容；无差异时方法会返回原引用避免 SQLite 写入喵~
+            return refreshItemTree(originalItem);
+        };
+        // 优先使用稳定公开 API，成功后不再触碰任何内部服务喵~
+        if (refreshViaStableApi(externalPlugin, player, itemRefresher)) {
+            // 稳定路径已受理本次刷新喵~
+            return;
+        }
+        // 稳定 API 不存在时回退旧内部服务，兼容尚未升级的 PlayerBackpack 版本喵~
+        refreshViaLegacyService(externalPlugin, player, itemRefresher);
+    }
+
+    /**
+     * 通过 Bukkit 服务管理器上的稳定公开 API 刷新外部背包喵~
+     *
+     * 为什么走服务管理器：
+     * 旧实现反射的是 PlayerBackpack 主类上标记 forRemoval 的内部访问器，
+     * 一旦上游移除该方法，本功能会永久静默失效；
+     * 稳定 API 是上游明确对兼容插件承诺的边界，因此优先使用它喵~
+     *
+     * @param externalPlugin 已确认启用的 PlayerBackpack 插件实例
+     * @param player         当前在线玩家
+     * @param itemRefresher  主线程物品刷新器
+     * @return true 表示稳定 API 已受理本次刷新，false 表示需要回退旧路径
+     */
+    private boolean refreshViaStableApi(org.bukkit.plugin.Plugin externalPlugin, org.bukkit.entity.Player player,
+                                        java.util.function.UnaryOperator<ItemStack> itemRefresher) {
+        try {
+            // 使用 provider 插件的 classloader 加载稳定 API 类型，避免本插件静态链接可选类喵~
+            Class<?> apiClass = Class.forName(EXTERNAL_BACKPACK_API_CLASS, false,
+                    externalPlugin.getClass().getClassLoader());
+            // 从服务管理器读取上游注册的稳定 API 实现喵~
+            Object backpackApi = org.bukkit.Bukkit.getServicesManager().load(apiClass);
+            // 喵~防御：服务尚未注册时回退旧路径而不是直接放弃刷新喵~
+            if (backpackApi == null) return false;
+            // 反射调用稳定刷新方法，参数为目标 UUID 与主线程刷新器喵~
+            Object acceptance = backpackApi.getClass()
+                    .getMethod("refreshExistingItems", java.util.UUID.class, java.util.function.UnaryOperator.class)
+                    .invoke(backpackApi, player.getUniqueId(), itemRefresher);
+            // 受理结果为空说明 provider 实现异常，按调用失败处理喵~
+            if (acceptance == null) {
+                // 记录一次调用异常诊断喵~
+                logExternalInvokeFailure("稳定刷新 API 返回空受理结果");
+                // 返回已处理，避免同一轮再调用内部服务造成重复排队喵~
+                return true;
+            }
+            // 受理状态非 QUEUED 时只记录诊断，不重复排队喵~
+            if (!"QUEUED".equals(acceptance.toString())) {
+                // 输出忙碌或不可用状态，便于管理员理解偶发不刷新喵~
+                logExternalInvokeFailure("稳定刷新 API 未受理，状态=" + acceptance);
+            }
+            // 稳定路径已完成本轮处理喵~
+            return true;
+        } catch (ClassNotFoundException | NoSuchMethodException exception) {
+            // 旧版本 PlayerBackpack 没有稳定刷新接口，交由回退路径处理喵~
+            return false;
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError exception) {
+            // 喵~防御：调用本身失败时不再回退内部服务，避免同一轮重复排队刷新喵~
+            logExternalInvokeFailure("稳定刷新 API 调用失败：" + exception.getMessage());
+            // 返回已处理喵~
+            return true;
+        }
+    }
+
+    /**
+     * 回退调用 PlayerBackpack 内部服务刷新外部背包喵~
+     *
+     * 仅用于尚未提供稳定刷新 API 的旧版本；该内部访问器在上游已标记 forRemoval，
+     * 因此这里把"接口缺失"和"调用失败"分成两类日志，避免真实故障被误报为版本过旧喵~
+     *
+     * @param externalPlugin 已确认启用的 PlayerBackpack 插件实例
+     * @param player         当前在线玩家
+     * @param itemRefresher  主线程物品刷新器
+     */
+    private void refreshViaLegacyService(org.bukkit.plugin.Plugin externalPlugin, org.bukkit.entity.Player player,
+                                         java.util.function.UnaryOperator<ItemStack> itemRefresher) {
         try {
             Object backpackService = externalPlugin.getClass().getMethod("getBackpackService").invoke(externalPlugin);
             // 喵~防御：服务尚未完成初始化时跳过本次周期刷新喵~
             if (backpackService == null) return;
-            java.util.function.UnaryOperator<ItemStack> itemRefresher = originalItem -> {
-                // 喵~防御：空物品没有收纳袋内容或食物标签可刷新喵~
-                if (originalItem == null || originalItem.getType().isAir()) return originalItem;
-                // 刷新根物品及其收纳袋内容；无差异时方法会返回原引用避免 SQLite 写入喵~
-                return refreshItemTree(originalItem);
-            };
             backpackService.getClass().getMethod("refreshExistingItems", java.util.UUID.class,
                     java.util.function.UnaryOperator.class).invoke(backpackService, player.getUniqueId(), itemRefresher);
-        } catch (ReflectiveOperationException exception) {
-            // 喵~防御：旧版本或不兼容 API 仅跳过本次刷新，不影响原版与Slimefun背包逻辑喵~
+        } catch (NoSuchMethodException exception) {
+            // 喵~防御：旧版本确实没有兼容刷新入口时仅提示一次，不影响原版与 Slimefun 背包逻辑喵~
             if (!externalBackpackApiWarningLogged) {
                 externalBackpackApiWarningLogged = true;
                 org.bukkit.Bukkit.getLogger().warning("[Cooking] PlayerBackpack 未提供兼容刷新 API，已跳过外部背包食物更新喵~");
             }
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError exception) {
+            // 喵~防御：接口存在但调用失败属于运行期故障，必须与版本过旧区分开记录喵~
+            logExternalInvokeFailure("内部刷新服务调用失败：" + exception.getMessage());
+        }
+    }
+
+    // 输出一次外部背包刷新调用失败诊断，避免每分钟刷屏喵~
+    private void logExternalInvokeFailure(String reason) {
+        // 同类问题只提示一次，保留首次原因供管理员定位喵~
+        if (!externalBackpackInvokeWarningLogged) {
+            externalBackpackInvokeWarningLogged = true;
+            org.bukkit.Bukkit.getLogger().warning("[Cooking] 外部背包食物刷新未生效：" + reason + "喵~");
         }
     }
 
